@@ -21,7 +21,6 @@ import android.util.FloatMath;
 
 import com.zeddic.game.common.Component;
 import com.zeddic.game.common.PhysicalObject;
-import com.zeddic.game.common.util.RandomUtil;
 
 public class StraightPath extends Component {
 
@@ -59,22 +58,20 @@ public class StraightPath extends Component {
     this.target = target;
   }
 
-  public void draw(Canvas canvas) {
-    if (target != null) {
-      target.draw(canvas);
-    }
+  public Target getTarget() {
+    return target;
   }
   
+  public void draw(Canvas canvas) {
+
+  }
+
   public void update(long time) {
-    
+
     if (!enabled || target == null) {
       return;
     }
-    
-    target.update(time);
-    
 
-    
     float dX = target.getX() - parent.x;
     float dY = target.getY() - parent.y;
     float distance = FloatMath.sqrt(dX * dX + dY * dY); 
@@ -82,6 +79,8 @@ public class StraightPath extends Component {
       parent.velocity.x = 0;
       parent.velocity.y = 0;
       inRange = true;
+      target.removeFollower(parent);
+      target = null;
       return;
     }
     
@@ -118,6 +117,4 @@ public class StraightPath extends Component {
   public boolean inWaitRange() {
     return inRange;
   }
-  
-  
 }
