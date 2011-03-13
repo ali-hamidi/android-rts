@@ -143,6 +143,7 @@ public class WarGame extends Game {
     }
     //ship.update(time);
 
+    commandManager.update(time);
     GameState.stockpiles.update(time);
   }
 

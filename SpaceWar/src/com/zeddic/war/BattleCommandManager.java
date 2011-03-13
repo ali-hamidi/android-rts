@@ -1,5 +1,8 @@
 package com.zeddic.war;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -7,6 +10,7 @@ import android.view.MotionEvent;
 
 import com.zeddic.game.common.GameObject;
 import com.zeddic.game.common.util.SimpleList;
+import com.zeddic.game.common.util.Vector2d;
 import com.zeddic.war.collision.ProximityUtil;
 import com.zeddic.war.ships.FighterShip;
 import com.zeddic.war.ships.LocationTarget;
@@ -22,8 +26,9 @@ public class BattleCommandManager extends GameObject {
     PAINT.setStrokeWidth(1);
     PAINT.setStyle(Paint.Style.STROKE);
   }
-  
+
   private final SimpleList<Target> targets = SimpleList.create(Target.class);
+
   private Selection selection;
   private float lastX;
   private float lastY;
@@ -47,7 +52,11 @@ public class BattleCommandManager extends GameObject {
 
     FighterShip ship = (FighterShip) ProximityUtil.getClosest(FighterShip.class, e.getX(), e.getY(), 50);
     if (ship != null) {
-      this.selection = new Selection(ship);
+      //if (ship.getTarget() != null) {
+      //  this.selection = new Selection(ship.getTarget());
+      //} else {
+        this.selection = new Selection(ship);
+      //}
     } else {
       Target target = getTargetInRange(e.getX(), e.getY());
       if (target != null) {
@@ -64,11 +73,23 @@ public class BattleCommandManager extends GameObject {
       return;
     }
     
-    LocationTarget target = new LocationTarget(e.getX(), e.getY());
-    targets.add(target);
-    
     if (selection.isShip()) {
-      selection.ship.setTarget(target);
+      
+      if (selection.ship.getTarget() != null) {
+        selection.ship.getTarget().set(e.getX(), e.getY());
+      } else {
+        final LocationTarget target = new LocationTarget(e.getX(), e.getY());
+        target.addFollower(selection.ship);
+        target.addReachedHandler(new Runnable() {
+            @Override
+            public void run() {
+              targets.remove(target);
+            }
+          });
+        
+        targets.add(target);
+        selection.ship.setTarget(target);
+      }
     }
     
     selection = null;
@@ -97,20 +118,41 @@ public class BattleCommandManager extends GameObject {
   
   @Override
   public void draw(Canvas c) {
+    
+    for (int i = 0; i < targets.size; i++) {
+      targets.items[i].draw(c);
+    }
+    
     if (!hasSelection()) {
       return;
     }
 
     if (selection.isShip()) {
-      c.drawLine(selection.getX(), selection.getY(), lastX, lastY, PAINT);
+      
+      
+      float dX = lastX - selection.ship.x;
+      float dY = lastY - selection.ship.y;
+      
+      if (dX * dX + dY * dY > 25 * 25) {
+        Vector2d temp = new Vector2d(dX, dY);
+        temp.normalize();
+        temp.x *= 25;
+        temp.y *= 25;
+        c.drawLine(selection.ship.x + temp.x, selection.ship.y + temp.y, lastX, lastY, PAINT);
+      }
+      
+      
+      //c.drawLine(selection.getX(), selection.getY(), lastX, lastY, PAINT);
     }
   }
   
   @Override
   public void update(long time) {
-    
+    for (int i = 0; i < targets.size; i++) {
+      targets.items[i].update(time);
+    }
   }
-  
+
   private Target getTargetInRange(float x, float y) {
     Target toReturn = null;
     Target target;

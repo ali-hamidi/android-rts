@@ -73,7 +73,7 @@ public class FighterShip extends Ship {
     //gun = GameStorage.upgrades.getGun();
     //gun.setOwner(this);
     
-    path = new StraightPath(this, 0, speed);
+    path = new StraightPath(this, 5, speed);
     
     components = new ComponentManager(this);
     components.add(new CollideComponent(this, CollideBehavior.HIT_RECEIVE));
@@ -142,12 +142,14 @@ public class FighterShip extends Ship {
     //this.setAngle(calculateAngle(target));
   }
   
+  public Target getTarget() {
+    return this.path.getTarget();
+  }
 
-  
   public void fire() {
     gun.fire();
   }
-  
+
   public void fire(float angle) {
     gun.setAimAngle(angle);    
   }
