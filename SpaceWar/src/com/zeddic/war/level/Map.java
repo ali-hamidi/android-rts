@@ -23,7 +23,7 @@ import android.graphics.Path;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 
-import com.zeddic.game.common.GameObject;
+import com.zeddic.common.GameObject;
 
 public class Map extends GameObject {
   

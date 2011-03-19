@@ -2,7 +2,7 @@ package com.zeddic.war.ships;
 
 import android.graphics.Canvas;
 
-import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.common.PhysicalObject;
 
 public interface Target {
   float getX();

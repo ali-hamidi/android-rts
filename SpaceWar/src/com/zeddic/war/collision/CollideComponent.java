@@ -1,7 +1,7 @@
 package com.zeddic.war.collision;
 
-import com.zeddic.game.common.Component;
-import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.common.Component;
+import com.zeddic.common.PhysicalObject;
 
 public class CollideComponent extends Component {
 

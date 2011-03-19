@@ -18,9 +18,9 @@ package com.zeddic.war.guns;
 
 import android.graphics.Canvas;
 
-import com.zeddic.game.common.Component;
-import com.zeddic.game.common.PhysicalObject;
-import com.zeddic.game.common.util.Countdown;
+import com.zeddic.common.Component;
+import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.util.Countdown;
 import com.zeddic.war.GameState;
 import com.zeddic.war.guns.control.GunControl;
 

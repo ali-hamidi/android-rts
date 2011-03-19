@@ -3,10 +3,10 @@ package com.zeddic.war.guns;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.zeddic.game.common.util.Bounds;
-import com.zeddic.game.common.util.Circle;
-import com.zeddic.game.common.util.Polygon;
-import com.zeddic.game.common.util.Polygon.PolygonBuilder;
+import com.zeddic.common.util.Bounds;
+import com.zeddic.common.util.Circle;
+import com.zeddic.common.util.Polygon;
+import com.zeddic.common.util.Polygon.PolygonBuilder;
 
 public class ShardBullet extends Bullet {
 

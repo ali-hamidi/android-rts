@@ -13,8 +13,8 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.zeddic.game.common.GameSurface;
-import com.zeddic.game.common.Updater;
+import com.zeddic.common.GameSurface;
+import com.zeddic.common.Updater;
 
 public class MainActivity extends Activity {
 	private GameSurface surface;

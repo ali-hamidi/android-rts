@@ -8,9 +8,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 
-import com.zeddic.game.common.GameObject;
-import com.zeddic.game.common.util.SimpleList;
-import com.zeddic.game.common.util.Vector2d;
+import com.zeddic.common.GameObject;
+import com.zeddic.common.util.SimpleList;
+import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.ProximityUtil;
 import com.zeddic.war.ships.FighterShip;
 import com.zeddic.war.ships.LocationTarget;
