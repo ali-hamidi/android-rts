@@ -2,8 +2,8 @@ package com.zeddic.war;
 
 import android.graphics.Canvas;
 
-import com.zeddic.game.common.GameObject;
-import com.zeddic.game.common.util.ObjectStockpile;
+import com.zeddic.common.GameObject;
+import com.zeddic.common.util.ObjectStockpile;
 import com.zeddic.war.guns.Bullet;
 import com.zeddic.war.guns.ShardBullet;
 import com.zeddic.war.ships.FighterShip;

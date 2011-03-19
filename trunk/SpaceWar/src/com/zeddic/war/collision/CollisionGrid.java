@@ -2,8 +2,8 @@ package com.zeddic.war.collision;
 
 import android.graphics.Canvas;
 
-import com.zeddic.game.common.PhysicalObject;
-import com.zeddic.game.common.util.SimpleList;
+import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.util.SimpleList;
 import com.zeddic.war.level.Level;
 
 public class CollisionGrid {

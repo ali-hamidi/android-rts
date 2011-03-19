@@ -8,12 +8,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 
-import com.zeddic.game.common.PhysicalObject;
-import com.zeddic.game.common.transistions.Range;
-import com.zeddic.game.common.transistions.RangeConverter;
-import com.zeddic.game.common.transistions.Transition;
-import com.zeddic.game.common.transistions.Transitions;
-import com.zeddic.game.common.util.Vector2d;
+import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.transistions.Range;
+import com.zeddic.common.transistions.RangeConverter;
+import com.zeddic.common.transistions.Transition;
+import com.zeddic.common.transistions.Transitions;
+import com.zeddic.common.util.Vector2d;
 
 public class LocationTarget implements Target {
 

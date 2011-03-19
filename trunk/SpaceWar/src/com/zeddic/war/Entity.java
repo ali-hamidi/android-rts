@@ -1,6 +1,6 @@
 package com.zeddic.war;
 
-import com.zeddic.game.common.GameObject;
+import com.zeddic.common.GameObject;
 
 public class Entity extends GameObject {
   

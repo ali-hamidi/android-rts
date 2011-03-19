@@ -16,7 +16,7 @@
 
 package com.zeddic.war.guns.control;
 
-import com.zeddic.game.common.util.RandomUtil;
+import com.zeddic.common.util.RandomUtil;
 import com.zeddic.war.guns.Gun;
 
 public class RandomGunControl extends GunControl {

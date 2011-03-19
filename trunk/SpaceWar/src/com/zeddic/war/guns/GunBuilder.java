@@ -16,7 +16,7 @@
 
 package com.zeddic.war.guns;
 
-import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.common.PhysicalObject;
 import com.zeddic.war.guns.control.GunControl;
 
 public class GunBuilder { 

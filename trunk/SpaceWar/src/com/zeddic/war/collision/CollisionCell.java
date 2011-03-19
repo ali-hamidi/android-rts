@@ -4,9 +4,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.zeddic.game.common.PhysicalObject;
-import com.zeddic.game.common.util.SimpleList;
-import com.zeddic.game.common.util.Vector2d;
+import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.util.SimpleList;
+import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.TileBounds.EdgeType;
 
 public class CollisionCell {

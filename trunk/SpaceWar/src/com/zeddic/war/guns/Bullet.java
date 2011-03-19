@@ -20,14 +20,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.zeddic.game.common.PhysicalObject;
-import com.zeddic.game.common.collision.CollisionComponent;
-import com.zeddic.game.common.collision.CollisionManager;
-import com.zeddic.game.common.effects.Effects;
-import com.zeddic.game.common.util.Bounds;
-import com.zeddic.game.common.util.Circle;
-import com.zeddic.game.common.util.ComponentManager;
-import com.zeddic.game.common.util.Vector2d;
+import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.effects.Effects;
+import com.zeddic.common.util.Bounds;
+import com.zeddic.common.util.Circle;
+import com.zeddic.common.util.ComponentManager;
+import com.zeddic.common.util.Vector2d;
 
 public class Bullet extends PhysicalObject {
 
@@ -48,7 +46,7 @@ public class Bullet extends PhysicalObject {
   public boolean firedByEnemy = false;
   
   private ComponentManager components;
-  private CollisionComponent collisionComponent;
+  //private CollisionComponent collisionComponent;
   
   public Bullet() {
     this(0, 0);
@@ -61,17 +59,17 @@ public class Bullet extends PhysicalObject {
     life = 0;
     maxLife = DEFAULT_MAX_LIFE;
     
-    collisionComponent = new CollisionComponent(this, CollisionManager.TYPE_HIT_ONLY);
+    //collisionComponent = new CollisionComponent(this, CollisionManager.TYPE_HIT_ONLY);
     
     components = new ComponentManager(this);
-    components.add(collisionComponent);
+    //components.add(collisionComponent);
     //components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
   }
   
   @Override
   public void kill() {
     super.kill();
-    collisionComponent.unregisterObject();
+   // collisionComponent.unregisterObject();
   }
   
   public void reset() {

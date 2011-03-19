@@ -16,7 +16,7 @@
 
 package com.zeddic.war.ships;
 
-import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.common.PhysicalObject;
 
 public class Ship extends PhysicalObject {
 

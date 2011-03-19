@@ -4,8 +4,8 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.zeddic.game.common.Game;
-import com.zeddic.game.common.util.Countdown;
+import com.zeddic.common.Game;
+import com.zeddic.common.util.Countdown;
 import com.zeddic.war.collision.CollisionSystem;
 import com.zeddic.war.collision.ProximityUtil;
 import com.zeddic.war.level.MockLevelLoader;

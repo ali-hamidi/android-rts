@@ -1,7 +1,7 @@
 package com.zeddic.war.collision;
 
-import com.zeddic.game.common.util.Polygon;
-import com.zeddic.game.common.util.Polygon.PolygonBuilder;
+import com.zeddic.common.util.Polygon;
+import com.zeddic.common.util.Polygon.PolygonBuilder;
 
 public enum TileBounds {
   

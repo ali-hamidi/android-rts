@@ -19,8 +19,8 @@ package com.zeddic.war.ships;
 import android.graphics.Canvas;
 import android.util.FloatMath;
 
-import com.zeddic.game.common.Component;
-import com.zeddic.game.common.PhysicalObject;
+import com.zeddic.common.Component;
+import com.zeddic.common.PhysicalObject;
 
 public class StraightPath extends Component {
 
