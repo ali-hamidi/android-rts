@@ -33,6 +33,7 @@ public class Level {
   
   public void draw(Canvas c) {
     map.draw(c);
+    c.save();
     for (int row = 0; row < rows; row++) {
       for(int col = 0; col < cols; col++) {
         LevelTile tile = grid[row][col];
@@ -41,6 +42,7 @@ public class Level {
         }
       }
     }
+    c.restore();
   }
   
   public int getTileRows() {
@@ -105,11 +107,11 @@ public class Level {
     
     public LevelBuilder() {}
     
-    public void withSize(float width, float height) {
-      this.width = width;
-      this.height = height;
-      this.rows = (int) (height / TILE_SIZE);
-      this.cols = (int) (width / TILE_SIZE);
+    public void withGridSize(int rows, int cols) {
+      this.width = cols * TILE_SIZE;
+      this.height = rows * TILE_SIZE;
+      this.rows = rows;
+      this.cols = cols;
       grid = new LevelTile[rows][cols];
     }
     

@@ -1,5 +1,7 @@
 package com.zeddic.war;
 
+import java.io.IOException;
+
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -8,6 +10,7 @@ import com.zeddic.common.Game;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.war.collision.CollisionSystem;
 import com.zeddic.war.collision.ProximityUtil;
+import com.zeddic.war.level.FileLevelLoader;
 import com.zeddic.war.level.MockLevelLoader;
 import com.zeddic.war.ships.FighterShip;
 import com.zeddic.war.ships.LocationTarget;
@@ -62,7 +65,12 @@ public class WarGame extends Game {
     // the world as big as the screen... :(
     // That or making the world scrollable as needed.
     
-    GameState.level = new MockLevelLoader(screenWidth, screenHeight).load("blah");
+    GameState.level = new MockLevelLoader().load("blah");
+//    try {
+//      GameState.level = new FileLevelLoader().load("levels/1.txt");
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
     CollisionSystem.get().initializeForLevel(GameState.level);
 
     commandManager = new BattleCommandManager();
