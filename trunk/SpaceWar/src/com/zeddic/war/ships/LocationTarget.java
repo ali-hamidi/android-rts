@@ -8,7 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.transistions.Range;
 import com.zeddic.common.transistions.RangeConverter;
 import com.zeddic.common.transistions.Transition;
@@ -30,7 +30,7 @@ public class LocationTarget implements Target {
   private float y;
   private final Transition sizeTransition = new Transition(5, 25, 1000, Transitions.EASE_IN_OUT);
   private static final RangeConverter ALPHA = new RangeConverter(new Range(15, 25), new Range(255, 50));
-  private final List<PhysicalObject> followers = new ArrayList<PhysicalObject>();
+  private final List<Entity> followers = new ArrayList<Entity>();
   
   // TODO(baileys): Change this to a composite.
   private Runnable reachedHandler;
@@ -73,7 +73,7 @@ public class LocationTarget implements Target {
 
 
     for (int i = 0; i < length ; i++) {
-      PhysicalObject follower = followers.get(i);
+      Entity follower = followers.get(i);
       
       float dX = x - follower.x;
       float dY = y - follower.y;
@@ -98,12 +98,12 @@ public class LocationTarget implements Target {
   }
 
   @Override
-  public void addFollower(PhysicalObject follower) {
+  public void addFollower(Entity follower) {
     followers.add(follower);
   }
 
   @Override
-  public void removeFollower(PhysicalObject follower) {
+  public void removeFollower(Entity follower) {
     followers.remove(follower);
     
     if (followers.size() == 0) {

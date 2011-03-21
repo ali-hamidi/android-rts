@@ -2,7 +2,7 @@ package com.zeddic.war.collision;
 
 import android.graphics.Canvas;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.war.level.Level;
 
@@ -48,7 +48,7 @@ public class CollisionGrid {
 	  
 
 	  // Second: collide with any tiles.
-	  PhysicalObject entity = component.entity;
+	  Entity entity = component.entity;
 	  
     int minCol = convertMapToGridValue(entity.left());
     int maxCol = convertMapToGridValue(entity.right());
@@ -70,7 +70,7 @@ public class CollisionGrid {
 	 * of results in the array returned as an int.
 	 */
   public int getReleventCells(CollideComponent component, SimpleList<CollisionCell> result) {
-    PhysicalObject entity = component.entity;
+    Entity entity = component.entity;
     
     int minCol = convertMapToGridValue(entity.left());
     int maxCol = convertMapToGridValue(entity.right());
@@ -168,7 +168,7 @@ public class CollisionGrid {
    * be used to place it in the grid.
    */
   public void add(CollideComponent component) {
-    PhysicalObject entity = component.entity;
+    Entity entity = component.entity;
     CollisionCell cell = getCellForEntity(entity);
     
     if (cell != null) {
@@ -182,7 +182,7 @@ public class CollisionGrid {
    * Removes an object from the grid entirely.
    */
   public void remove(CollideComponent component) {
-    PhysicalObject entity = component.entity;
+    Entity entity = component.entity;
     CollisionCell cell = getCellForEntity(entity);
     cell.remove(entity);
     
@@ -193,7 +193,7 @@ public class CollisionGrid {
    * Updates an objects position in the grid.
    */
   public void update(CollideComponent component) {
-    PhysicalObject entity = component.entity;
+    Entity entity = component.entity;
     CollisionCell cell = getCellForEntity(entity);
 
     if (cell != component.currentCell) {
@@ -206,7 +206,7 @@ public class CollisionGrid {
     }
   }
   
-  CollisionCell getCellForEntity(PhysicalObject entity) {
+  CollisionCell getCellForEntity(Entity entity) {
     int col = convertMapToGridValue(entity.x);
     int row = convertMapToGridValue(entity.y);
 

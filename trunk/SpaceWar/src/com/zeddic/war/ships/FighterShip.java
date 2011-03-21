@@ -20,7 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.util.Bounds;
 import com.zeddic.common.util.Circle;
 import com.zeddic.common.util.ComponentManager;
@@ -66,9 +66,9 @@ public class FighterShip extends Ship {
   public FighterShip(float x, float y) {
     super(x, y);
 
-    paint = new Paint(PAINT);
-    setBounds(new Bounds(new Circle(8)));
-    speed = 20;
+    
+    this.radius = 8;
+    this.speed = 20;
     
     //gun = GameStorage.upgrades.getGun();
     //gun.setOwner(this);
@@ -87,10 +87,6 @@ public class FighterShip extends Ship {
     gun.reset();
     
     health = maxHealth;
-    
-    paint.setColor(Color.BLUE);
-    paint.setStyle(Paint.Style.STROKE);
-    paint.setStrokeWidth(3);
     
     soundCountdown.restart();
   }
@@ -124,13 +120,11 @@ public class FighterShip extends Ship {
   
   @Override
   public void draw(Canvas canvas) {
-    super.draw(canvas);
-
     canvas.save();
     canvas.translate(x, y);
     canvas.rotate(getAngleOffset() + angle);
     canvas.scale(scale, scale);
-    canvas.drawPath(SHAPE.path, paint);
+    canvas.drawPath(SHAPE.path, PAINT);
     canvas.restore();
     
     components.draw(canvas);
@@ -155,7 +149,7 @@ public class FighterShip extends Ship {
   }
   
   public boolean isDead() {
-    return !active;
+    return !enabled;
   }
   
   @Override
@@ -187,7 +181,7 @@ public class FighterShip extends Ship {
     //GameState.stockpiles.killAllEnemies();    
   }
 
-  public void collide(PhysicalObject object, Vector2d avoidVector) {
+  public void collide(Entity object, Vector2d avoidVector) {
     /*if (object instanceof Bullet) {
       damage(5);
     } else if (object instanceof EnemyShip) {

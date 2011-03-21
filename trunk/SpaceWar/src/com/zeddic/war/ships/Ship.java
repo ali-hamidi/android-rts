@@ -16,9 +16,9 @@
 
 package com.zeddic.war.ships;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 
-public class Ship extends PhysicalObject {
+public class Ship extends Entity {
 
   public float health;
   

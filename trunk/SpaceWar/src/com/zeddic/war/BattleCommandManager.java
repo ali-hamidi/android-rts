@@ -8,7 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.ProximityUtil;
@@ -17,7 +17,7 @@ import com.zeddic.war.ships.LocationTarget;
 import com.zeddic.war.ships.Target;
 import com.zeddic.war.util.HasPosition;
 
-public class BattleCommandManager extends GameObject {
+public class BattleCommandManager extends AbstractGameObject {
 
   private static final Paint PAINT;
   static {

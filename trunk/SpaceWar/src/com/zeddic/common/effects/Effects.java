@@ -18,13 +18,13 @@ package com.zeddic.common.effects;
 
 import android.graphics.Canvas;
 
-import com.zeddic.common.GameObject;
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.AbstractGameObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.util.ObjectPoolManager;
 import com.zeddic.common.util.ObjectStockpile;
 import com.zeddic.common.util.Vector2d;
 
-public class Effects extends GameObject {
+public class Effects extends AbstractGameObject {
 
   ObjectStockpile effects;
   
@@ -46,15 +46,15 @@ public class Effects extends GameObject {
     effects.createSupply(Implosion.class, 50);
   }
   
-  public void createSupply(Class<? extends GameObject> clazz, int number) {
+  public void createSupply(Class<? extends AbstractGameObject> clazz, int number) {
     effects.createSupply(clazz, number);
   }
   
-  public <T extends GameObject> ObjectPoolManager<T> getSupply(Class<T> clazz) {
+  public <T extends AbstractGameObject> ObjectPoolManager<T> getSupply(Class<T> clazz) {
     return effects.getSupply(clazz);
   }
   
-  public <T extends GameObject> T take(Class<T> clazz) {
+  public <T extends AbstractGameObject> T take(Class<T> clazz) {
     return effects.getSupply(clazz).take();
   } 
   
@@ -86,7 +86,7 @@ public class Effects extends GameObject {
   }
   
   public GravityExplosion explodeWithGravity(
-      float x, float y, PhysicalObject dest) {
+      float x, float y, Entity dest) {
     
     GravityExplosion explosion = effects.getSupply(GravityExplosion.class).take();
     if (explosion == null)

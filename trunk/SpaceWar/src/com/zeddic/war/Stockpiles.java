@@ -2,13 +2,13 @@ package com.zeddic.war;
 
 import android.graphics.Canvas;
 
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.util.ObjectStockpile;
 import com.zeddic.war.guns.Bullet;
 import com.zeddic.war.guns.ShardBullet;
 import com.zeddic.war.ships.FighterShip;
 
-public class Stockpiles extends GameObject {
+public class Stockpiles extends AbstractGameObject {
 
   //public ObjectStockpile enemies;
   public ObjectStockpile bullets;

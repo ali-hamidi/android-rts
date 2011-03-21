@@ -3,7 +3,7 @@ package com.zeddic.common.util;
 import android.graphics.Canvas;
 import android.util.Log;
 
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.util.ObjectPool.ObjectBuilder;
 
 /**
@@ -19,7 +19,7 @@ import com.zeddic.common.util.ObjectPool.ObjectBuilder;
  *
  * @param <T> The object that will make up the pool.
  */
-public class ObjectPoolManager<T extends GameObject> extends GameObject {
+public class ObjectPoolManager<T extends AbstractGameObject> extends AbstractGameObject {
   
   /** Default pool size to use if none is specified. */
   private static final int DEFAULT_POOL_SIZE = 50;
@@ -75,7 +75,7 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
         
         try {
           T gameObject = clazz.newInstance();
-          gameObject.active = false;
+          gameObject.enabled = false;
           gameObject.taken = false;
           gameObject.canRecycle = false;
           return gameObject;
@@ -113,7 +113,7 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
     T gameObject;
     for ( int i = 0 ; i < pool.items.length ; i++) {
       gameObject = pool.items[i];
-      if (gameObject.active)
+      if (gameObject.enabled)
         gameObject.draw(canvas);
     }
   }
@@ -125,13 +125,13 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
     T gameObject;
     for ( int i = 0 ; i < pool.items.length ; i++) {
       gameObject = pool.items[i];
-      if (gameObject.active) {
+      if (gameObject.enabled) {
         gameObject.update(time);
       }
       
       if (gameObject.canRecycle) {
         pool.restore(gameObject);
-        gameObject.active = false;
+        gameObject.enabled = false;
         gameObject.canRecycle = false;
         gameObject.taken = false;
       }
@@ -143,7 +143,7 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
    */
   public void activateAllItemsInPool() {
     for ( int i = 0 ; i < pool.items.length ; i++) {
-      pool.items[i].active = true;
+      pool.items[i].enabled = true;
     }
   }
   
@@ -154,7 +154,7 @@ public class ObjectPoolManager<T extends GameObject> extends GameObject {
     for ( int i = 0 ; i < pool.items.length ; i++) {
       if (pool.items[i].taken) {
         pool.items[i].reset();
-        pool.items[i].active = false;
+        pool.items[i].enabled = false;
         pool.items[i].canRecycle = false;
         pool.items[i].taken = false;
         pool.restore(pool.items[i]);

@@ -18,11 +18,11 @@ package com.zeddic.common.effects;
 
 import android.graphics.Canvas;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.particle.ParticleEmitter;
 import com.zeddic.common.particle.ParticleEmitter.ParticleEmitterBuilder;
 
-public class Explosion extends PhysicalObject {
+public class Explosion extends Entity {
 
   ParticleEmitter emitter;
   
@@ -54,16 +54,23 @@ public class Explosion extends PhysicalObject {
     emitter.reset();
   }
   
+  @Override
   public void draw(Canvas canvas) {
     emitter.draw(canvas);
   }
   
+  @Override
   public void update(long time) {
     super.update(time);
     emitter.x = this.x;
     emitter.y = this.y;
     emitter.update(time);
-    if (!emitter.active)
+    if (!emitter.enabled)
       kill();
+  }
+
+  @Override
+  public void reset() {
+    emitter.reset();
   }
 }

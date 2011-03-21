@@ -20,7 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.util.Vector2d;
 
 /**
@@ -31,7 +31,7 @@ import com.zeddic.common.util.Vector2d;
  * 
  * @author scott
  */
-public class Particle extends PhysicalObject {
+public class Particle extends Entity {
 
   /** Position in the game world. */
   //public float x;
@@ -70,7 +70,7 @@ public class Particle extends PhysicalObject {
   public float gravityWellForce = 5f;
   
   /** A gravity well, or object, that the particle should be pulled towards. */
-  public PhysicalObject gravityWell = null;
+  public Entity gravityWell = null;
   
   /** Max distance the gravity well can influence particles from. 0 for no limit. */
   public float gravityWellMaxDistance;
@@ -149,10 +149,11 @@ public class Particle extends PhysicalObject {
    * Main update loop responsible for updating the particle state
    * based on the amount of time passed.
    */
+  @Override
   public void update(long time) {
     super.update(time);
     
-    timeFraction = (float) time / PhysicalObject.TIME_SCALER;
+    timeFraction = (float) time / Entity.TIME_SCALER;
     
     // Check to see if the particle should be dead.
     life += time;
@@ -181,6 +182,7 @@ public class Particle extends PhysicalObject {
   /**
    * Draws the particle to the screen.
    */
+  @Override
   public void draw(Canvas c) {
     paint.setAlpha((int) alpha);
     
@@ -188,6 +190,11 @@ public class Particle extends PhysicalObject {
     // used to be. The length of the line is based on its current velocity.
     c.drawLine(x, y, x + -scaledVelocity.x, y + -scaledVelocity.y, paint);
     //c.drawCircle(x, y, scale, paint);
+  }
+  
+  @Override
+  public void reset() {
+  
   }
   
   /**

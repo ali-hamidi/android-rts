@@ -16,7 +16,7 @@
 
 package com.zeddic.war.guns;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.war.guns.control.GunControl;
 
 public class GunBuilder { 
@@ -29,7 +29,7 @@ public class GunBuilder {
   private static final int DEFAULT_RELOAD_TIME = 0;
   private static final Class<? extends Bullet> DEFAULT_BULLET = Bullet.class;
   
-  private PhysicalObject owner;
+  private Entity owner;
   private float xOffset = 0;
   private float yOffset = 0;
   private int multiplier = 1;
@@ -49,7 +49,7 @@ public class GunBuilder {
     
   }
   
-  public GunBuilder withOwner(PhysicalObject owner) {
+  public GunBuilder withOwner(Entity owner) {
     this.owner = owner;
     return this;
   }

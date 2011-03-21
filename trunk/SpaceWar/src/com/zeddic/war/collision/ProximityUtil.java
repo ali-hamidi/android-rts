@@ -1,6 +1,6 @@
 package com.zeddic.war.collision;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
 
 public class ProximityUtil {
@@ -15,10 +15,10 @@ public class ProximityUtil {
   
   
   
-  private static SimpleList<PhysicalObject> objects = SimpleList.create(PhysicalObject.class);
+  private static SimpleList<Entity> objects = SimpleList.create(Entity.class);
   private static SimpleList<CollisionCell> cells = SimpleList.create(CollisionCell.class);
   
-  public static SimpleList<PhysicalObject> getNearbyObjects(
+  public static SimpleList<Entity> getNearbyObjects(
       Class<?> targetClass,
       float x,
       float y,
@@ -27,7 +27,7 @@ public class ProximityUtil {
     CollisionGrid grid = CollisionSystem.get().getGrid();
     grid.getCellsWithinRadius(x, y, radius, cells);
 
-    PhysicalObject object;
+    Entity object;
     CollisionCell cell;
     float maxDistance = radius * radius;
     
@@ -42,7 +42,7 @@ public class ProximityUtil {
         
         object = cell.items.items[j];
         
-        if (!object.active) {
+        if (!object.enabled) {
           continue;
         }
         
@@ -65,16 +65,16 @@ public class ProximityUtil {
     return objects;
   }
   
-  public static PhysicalObject getClosest(Class<?> targetClass, float x, float y, float distance) {
+  public static Entity getClosest(Class<?> targetClass, float x, float y, float distance) {
     return getClosest(targetClass, x, y, distance, null);
   }
   
-  public static PhysicalObject getClosest(Class<?> targetClass, float x, float y, float distance, PhysicalObject exclude) {
+  public static Entity getClosest(Class<?> targetClass, float x, float y, float distance, Entity exclude) {
     
     float minDistanceSquared = Float.MAX_VALUE;
-    PhysicalObject target = null;
-    PhysicalObject object;
-    SimpleList<PhysicalObject> result = getNearbyObjects(targetClass, x, y, distance);
+    Entity target = null;
+    Entity object;
+    SimpleList<Entity> result = getNearbyObjects(targetClass, x, y, distance);
     
     for (int i = 0; i < result.size; i++) {
       object = result.items[i];
@@ -96,7 +96,7 @@ public class ProximityUtil {
   }
   
   public static class ProximityResult {
-    public PhysicalObject[] objects;
+    public Entity[] objects;
     public int hits;
   }
 }

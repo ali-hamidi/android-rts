@@ -3,14 +3,14 @@ package com.zeddic.common.util;
 import android.graphics.Canvas;
 
 import com.zeddic.common.Component;
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 
-public class ComponentManager extends GameObject {
+public class ComponentManager extends AbstractGameObject {
 
   SimpleList<Component> components;
-  GameObject parent;
+  AbstractGameObject parent;
   
-  public ComponentManager(GameObject parent) {
+  public ComponentManager(AbstractGameObject parent) {
     this.components = new SimpleList<Component>(Component.class);
     this.parent = parent;
   }

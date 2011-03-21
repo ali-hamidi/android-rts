@@ -1,13 +1,13 @@
 package com.zeddic.war.collision;
 
 import com.zeddic.common.Component;
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 
 public class CollideComponent extends Component {
 
   private final CollisionSystem collisionSystem;
   public final CollideBehavior behavior;
-  public final PhysicalObject entity;
+  public final Entity entity;
   public boolean enabled;
   public CollisionCell currentCell;
 
@@ -15,14 +15,14 @@ public class CollideComponent extends Component {
   private float lastY = 0;
   
   public CollideComponent(
-      PhysicalObject entity,
+      Entity entity,
       CollideBehavior behavior) {
     this(CollisionSystem.get(), entity, behavior);
   }
   
   public CollideComponent(
       CollisionSystem collisionSystem,
-      PhysicalObject entity,
+      Entity entity,
       CollideBehavior behavior) {
     this.collisionSystem = collisionSystem;
     this.behavior = behavior;
@@ -85,9 +85,9 @@ public class CollideComponent extends Component {
   @Override
   public void update(long time) {
     
-    setEnabled(entity.active);
+    setEnabled(entity.enabled);
     
-    if (entity.active && behavior != CollideBehavior.HIT_ONLY) {
+    if (entity.enabled && behavior != CollideBehavior.HIT_ONLY) {
       if (lastX != entity.x || lastY != entity.y) {
         collisionSystem.update(this);
       }

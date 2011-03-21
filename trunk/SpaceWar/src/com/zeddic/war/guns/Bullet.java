@@ -20,14 +20,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.effects.Effects;
-import com.zeddic.common.util.Bounds;
-import com.zeddic.common.util.Circle;
 import com.zeddic.common.util.ComponentManager;
 import com.zeddic.common.util.Vector2d;
 
-public class Bullet extends PhysicalObject {
+public class Bullet extends Entity {
 
   private static final long DEFAULT_MAX_LIFE = 4000;
   
@@ -50,12 +48,12 @@ public class Bullet extends PhysicalObject {
   
   public Bullet() {
     this(0, 0);
+    this.radius = 4;
   }
   
   public Bullet(float x, float y) {
     super(x, y);
 
-    bounds = new Bounds(new Circle(4));
     life = 0;
     maxLife = DEFAULT_MAX_LIFE;
     
@@ -74,13 +72,12 @@ public class Bullet extends PhysicalObject {
   
   public void reset() {
     life = 0;
-    active = true;
+    enabled = true;
     canRecycle = false;
   }
   
   @Override
   public void draw(Canvas canvas) {
-    super.draw(canvas);
     canvas.drawLine(x, y, x + -velocity.x / 6, y + -velocity.y / 6, PAINT);
   }
   
@@ -106,7 +103,7 @@ public class Bullet extends PhysicalObject {
   }
   
   @Override
-  public void collide(PhysicalObject other, Vector2d avoidVector) {
+  public void collide(Entity other, Vector2d avoidVector) {
     super.collide(other, avoidVector);
     Effects.get().hit(x, y, avoidVector);
     kill();

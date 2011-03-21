@@ -20,11 +20,11 @@ import android.graphics.Canvas;
 import android.util.FloatMath;
 
 import com.zeddic.common.Component;
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 
 public class StraightPath extends Component {
 
-  private PhysicalObject parent;
+  private Entity parent;
   private Target target;
   private float waitDistance;
   private float speed;
@@ -37,7 +37,7 @@ public class StraightPath extends Component {
   private float lastTargetY = 0;
   
   public StraightPath(
-      PhysicalObject parent,
+      Entity parent,
       float waitDistance,
       float speed) {
     

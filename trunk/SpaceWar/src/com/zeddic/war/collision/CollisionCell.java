@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.TileBounds.EdgeType;
@@ -28,7 +28,7 @@ public class CollisionCell {
   }
 
   private TileBounds bounds = TileBounds.EMPTY;
-  public SimpleList<PhysicalObject> items;
+  public SimpleList<Entity> items;
   
   private boolean active;
   private float top;
@@ -50,7 +50,7 @@ public class CollisionCell {
     top = row * CollisionSystem.SIZE;
     left = col * CollisionSystem.SIZE;
     active = false;
-    items = new SimpleList<PhysicalObject>(PhysicalObject.class, INITIAL_CAPACITY);
+    items = new SimpleList<Entity>(Entity.class, INITIAL_CAPACITY);
   }
   
   public void setBounds(TileBounds bounds) {
@@ -123,7 +123,7 @@ public class CollisionCell {
   
   Vector2d projection = new Vector2d();
  
-  public void collide(PhysicalObject entity) {
+  public void collide(Entity entity) {
     
     if (bounds.isEmpty()) {
       return;
@@ -192,19 +192,19 @@ public class CollisionCell {
   /**
    * Adds a new object to this grid position.
    */
-  public void add(PhysicalObject object) {
+  public void add(Entity object) {
     items.add(object);
   }
   
   
-  public boolean contains(PhysicalObject object) {
+  public boolean contains(Entity object) {
     return items.contains(object);
   }
   
   /**
    * Removes an object from the grid spot.
    */
-  public void remove(PhysicalObject object) {
+  public void remove(Entity object) {
     items.remove(object);
   }
 }
