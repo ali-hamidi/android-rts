@@ -23,13 +23,13 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.view.MotionEvent;
 
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 
 /**
  * A game object that draws a joystick. The object gets user input
  * and updates relevant state.
  */
-public class JoystickControl extends GameObject {
+public class JoystickControl extends AbstractGameObject {
 
   /** How large the joystick input circle should be. */
   public static final float BORDER_RADIUS = 100;
@@ -307,5 +307,10 @@ public class JoystickControl extends GameObject {
    */
   private float getMaximumJoystickDistance() {
     return BORDER_RADIUS - 1 - JOYSTICK_RADIUS; 
+  }
+
+  @Override
+  public void update(long time) {
+    // Nothing to update.
   }
 }

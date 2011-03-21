@@ -33,8 +33,7 @@ public class ShardBullet extends Bullet {
   
   public ShardBullet(float x, float y) {
     super(x, y);
-    
-    bounds = new Bounds(new Circle(8));
+    this.radius = 8;
   }
   
   @Override

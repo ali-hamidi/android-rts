@@ -19,14 +19,14 @@ package com.zeddic.war.guns;
 import android.graphics.Canvas;
 
 import com.zeddic.common.Component;
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.war.GameState;
 import com.zeddic.war.guns.control.GunControl;
 
 public class Gun extends Component {
   
-  protected PhysicalObject owner;
+  protected Entity owner;
   protected int fireCooldown;
   protected float fireOffset;
   protected float bulletSpeed;
@@ -123,7 +123,7 @@ public class Gun extends Component {
       }
       bullet.x = owner.x + xOffset;
       bullet.y = owner.y + yOffset;
-      bullet.setAngle(fireAngle);
+      bullet.angle = fireAngle;
       bullet.setVelocityBySpeed(fireAngle, bulletSpeed);
       bullet.offset(fireOffset);
       
@@ -161,7 +161,7 @@ public class Gun extends Component {
     }
   }
   
-  public void setOwner(PhysicalObject owner) {
+  public void setOwner(Entity owner) {
     this.owner = owner;
   }
   

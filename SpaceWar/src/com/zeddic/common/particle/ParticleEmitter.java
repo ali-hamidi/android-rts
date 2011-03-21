@@ -21,7 +21,7 @@ import java.util.Random;
 import android.graphics.Canvas;
 import android.util.Log;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.util.ObjectPoolManager;
 import com.zeddic.common.util.ObjectPool.ObjectBuilder;
 
@@ -37,7 +37,7 @@ import com.zeddic.common.util.ObjectPool.ObjectBuilder;
  * @author scott (scott@zeddic.com)
  *
  */
-public class ParticleEmitter extends PhysicalObject {
+public class ParticleEmitter extends Entity {
 
   //// SPAWN MODES
   // Avoiding an enum here due to high speed costs associated with them
@@ -124,7 +124,7 @@ public class ParticleEmitter extends PhysicalObject {
    * A gravity well (object) that particles should be pulled towards. Null,
    * default, means there is no gravity well.
    */
-  public PhysicalObject pGravityWell;
+  public Entity pGravityWell;
   
   /** The force at which the gravity well pulls on particles. */
   public float pGravityWellForce;
@@ -181,7 +181,7 @@ public class ParticleEmitter extends PhysicalObject {
             Particle particle = null;
             try {
               particle = pClass.newInstance();
-              particle.active = false;
+              particle.enabled = false;
             } catch (IllegalAccessException e) {
               Log.e(this.getClass().toString(), "Error creating particle", e);
             } catch (InstantiationException e) {
@@ -339,7 +339,7 @@ public class ParticleEmitter extends PhysicalObject {
     float pLife = 1000;
     float pAlpha = 255;
     float pAlphaRate = 0;
-    PhysicalObject pGravityWell;
+    Entity pGravityWell;
     float pGravityWellForce;
     float pGravityWellMaxDistance = 0;
     float pGravityWellDespawnDistance = 0;
@@ -442,7 +442,7 @@ public class ParticleEmitter extends PhysicalObject {
     }
     
     public ParticleEmitterBuilder withGravityWell(
-        PhysicalObject well,
+        Entity well,
         float force) {
       
       this.pGravityWell = well;

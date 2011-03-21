@@ -1,6 +1,6 @@
 package com.zeddic.common.effects;
 
-import com.zeddic.common.PhysicalObject;
+import com.zeddic.common.Entity;
 import com.zeddic.common.particle.MoneyParticle;
 import com.zeddic.common.particle.ParticleEmitter;
 import com.zeddic.common.particle.ParticleEmitter.ParticleEmitterBuilder;
@@ -38,7 +38,7 @@ public class GravityExplosion extends Explosion {
     emitter.pGravityWellForce = 25;
   }
   
-  public void ignite(PhysicalObject destination) {
+  public void ignite(Entity destination) {
     super.ignite();
     emitter.pGravityWell = destination;
   }

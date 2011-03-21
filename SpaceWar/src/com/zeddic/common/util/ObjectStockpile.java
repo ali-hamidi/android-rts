@@ -5,7 +5,7 @@ import java.util.Map;
 
 import android.graphics.Canvas;
 
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 
 /**
  * Creates and manages multiple object pools of different classes. A pool
@@ -31,18 +31,18 @@ import com.zeddic.common.GameObject;
  * 
  * @author scott@zeddic.com
  */
-public class ObjectStockpile extends GameObject {
+public class ObjectStockpile extends AbstractGameObject {
   
-  public Map<Class<? extends GameObject>, ObjectPoolManager<? extends GameObject>> supply;
+  public Map<Class<? extends AbstractGameObject>, ObjectPoolManager<? extends AbstractGameObject>> supply;
     
   public ObjectStockpile() {
-    supply = new HashMap<Class<? extends GameObject>, ObjectPoolManager<? extends GameObject>>();
+    supply = new HashMap<Class<? extends AbstractGameObject>, ObjectPoolManager<? extends AbstractGameObject>>();
   }
  
   /**
    * Creates a new supply of the specified class.
    */
-  public <T extends GameObject> ObjectPoolManager<T> createSupply(
+  public <T extends AbstractGameObject> ObjectPoolManager<T> createSupply(
       Class<T> shipType, int maxShips) {
     
     ObjectPoolManager<T> pool = new ObjectPoolManager<T>(shipType, maxShips);
@@ -55,7 +55,7 @@ public class ObjectStockpile extends GameObject {
    * and restoring them to their respective pools.
    */
   public void reset() {
-    for (ObjectPoolManager<? extends GameObject> pool : supply.values()) {
+    for (ObjectPoolManager<? extends AbstractGameObject> pool : supply.values()) {
       pool.reclaimPool();
     }
   }
@@ -64,7 +64,7 @@ public class ObjectStockpile extends GameObject {
    * Calls the update method on all currently enabled objects in all pools.
    */
   public void update(long time) {
-    for (ObjectPoolManager<? extends GameObject> pool : supply.values()) {
+    for (ObjectPoolManager<? extends AbstractGameObject> pool : supply.values()) {
       pool.update(time);
     }
   }
@@ -73,7 +73,7 @@ public class ObjectStockpile extends GameObject {
    * Calls the draw method on all currently enabled objects in all pools.
    */
   public void draw(Canvas canvas) {
-    for (ObjectPoolManager<? extends GameObject> pool : supply.values()) {
+    for (ObjectPoolManager<? extends AbstractGameObject> pool : supply.values()) {
       pool.draw(canvas);
     }
   }
@@ -82,7 +82,7 @@ public class ObjectStockpile extends GameObject {
    * Obtains a single object pool for the specified class.
    */
   @SuppressWarnings("unchecked")
-  public <T extends GameObject> ObjectPoolManager<T> getSupply(Class<T> shipType) {
+  public <T extends AbstractGameObject> ObjectPoolManager<T> getSupply(Class<T> shipType) {
     return (ObjectPoolManager<T>) supply.get(shipType);
   }
   
@@ -91,7 +91,7 @@ public class ObjectStockpile extends GameObject {
    * the pool has run out of instances.
    */
   @SuppressWarnings("unchecked")
-  public <T extends GameObject> T take(Class<T> shipType) {
+  public <T extends AbstractGameObject> T take(Class<T> shipType) {
     return (T) supply.get(shipType).take();
   }
 }

@@ -23,9 +23,9 @@ import android.graphics.Path;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 
-public class Map extends GameObject {
+public class Map extends AbstractGameObject {
   
   private static final float EDGE_BUFFER = 0;
   private static final float SPAWN_BUFFER = 50;

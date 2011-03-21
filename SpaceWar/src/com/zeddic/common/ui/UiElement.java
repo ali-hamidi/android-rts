@@ -19,11 +19,12 @@ package com.zeddic.common.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Canvas;
 import android.view.MotionEvent;
 
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 
-public class UiElement extends GameObject {
+public class UiElement extends AbstractGameObject {
   public float width;
   public float height;
   public float x;
@@ -93,5 +94,23 @@ public class UiElement extends GameObject {
     float eY = e.getY();
     return !(eX < x || eX > x + width ||
              eY < y || eY > y + height);
+  }
+
+  @Override
+  public void draw(Canvas canvas) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void reset() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void update(long time) {
+    // TODO Auto-generated method stub
+    
   }  
 }

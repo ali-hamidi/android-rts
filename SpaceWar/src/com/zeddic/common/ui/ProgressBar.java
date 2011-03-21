@@ -21,9 +21,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 
-import com.zeddic.common.GameObject;
+import com.zeddic.common.AbstractGameObject;
 
-public class ProgressBar extends GameObject {
+public class ProgressBar extends AbstractGameObject {
 
   public static float WIDTH = 200;
   public static float HEIGHT = 20;
@@ -64,5 +64,10 @@ public class ProgressBar extends GameObject {
     float progress = value * WIDTH / max;
     paint.setStyle(Style.FILL);
     c.drawRect(x, y, x + progress, y + HEIGHT, paint);
+  }
+
+  @Override
+  public void reset() {
+    // Nothing to reset.
   }
 }

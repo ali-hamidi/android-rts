@@ -26,7 +26,7 @@ import android.graphics.Canvas;
  */
 public class Component {
   
-  public GameObject parent;
+  public AbstractGameObject parent;
   
   public void draw(Canvas canvas) {
     
