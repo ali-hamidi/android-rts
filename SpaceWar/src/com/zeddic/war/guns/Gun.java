@@ -18,13 +18,13 @@ package com.zeddic.war.guns;
 
 import android.graphics.Canvas;
 
-import com.zeddic.common.Component;
 import com.zeddic.common.Entity;
+import com.zeddic.common.GameObject;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.war.GameState;
 import com.zeddic.war.guns.control.GunControl;
 
-public class Gun extends Component {
+public class Gun implements GameObject {
   
   protected Entity owner;
   protected int fireCooldown;

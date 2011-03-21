@@ -23,7 +23,7 @@ import android.graphics.Paint;
 import com.zeddic.common.Entity;
 import com.zeddic.common.util.Bounds;
 import com.zeddic.common.util.Circle;
-import com.zeddic.common.util.ComponentManager;
+import com.zeddic.common.util.Components;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.common.util.Polygon;
 import com.zeddic.common.util.Vector2d;
@@ -54,7 +54,7 @@ public class FighterShip extends Ship {
   public float health = 200;
   private Countdown soundCountdown = new Countdown(400);
   private Gun gun;
-  private ComponentManager components;
+  private Components components;
   private float speed;
   private Target target;
   private StraightPath path;
@@ -75,7 +75,7 @@ public class FighterShip extends Ship {
     
     path = new StraightPath(this, 5, speed);
     
-    components = new ComponentManager(this);
+    components = new Components();
     components.add(new CollideComponent(this, CollideBehavior.HIT_RECEIVE));
     components.add(path);
     //components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));

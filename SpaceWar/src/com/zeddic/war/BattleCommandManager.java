@@ -1,8 +1,5 @@
 package com.zeddic.war;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,7 +12,6 @@ import com.zeddic.war.collision.ProximityUtil;
 import com.zeddic.war.ships.FighterShip;
 import com.zeddic.war.ships.LocationTarget;
 import com.zeddic.war.ships.Target;
-import com.zeddic.war.util.HasPosition;
 
 public class BattleCommandManager extends AbstractGameObject {
 
@@ -173,7 +169,7 @@ public class BattleCommandManager extends AbstractGameObject {
     return toReturn;
   }
   
-  private static class Selection implements HasPosition {
+  private static class Selection {
     private FighterShip ship;
     private Target target;
     
@@ -191,12 +187,10 @@ public class BattleCommandManager extends AbstractGameObject {
       return ship != null;
     }
 
-    @Override
     public float getX() {
       return ship != null ? ship.x : target.getX();
     }
 
-    @Override
     public float getY() {
       return ship != null ? ship.y : target.getY();
     }
