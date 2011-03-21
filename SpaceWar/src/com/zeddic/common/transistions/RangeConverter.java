@@ -1,5 +1,7 @@
 package com.zeddic.common.transistions;
 
+import com.zeddic.common.transistions.Transitions.TransitionType;
+
 /**
  * A utility method that converts a value in one range into a value of another
  * range. For example: a value of 5 in the range [0-10] would correspond to the
@@ -22,19 +24,19 @@ package com.zeddic.common.transistions;
 public class RangeConverter {
   private Range from;
   private Range to;
-  private int transition = Transitions.LINEAR;
+  private TransitionType transitionType = TransitionType.LINEAR;
   
   public RangeConverter(Range from, Range to) {
-    this(from, to, Transitions.LINEAR);
+    this(from, to, TransitionType.LINEAR);
   }
   
-  public RangeConverter(Range from, Range to, int transition) {
+  public RangeConverter(Range from, Range to, TransitionType transitionType) {
     this.from = from;
     this.to = to;
-    this.transition = transition;
+    this.transitionType = transitionType;
   }
   
   public float convert(float value) {
-    return from.convertValueToOtherRange(value, to, transition);
+    return from.convertValueToOtherRange(value, to, transitionType);
   }
 }
