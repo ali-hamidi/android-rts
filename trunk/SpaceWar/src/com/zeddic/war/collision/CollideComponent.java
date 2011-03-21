@@ -1,9 +1,11 @@
 package com.zeddic.war.collision;
 
-import com.zeddic.common.Component;
-import com.zeddic.common.Entity;
+import android.graphics.Canvas;
 
-public class CollideComponent extends Component {
+import com.zeddic.common.Entity;
+import com.zeddic.common.GameObject;
+
+public class CollideComponent implements GameObject {
 
   private final CollisionSystem collisionSystem;
   public final CollideBehavior behavior;
@@ -92,26 +94,16 @@ public class CollideComponent extends Component {
         collisionSystem.update(this);
       }
     }
-    
-    //if (entity.active) {
-    //  setEnabled(true);
-    //}
-    
-    //try {
-      
-      
-      // CollisionManager.get().updatePosition(this);
-      
-      
-      //if (type == CollisionManager.TYPE_HIT_ONLY || 
-      //    type == CollisionManager.TYPE_HIT_RECEIVE) {
-      //  CollisionManager.get().checkForCollision(this, time); 
-      //} else if (type == CollisionManager.TYPE_RECEIVE_ONLY) {
-        
-      //}
-    //} catch (Exception e) {
-    //  Log.e(CollisionComponent.class.getName(),"Error detecting collision:", e);
-    //}
+  }
+
+  @Override
+  public void draw(Canvas canvas) {
+    // Do nothing.
+  }
+
+  @Override
+  public void reset() {
+    // Do nothing.
   }
 }
 

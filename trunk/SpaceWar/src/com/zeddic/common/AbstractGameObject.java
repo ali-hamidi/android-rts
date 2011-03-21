@@ -1,7 +1,5 @@
 package com.zeddic.common;
 
-import com.zeddic.war.util.GameObject;
-
 public abstract class AbstractGameObject implements GameObject {
 
   /** Whether an object should be drawn and updated. */

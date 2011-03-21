@@ -22,7 +22,7 @@ import android.graphics.Paint;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.effects.Effects;
-import com.zeddic.common.util.ComponentManager;
+import com.zeddic.common.util.Components;
 import com.zeddic.common.util.Vector2d;
 
 public class Bullet extends Entity {
@@ -43,7 +43,7 @@ public class Bullet extends Entity {
   public long maxLife;
   public boolean firedByEnemy = false;
   
-  private ComponentManager components;
+  private Components components;
   //private CollisionComponent collisionComponent;
   
   public Bullet() {
@@ -59,7 +59,7 @@ public class Bullet extends Entity {
     
     //collisionComponent = new CollisionComponent(this, CollisionManager.TYPE_HIT_ONLY);
     
-    components = new ComponentManager(this);
+    components = new Components();
     //components.add(collisionComponent);
     //components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
   }

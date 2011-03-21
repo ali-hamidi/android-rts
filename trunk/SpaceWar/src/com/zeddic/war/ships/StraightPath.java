@@ -19,10 +19,10 @@ package com.zeddic.war.ships;
 import android.graphics.Canvas;
 import android.util.FloatMath;
 
-import com.zeddic.common.Component;
 import com.zeddic.common.Entity;
+import com.zeddic.common.GameObject;
 
-public class StraightPath extends Component {
+public class StraightPath implements GameObject {
 
   private Entity parent;
   private Target target;
