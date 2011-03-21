@@ -6,56 +6,39 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.zeddic.common.util.ResourceLoader;
+import com.zeddic.war.level.Level.LevelBuilder;
+
 
 public class FileLevelLoader implements LevelLoader {
 
   private static final String PROPERTY_SEPERATOR = ":";
   private static final String PROPERTY_LEVEL_NAME = "Name";
-  private static final String PROPERTY_SPAWN_X = "SpawnX";
-  private static final String PROPERTY_SPAWN_Y = "SpawnY";
   private static final String PROPERTY_TILES = "Tiles";
   private static final String MAP_LINE_START = "[";
   private static final String MAP_LINE_END = "]";
+  private static final String PROPERTY_ROWS = "Rows";
+  private static final String PROPERTY_COLS = "Cols";
   
   
   @Override
   public Level load(String file) throws IOException {
-    InputStream inputStream = new FileInputStream("res/levels/1.txt");
+    InputStream inputStream = ResourceLoader.loadAsset(file);
+    Level loadedLevel = null;
     
     try {
       InputStreamReader inputReader = new InputStreamReader(inputStream);
       BufferedReader reader = new BufferedReader(inputReader);
       
-      loadMetadata(reader);
+      loadedLevel = parseMap(reader);
 
     } catch (IOException e) {
-      
+      throw e;
     } finally {
       inputStream.close();
     }
     
-    return null;
-  }
-  
-  
-  /*public Level loadLevel(String fileName) throws IOException {
-
-    
-    
-    if (level.swarms.size() == 0 && !metadataOnly) {
-      throw new IOException("No swarms were loaded in the level " + fileName);
-    }
-
-    return level;
-  } */
-  
-  public void loadMetadata(BufferedReader reader) throws IOException {
-    
-    String levelName = getValue(reader, PROPERTY_LEVEL_NAME);
-    int spawnX = parseInt(getValue(reader, PROPERTY_SPAWN_X));
-    int spawnY = parseInt(getValue(reader, PROPERTY_SPAWN_Y));
-    
-    reader.readLine();
+    return loadedLevel;
   }
   
   private String getValue(BufferedReader reader, String propName) throws IOException {
@@ -84,16 +67,43 @@ public class FileLevelLoader implements LevelLoader {
     reader.readLine();
   }*/
   
-  /**
-   * Loads all the swarms in the file and adds them to the level instance.
-   */
-  /*private void loadSwarms(BufferedReader reader) throws IOException {
+  private Level parseMap(BufferedReader reader) throws IOException {
+    LevelBuilder loadedLevelBuilder = new LevelBuilder();
+    int rows = 0;
+    int cols = 0;
     
-    Swarm loaded;
-    while ( (loaded = loadSwarm(reader)) != null) {
-      level.addSwarm(loaded);
+    String line;
+    while ((line = reader.readLine()) != null) {
+      SimpleProperty prop = loadProperty(line);
+      if (prop.name.equalsIgnoreCase(PROPERTY_ROWS)) {
+        rows = parseInt(prop.value);
+      } else if (prop.name.equalsIgnoreCase(PROPERTY_COLS)) {
+        cols = parseInt(prop.value);
+      }
+      else if (prop.name.equalsIgnoreCase(PROPERTY_TILES)) {
+        if (rows == 0 || cols == 0) {
+          throw new IOException("Invalid Map Size specified or Map Size Missing: "
+              + rows + ", " + cols);
+        }
+        loadedLevelBuilder.withGridSize(rows, cols);
+        for (int r = 0; r < rows; r++) {
+          line = reader.readLine();
+          for (int c = 0; c < cols; c++) {
+            char tileType = line.charAt(c);
+            TileType typeToCreate = TileType.EMPTY;
+            switch (tileType) {
+              case '1':
+                typeToCreate = TileType.SOLID_ROCK;
+                break;
+            }
+            loadedLevelBuilder.addTile(r, c, typeToCreate);
+          }
+        }
+      }
     }
-  } */
+    
+    return loadedLevelBuilder.build();
+  }
   
   /**
    * Returns a single swarm loaded from the reader. Returns null if the
@@ -147,6 +157,7 @@ public class FileLevelLoader implements LevelLoader {
  
   /**
    * Parses a pattern until either the end of the file or a new line is reached.
+   * @param loadedLevelBuilder 
    */
   /*private void parseMap(BufferedReader reader) throws IOException {
     
@@ -177,8 +188,7 @@ public class FileLevelLoader implements LevelLoader {
     spawnPattern.parsePattern(pattern.toString());
     return spawnPattern;
   } */
-  
-  
+
   /**
    * Loads a key/value pair from a single line.
    */

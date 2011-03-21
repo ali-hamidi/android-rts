@@ -14,7 +14,7 @@ public class MockLevelLoader implements LevelLoader {
   private static final int[][] SPOTS = {
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+      {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
       {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0},
@@ -25,19 +25,12 @@ public class MockLevelLoader implements LevelLoader {
   };
   private static final int COLS = SPOTS[0].length;
   private static final int ROWS = SPOTS.length;
-  private final float worldWidth;
-  private final float worldHeight;
-  
-  public MockLevelLoader(float width, float height) {
-    this.worldWidth = width;
-    this.worldHeight = height;
-  }
   
   @Override
   public Level load(String file) {
     
     LevelBuilder builder = new LevelBuilder();
-    builder.withSize(worldWidth, worldHeight);
+    builder.withGridSize(ROWS, COLS);
     for (int row = 0; row < ROWS; row++) {
       for (int col = 0; col < COLS; col++) {   
         TileType type = TileType.EMPTY;
