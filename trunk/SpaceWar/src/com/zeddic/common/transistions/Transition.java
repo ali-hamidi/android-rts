@@ -16,24 +16,25 @@
 
 package com.zeddic.common.transistions;
 
-public class Transition {
+import android.graphics.Canvas;
 
+import com.zeddic.common.GameObject;
+import com.zeddic.common.transistions.Transitions.TransitionType;
+
+public class Transition implements GameObject {
+
+  public boolean finished;
   
   private float start;
   private float end;
   private long milliseconds;
-  private int type;
-  
-  public boolean finished;
-  
+  private TransitionType type;
   private long passedTime;
   private float progress;
-  
   private boolean autoReset;
   private boolean autoReverse;
-  
-  
-  public Transition(float start, float end, long milliseconds, int type) {
+
+  public Transition(float start, float end, long milliseconds, TransitionType type) {
     this.start = start;
     this.end = end;
     this.milliseconds = milliseconds;
@@ -53,12 +54,6 @@ public class Transition {
     this.autoReverse = autoReverse;
   }
   
-  public void reset() {
-    passedTime = 0;
-    finished = false;
-    updateProgress();
-  }
-  
   public void reverse() {
     float temp = start;
     start = end;
@@ -74,7 +69,8 @@ public class Transition {
     return progress;
   }
   
-  public float update(long time) {
+  @Override
+  public void update(long time) {
     passedTime += time;
     if (passedTime >= milliseconds) {
       finished = true;
@@ -88,16 +84,25 @@ public class Transition {
     }
     
     updateProgress();
-    
-    
-    return progress;
+  }
+
+  @Override
+  public void draw(Canvas canvas) { 
+    // Nothing to draw. 
   }
   
+  @Override
+  public void reset() {
+    passedTime = 0;
+    finished = false;
+    updateProgress();
+  }
+
   public void updateProgress() {
     if (finished) {
       progress = end;
     }
-    
+
     double ratio = (double) passedTime / (double) milliseconds;
     if (ratio >= 1) {
       ratio = 1;

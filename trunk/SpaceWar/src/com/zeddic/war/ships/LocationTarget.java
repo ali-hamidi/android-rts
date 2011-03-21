@@ -12,7 +12,7 @@ import com.zeddic.common.Entity;
 import com.zeddic.common.transistions.Range;
 import com.zeddic.common.transistions.RangeConverter;
 import com.zeddic.common.transistions.Transition;
-import com.zeddic.common.transistions.Transitions;
+import com.zeddic.common.transistions.Transitions.TransitionType;
 import com.zeddic.common.util.Vector2d;
 
 public class LocationTarget implements Target {
@@ -28,7 +28,7 @@ public class LocationTarget implements Target {
   
   private float x;
   private float y;
-  private final Transition sizeTransition = new Transition(5, 25, 1000, Transitions.EASE_IN_OUT);
+  private final Transition sizeTransition = new Transition(5, 25, 1000, TransitionType.EASE_IN_OUT);
   private static final RangeConverter ALPHA = new RangeConverter(new Range(15, 25), new Range(255, 50));
   private final List<Entity> followers = new ArrayList<Entity>();
   

@@ -20,39 +20,42 @@ public class Transitions {
   private static final double PI = 3.14159265358;
   private static final double EULER = 2.718281828459045;
   
-  /**
-   * The value changes directly proportional to the time.
-   * This transition has the danger of appearing jerky.
-   */
-  public static final int LINEAR = 1;
-  
-  /**
-   * This starts out quickly then slows down as its finishing.
-   */
-  public static final int LOG = 2;
-  
-  /**
-   * This starts slowly and near the end is very quick.
-   */
-  public static final int EXPONENTIAL = 3;
-  
-  /**
-   * This transition starts out slowly, until it hits
-   * its max speed, then slows down again before finishing.
-   * Think of this as as the way you drive your car.
-   */
-  public static final int EASE_IN_OUT = 4;
-  
-  /**
-   * Transition starts out quickly, overshoots its final value,
-   * then wobbles back and forth before settling on the
-   * final value.
-   */
-  public static final int SPRING = 5;
+  public enum TransitionType {
+    
+    /**
+     * The value changes directly proportional to the time.
+     * This transition has the danger of appearing jerky.
+     */
+    LINEAR,
+    
+    /**
+     * This starts out quickly then slows down as its finishing.
+     */
+    LOG,
+    
+    /**
+     * This starts slowly and near the end is very quick.
+     */
+    EXPONENTIAL,
+    
+    /**
+     * This transition starts out slowly, until it hits
+     * its max speed, then slows down again before finishing.
+     * Think of this as as the way you drive your car.
+     */
+    EASE_IN_OUT,
+    
+    /**
+     * Transition starts out quickly, overshoots its final value,
+     * then wobbles back and forth before settling on the
+     * final value.
+     */
+    SPRING,
+  }
 
-  public static double getProgress(int transitionType, double timeProgress) {
+  public static double getProgress(TransitionType transition, double timeProgress) {
  
-    switch (transitionType) {
+    switch (transition) {
       case LINEAR: return getLinearProgress(timeProgress);
       case LOG: return getLogProgress(timeProgress);
       case EXPONENTIAL: return getExponentialProgress(timeProgress);

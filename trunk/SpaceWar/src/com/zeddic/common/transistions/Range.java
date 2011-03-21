@@ -1,10 +1,11 @@
 package com.zeddic.common.transistions;
 
+import com.zeddic.common.transistions.Transitions.TransitionType;
+
 /**
  * Represents a maximum and minimum range of values.
  * 
- * @author baileys
- *
+ * @author scott@zeddic.com (Scott Bailey)
  */
 public class Range {
 
@@ -24,10 +25,10 @@ public class Range {
    * within the range.
    */
   public float getValue(float progress) {
-    return getValue(progress, Transitions.LINEAR);
+    return getValue(progress, TransitionType.LINEAR);
   }
   
-  public float getValue(float progress, int transitionType) {
+  public float getValue(float progress, TransitionType transitionType) {
     progress = (float) Transitions.getProgress(transitionType, progress);
     return min + progress * (max - min);
   }
@@ -44,7 +45,7 @@ public class Range {
   /**
    * Converts a value to a percent range using the given transition type.
    */
-  public float getProgress(float value, int transitionType) {
+  public float getProgress(float value, TransitionType transitionType) {
     return (float) Transitions.getProgress(transitionType, getProgress(value, min, max));
   }
   
@@ -61,7 +62,7 @@ public class Range {
    * Converts a value in this range to a corresponding value in another range,
    * applying the given transition type in to the destination range.
    */
-  public float convertValueToOtherRange(float value, Range range, int transitionType) {
+  public float convertValueToOtherRange(float value, Range range, TransitionType transitionType) {
     float progress = getProgress(value, transitionType);
     return (progress * (range.max - range.min) + range.min);
   }
