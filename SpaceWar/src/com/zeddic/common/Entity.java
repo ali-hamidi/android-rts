@@ -3,11 +3,13 @@ package com.zeddic.common;
 import android.graphics.Canvas;
 
 import com.zeddic.common.util.Vector2d;
+import com.zeddic.war.collision.CollideBehavior;
+import com.zeddic.war.collision.CollideComponent;
 
 public abstract class Entity extends AbstractGameObject {
 
   public static float TIME_SCALER = 200;
-  
+
   public float x;
   public float y;
   public float angle;
@@ -15,6 +17,7 @@ public abstract class Entity extends AbstractGameObject {
   public float rotation;
   public float radius;
   public Vector2d velocity;
+  public CollideComponent collide;
 
   public Entity() {
     this(0, 0);
@@ -28,6 +31,7 @@ public abstract class Entity extends AbstractGameObject {
     this.scale = 1;
     this.angle = 0;
     this.rotation = 0;
+    this.collide = new CollideComponent(this, CollideBehavior.NONE);
   }
   
   public void setScale(float scale) {
@@ -64,11 +68,14 @@ public abstract class Entity extends AbstractGameObject {
 
   public void update(long time) {
     float timeFraction = (float) time / TIME_SCALER;
-    x += velocity.x * timeFraction;
-    y += velocity.y * timeFraction;
+    float dX = velocity.x * timeFraction;
+    float dY = velocity.y * timeFraction;
     angle = angle + rotation * timeFraction;
+    
+    collide.move(dX, dY);
+    collide.update(time);
   }
-  
+
   @Override
   public void draw(Canvas canvas) {
     // Leave drawing to implementing classes.
@@ -84,7 +91,7 @@ public abstract class Entity extends AbstractGameObject {
       y += avoidVector.y;
     }
   }
-  
+
   public float top() {
     return y - radius;
   }

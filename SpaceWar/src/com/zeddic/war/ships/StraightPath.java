@@ -28,11 +28,8 @@ public class StraightPath implements GameObject {
   private Target target;
   private float waitDistance;
   private float speed;
-  
   private boolean inRange;
   private boolean enabled;
-  
-  
   private float lastTargetX = 0;
   private float lastTargetY = 0;
   

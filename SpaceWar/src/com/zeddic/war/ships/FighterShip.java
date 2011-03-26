@@ -21,14 +21,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.zeddic.common.Entity;
-import com.zeddic.common.util.Bounds;
-import com.zeddic.common.util.Circle;
 import com.zeddic.common.util.Components;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.common.util.Polygon;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.common.util.Polygon.PolygonBuilder;
-import com.zeddic.war.collision.CollideComponent;
 import com.zeddic.war.collision.CollideBehavior;
 import com.zeddic.war.guns.Gun;
 
@@ -69,17 +66,12 @@ public class FighterShip extends Ship {
     
     this.radius = 8;
     this.speed = 20;
-    
-    //gun = GameStorage.upgrades.getGun();
-    //gun.setOwner(this);
+    this.collide.setBehavior(CollideBehavior.HIT_RECEIVE);
     
     path = new StraightPath(this, 5, speed);
     
     components = new Components();
-    components.add(new CollideComponent(this, CollideBehavior.HIT_RECEIVE));
     components.add(path);
-    //components.add(new MapBoundsComponent(this, MapBoundsComponent.BEHAVIOR_COLLIDE));
-    //components.add(gun);
   }
   
   public void reset() {

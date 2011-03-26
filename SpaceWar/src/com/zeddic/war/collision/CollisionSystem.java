@@ -43,10 +43,19 @@ public class CollisionSystem {
     grid.update(component);
   }
   
-  public void collide(CollideComponent component) {
+  public void move(CollideComponent component, float dX, float dY) {
+    // TODO: perform a scan of objects here cases where dX, dY are
+    // more than 32 in length.
+    
+    component.entity.x += dX;
+    component.entity.y += dY;
     grid.collide(component);
+    
+    if (dX != 0 || dY != 0) {
+      grid.update(component);
+    }
   }
-  
+
   public CollisionGrid getGrid() {
     return grid;
   }

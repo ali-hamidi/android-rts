@@ -162,6 +162,8 @@ public class CollisionCell {
     }
     
     if (hit) {
+      entity.x += projection.x;
+      entity.y += projection.y;
       //entity.collide(projection, null);
     }
   }
