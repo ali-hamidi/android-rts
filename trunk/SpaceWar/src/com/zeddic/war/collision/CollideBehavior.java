@@ -1,6 +1,12 @@
 package com.zeddic.war.collision;
 
 public enum CollideBehavior {
+
+  /**
+   * The object should have no collision detection.
+   */
+  NONE,
+
   /**
    * An object that can hit other objects but can never be hit. 
    * This is useful when many of a given type of object may exist

@@ -5,28 +5,27 @@ import android.graphics.Canvas;
 import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.war.level.Level;
+import com.zeddic.war.level.TileType;
 
 public class CollisionGrid {
 
   private final int cols;
   private final int rows;
-  private final float width;
-  private final float height;
 	private CollisionCell[][] grid;
 	
 	public CollisionGrid(Level level) {
 	  
 	  this.rows = level.getTileRows();
 	  this.cols = level.getTileCols();
-	  this.width = level.getWidth();
-	  this.height = level.getHeight();
 	  
 	  grid = new CollisionCell[rows][cols];
 	  
 	  for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {   
         CollisionCell cell = new CollisionCell(this, row, col);
-        //cell.setBounds(level.getTile(row, col).getType().getBounds());
+        if (level.getTile(row, col).getType() != TileType.EMPTY) {
+          cell.setBounds(TileBounds.SOLID);
+        }
         grid[row][col] = cell;
       }
     }
@@ -212,102 +211,4 @@ public class CollisionGrid {
 
     return get(row, col);
   }
-  
-  /**
-   * Updates an objects position in the grid.
-   */
-  /*private void updatePosition(CollisionComponent component, GridSpot newSpot) {
-    if (component.type == CollisionManager.TYPE_HIT_RECEIVE ||
-        component.type == CollisionManager.TYPE_RECEIVE_ONLY) {
-      if (newSpot != component.gridSpot) {
-        if (component.gridSpot != null) {
-          component.gridSpot.remove(component.object);
-        }
-        if (newSpot != null) {
-          newSpot.add(component.object);
-        }
-        component.gridSpot = newSpot;
-      } 
-    }
-  } */
-  
-  /**
-   * Returns an array of Grid positions of all the spots around the given
-   * object. Note that some grid spots may be null (if it is out of bounds).
-   * Returned spots will be placed in the provided nearby[] array.
-   */
-  /*public void getNearbyGridSpots(CollisionComponent component, GridSpot[] nearby) {
-    int x = (int) (component.object.x / CollisionSystem.SIZE);
-    int y = (int) (component.object.y / CollisionSystem.SIZE);
-    
-    if (x < 0 || x >= width || y < 0 || y >= height ) {
-      nearby[1] = null;
-      nearby[2] = null;
-      nearby[3] = null;
-      nearby[4] = null;
-      return;
-    }
- 
-    GridSpot here = grid[x][y];
-    if (component.type == CollisionManager.TYPE_HIT_RECEIVE ||
-        component.type == CollisionManager.TYPE_RECEIVE_ONLY) {
-      updatePosition(component, here);
-    }
-    
-    nearby[0] = here;
-
-    nearby[1] = x - 1 >= 0 ? grid[x - 1][y] : null;
-    nearby[2] = y - 1>= 0 ? grid[x][y - 1] : null;
-    nearby[3] = x + 1 < width ? grid[x + 1][y] : null;
-    nearby[4] = y + 1< height ? grid[x][y + 1] : null;
-  } */
-  
-  /**
-   * Returns a list of nearby grid spots that are within a given distance of
-   * the starting world position. Returns the number of non-empty gridspots
-   * that were found. Populated gridspots are put into nearby.
-   */
-  /*public int getNearbyGridSpots(
-      float worldX,
-      float worldY,
-      float distance,
-      GridSpot[] nearby) {
-    
-    int centerX = (int) (worldX / gridSize);
-    int centerY = (int) (worldY / gridSize);
-
-    int range = (int) (distance / gridSize);
-    int minX = centerX - range;
-    int maxX = centerX + range;
-    int minY = centerY - range;
-    int maxY = centerY + range;
-    
-    GridSpot spot;
-    int hits = 0;
-    for (int x = minX; x <= maxX; x++) {
-      for (int y = minY; y <= maxY; y++) {
-        spot = get(x, y);
-        if (spot != null) {
-          nearby[hits] = spot;
-          hits++;
-        }
-      }
-    }
-    
-    return hits;
-  } */
-  
-  
-  
-  /**
-   * Returns the grid represented by the world position.
-   */
-  /*public GridSpot getObjectsAtWorldPosition(float mapX, float mapY) {
-    int x = (int) Math.floor(mapX / gridSize);
-    int y = (int) Math.floor(mapY / gridSize);
-    return get(x, y);
-  }*/
-
-
-  
 }
