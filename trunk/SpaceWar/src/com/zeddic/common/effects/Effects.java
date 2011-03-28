@@ -16,7 +16,7 @@
 
 package com.zeddic.common.effects;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.Entity;
@@ -117,10 +117,12 @@ public class Effects extends AbstractGameObject {
     effects.reset();
   }
   
-  public void draw(Canvas canvas) {
-    effects.draw(canvas);
+  @Override
+  public void draw(GL10 gl) {
+    effects.draw(gl);
   }
   
+  @Override
   public void update(long time) {
     effects.update(time);
   }

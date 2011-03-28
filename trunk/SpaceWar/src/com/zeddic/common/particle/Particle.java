@@ -16,7 +16,8 @@
 
 package com.zeddic.common.particle;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 
@@ -183,12 +184,15 @@ public class Particle extends Entity {
    * Draws the particle to the screen.
    */
   @Override
-  public void draw(Canvas c) {
-    paint.setAlpha((int) alpha);
+  public void draw(GL10 gl) {
+    
+    // TODO(baileys): Draw an open gl based particle.
+    
+    //paint.setAlpha((int) alpha);
     
     // Draw the particle as a line from its current position to where it
     // used to be. The length of the line is based on its current velocity.
-    c.drawLine(x, y, x + -scaledVelocity.x, y + -scaledVelocity.y, paint);
+    //c.drawLine(x, y, x + -scaledVelocity.x, y + -scaledVelocity.y, paint);
     //c.drawCircle(x, y, scale, paint);
   }
   

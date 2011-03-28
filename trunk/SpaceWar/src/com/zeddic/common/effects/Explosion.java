@@ -16,7 +16,7 @@
 
 package com.zeddic.common.effects;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.particle.ParticleEmitter;
@@ -55,8 +55,8 @@ public class Explosion extends Entity {
   }
   
   @Override
-  public void draw(Canvas canvas) {
-    emitter.draw(canvas);
+  public void draw(GL10 gl) {
+    emitter.draw(gl);
   }
   
   @Override

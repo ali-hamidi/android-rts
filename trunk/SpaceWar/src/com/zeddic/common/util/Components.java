@@ -1,6 +1,6 @@
 package com.zeddic.common.util;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.GameObject;
@@ -20,10 +20,10 @@ public class Components extends AbstractGameObject {
     }
   }
   
-  public void draw(Canvas canvas) {
+  public void draw(GL10 gl) {
     int size = children.size;
     for ( int i = 0 ; i < size ; i++) {
-      children.items[i].draw(canvas);
+      children.items[i].draw(gl);
     }
   }
   

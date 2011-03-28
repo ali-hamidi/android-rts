@@ -1,11 +1,12 @@
 package com.zeddic.war.collision;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
+import com.zeddic.common.GameObject;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.war.level.Level;
 
-public class CollisionSystem {
+public class CollisionSystem implements GameObject {
 
   private static CollisionSystem singleton;
   public static final int SIZE = 32;
@@ -60,13 +61,20 @@ public class CollisionSystem {
     return grid;
   }
   
+  @Override
+  public void update(long time) {
+    // Nothing to do.
+  }
+  
   /**
    * Draw the collision grid for debug purposes only.
    */
-  public void draw(Canvas c) {
-    grid.draw(c);
+  @Override
+  public void draw(GL10 gl) {
+    grid.draw(gl);
   }
   
+  @Override
   public void reset() {
     ready = false;
     grid = null;

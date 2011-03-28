@@ -16,7 +16,8 @@
 
 package com.zeddic.war.ships;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.util.FloatMath;
 
 import com.zeddic.common.Entity;
@@ -59,10 +60,12 @@ public class StraightPath implements GameObject {
     return target;
   }
   
-  public void draw(Canvas canvas) {
+  @Override
+  public void draw(GL10 gl) {
 
   }
 
+  @Override
   public void update(long time) {
 
     if (!enabled || target == null) {

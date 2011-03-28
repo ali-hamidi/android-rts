@@ -1,9 +1,13 @@
 package com.zeddic.war.level;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Canvas;
 
+import com.zeddic.common.GameObject;
 
-public class Level {
+
+public class Level implements GameObject {
 
   public static final int TILE_SIZE = 32;
   private final LevelTile[][] grid;
@@ -19,6 +23,7 @@ public class Level {
     this.cols = builder.cols;
   }
   
+  @Override
   public void update(long time) {
     map.update(time);
     for (int row = 0; row < rows; row++) {
@@ -31,18 +36,27 @@ public class Level {
     }
   }
   
-  public void draw(Canvas c) {
-    map.draw(c);
-    c.save();
+  @Override
+  public void draw(GL10 gl) {
+    map.draw(gl);
+    
+    gl.glPushMatrix();
+    
     for (int row = 0; row < rows; row++) {
       for(int col = 0; col < cols; col++) {
         LevelTile tile = grid[row][col];
         if (tile != null) {
-          tile.draw(c);
+          tile.draw(gl);
         }
       }
     }
-    c.restore();
+    
+    gl.glPopMatrix();
+  }
+  
+  @Override
+  public void reset() {
+    // Nothing to reset.
   }
   
   public int getTileRows() {

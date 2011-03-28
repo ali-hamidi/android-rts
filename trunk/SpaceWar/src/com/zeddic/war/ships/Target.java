@@ -1,6 +1,6 @@
 package com.zeddic.war.ships;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
 
@@ -11,6 +11,6 @@ public interface Target {
   void addFollower(Entity follower);
   void removeFollower(Entity follower);
   void update(long time);
-  void draw(Canvas c);
+  void draw(GL10 gl);
   void addReachedHandler(Runnable handler);
 }

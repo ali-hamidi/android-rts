@@ -16,7 +16,8 @@
 
 package com.zeddic.war.guns;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 
@@ -77,8 +78,9 @@ public class Bullet extends Entity {
   }
   
   @Override
-  public void draw(Canvas canvas) {
-    canvas.drawLine(x, y, x + -velocity.x / 6, y + -velocity.y / 6, PAINT);
+  public void draw(GL10 gl) {
+    // TODO(baileys): Draw using opengl.
+    // canvas.drawLine(x, y, x + -velocity.x / 6, y + -velocity.y / 6, PAINT);
   }
   
   @Override

@@ -16,7 +16,7 @@
 
 package com.zeddic.war.guns;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.GameObject;
@@ -137,8 +137,9 @@ public class Gun implements GameObject {
     }
   }
   
-  public void draw(Canvas canvas) {
-    
+  @Override
+  public void draw(GL10 gl) {
+    //nothing to draw.
   }
   
   public void reset() {

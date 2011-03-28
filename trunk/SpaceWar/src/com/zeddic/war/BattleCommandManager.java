@@ -1,6 +1,7 @@
 package com.zeddic.war;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
@@ -113,10 +114,10 @@ public class BattleCommandManager extends AbstractGameObject {
   }
   
   @Override
-  public void draw(Canvas c) {
+  public void draw(GL10 gl) {
     
     for (int i = 0; i < targets.size; i++) {
-      targets.items[i].draw(c);
+      targets.items[i].draw(gl);
     }
     
     if (!hasSelection()) {
@@ -126,7 +127,7 @@ public class BattleCommandManager extends AbstractGameObject {
     if (selection.isShip()) {
       
       
-      float dX = lastX - selection.ship.x;
+      /*float dX = lastX - selection.ship.x;
       float dY = lastY - selection.ship.y;
       
       if (dX * dX + dY * dY > 25 * 25) {
@@ -135,7 +136,7 @@ public class BattleCommandManager extends AbstractGameObject {
         temp.x *= 25;
         temp.y *= 25;
         c.drawLine(selection.ship.x + temp.x, selection.ship.y + temp.y, lastX, lastY, PAINT);
-      }
+      } */
       
       
       //c.drawLine(selection.getX(), selection.getY(), lastX, lastY, PAINT);

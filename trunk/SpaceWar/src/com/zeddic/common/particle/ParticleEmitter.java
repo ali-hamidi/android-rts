@@ -18,12 +18,13 @@ package com.zeddic.common.particle;
 
 import java.util.Random;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.util.Log;
 
 import com.zeddic.common.Entity;
-import com.zeddic.common.util.ObjectPoolManager;
 import com.zeddic.common.util.ObjectPool.ObjectBuilder;
+import com.zeddic.common.util.ObjectPoolManager;
 
 /**
  * Spawns particles with particular properties to create animations. 
@@ -266,8 +267,8 @@ public class ParticleEmitter extends Entity {
    * Draws all particles that have been spawned. The emitter itself
    * is not visible.
    */
-  public void draw(Canvas canvas) {
-    poolManager.draw(canvas);
+  public void draw(GL10 gl) {
+    poolManager.draw(gl);
   }
   
   /**

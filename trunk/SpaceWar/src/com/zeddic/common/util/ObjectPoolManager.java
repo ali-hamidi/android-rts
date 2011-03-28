@@ -1,6 +1,7 @@
 package com.zeddic.common.util;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.util.Log;
 
 import com.zeddic.common.AbstractGameObject;
@@ -109,12 +110,12 @@ public class ObjectPoolManager<T extends AbstractGameObject> extends AbstractGam
   /**
    * Draws all objects in the pool. Skips non-active objects.
    */
-  public void draw(Canvas canvas) {
+  public void draw(GL10 gl) {
     T gameObject;
     for ( int i = 0 ; i < pool.items.length ; i++) {
       gameObject = pool.items[i];
       if (gameObject.enabled)
-        gameObject.draw(canvas);
+        gameObject.draw(gl);
     }
   }
   
