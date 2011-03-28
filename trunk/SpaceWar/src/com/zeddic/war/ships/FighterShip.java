@@ -22,7 +22,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.zeddic.common.Entity;
-import com.zeddic.common.opengl.Cube;
+import com.zeddic.common.opengl.WireFrame;
 import com.zeddic.common.util.Components;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.common.util.Polygon;
@@ -57,8 +57,18 @@ public class FighterShip extends Ship {
   private float speed;
   private Target target;
   private StraightPath path;
-  
-  private ShipMesh mesh;
+
+  private WireFrame mesh = new WireFrame.Builder()
+      .add(-5,  4, -.5f)
+      .add(-3,  0,  .5f)
+      .add( 4,  0,   0f)
+      .add(-5,  4, -.5f)
+      .add(-5, -4, -.5f)
+      .add(-3,  0,  .5f)
+      .add( 4,  0,   0f)
+      .add(-5, -4, -.5f)
+      .build();
+      
 
   public FighterShip() {
     this(0, 0);
@@ -67,8 +77,7 @@ public class FighterShip extends Ship {
   public FighterShip(float x, float y) {
     super(x, y);
 
-    mesh = new ShipMesh();
-    
+    mesh.setColor(43, 0, 255, 255);
     this.radius = 8;
     this.speed = 20;
     this.collide.setBehavior(CollideBehavior.HIT_RECEIVE);
@@ -130,7 +139,7 @@ public class FighterShip extends Ship {
     mesh.x = x;
     mesh.y = y;
     mesh.rz = angle;
-    mesh.scale = 4;
+    mesh.scale = 2;
     
     gl.glPushMatrix();
     mesh.draw(gl);
