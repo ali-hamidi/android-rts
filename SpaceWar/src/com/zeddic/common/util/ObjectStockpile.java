@@ -3,7 +3,7 @@ package com.zeddic.common.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.AbstractGameObject;
 
@@ -72,9 +72,9 @@ public class ObjectStockpile extends AbstractGameObject {
   /**
    * Calls the draw method on all currently enabled objects in all pools.
    */
-  public void draw(Canvas canvas) {
+  public void draw(GL10 gl) {
     for (ObjectPoolManager<? extends AbstractGameObject> pool : supply.values()) {
-      pool.draw(canvas);
+      pool.draw(gl);
     }
   }
   

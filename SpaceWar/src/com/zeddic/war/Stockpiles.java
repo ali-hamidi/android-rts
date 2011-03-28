@@ -1,6 +1,6 @@
 package com.zeddic.war;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.util.ObjectStockpile;
@@ -46,10 +46,10 @@ public class Stockpiles extends AbstractGameObject {
   }
   
   @Override
-  public void draw(Canvas c) {
+  public void draw(GL10 gl) {
     //enemies.draw(c);
-    bullets.draw(c);
-    ships.draw(c);
+    bullets.draw(gl);
+    ships.draw(gl);
     //ui.draw(c);
   }
   

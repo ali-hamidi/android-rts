@@ -1,18 +1,20 @@
 package com.zeddic.war.level;
 
-import com.zeddic.common.util.Polygon;
-import com.zeddic.common.util.Polygon.PolygonBuilder;
+import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
+import com.zeddic.common.GameObject;
+import com.zeddic.common.util.Polygon;
+import com.zeddic.common.util.Polygon.PolygonBuilder;
 
 /**
  * A single tile within the level.
  * 
  * @author baileys (Scott Bailey)
  */
-public class LevelTile {  
+public class LevelTile implements GameObject {  
   
   private TileType type;
   private int row;
@@ -39,15 +41,21 @@ public class LevelTile {
     this.col = col;
   }
   
-  public void draw(Canvas c) {
+  public void draw(GL10 gl) {
     if (type == TileType.SOLID_ROCK) {
-      c.drawRect(
+      // TODO(baileys): Draw using open gl.
+      /*c.drawRect(
           col * Level.TILE_SIZE,
           row * Level.TILE_SIZE, 
           (col * Level.TILE_SIZE) + Level.TILE_SIZE, 
           (row * Level.TILE_SIZE) + Level.TILE_SIZE,
-          PAINT);
+          PAINT); */
     }
+  }
+
+  @Override
+  public void reset() {
+    // Nothing to do.
   }
   
   public void update(long time) {

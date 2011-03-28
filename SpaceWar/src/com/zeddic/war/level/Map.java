@@ -16,12 +16,13 @@
 
 package com.zeddic.war.level;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 
 import com.zeddic.common.AbstractGameObject;
 
@@ -86,12 +87,15 @@ public class Map extends AbstractGameObject {
         y >= spawnTop && y <= spawnTop + spawnHeight;
   }
   
+  @Override
   public void update(long time) {
     //background.update(time);
   }
   
-  public void draw(Canvas c) {
+  @Override
+  public void draw(GL10 gl) {
+    // TODO(baileys): Draw using opengl.
     //background.draw(c);
-    c.drawPath(borderPath, paint);
+    //c.drawPath(borderPath, paint);
   }
 }

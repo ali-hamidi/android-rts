@@ -1,9 +1,9 @@
 package com.zeddic.common;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 public interface GameObject {
-  void draw(Canvas canvas);
+  void draw(GL10 gl);
   void update(long time);
   void reset();
 }

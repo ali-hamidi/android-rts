@@ -1,10 +1,9 @@
 package com.zeddic.war.guns;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Paint;
 
-import com.zeddic.common.util.Bounds;
-import com.zeddic.common.util.Circle;
 import com.zeddic.common.util.Polygon;
 import com.zeddic.common.util.Polygon.PolygonBuilder;
 
@@ -37,13 +36,15 @@ public class ShardBullet extends Bullet {
   }
   
   @Override
-  public void draw(Canvas canvas) {
-    canvas.save();
+  public void draw(GL10 gl) {
+    
+    // TODO(baileys): Draw using opengl.
+    /*canvas.save();
 
     canvas.translate(x, y);
     canvas.rotate(getAngleOffset() + angle);
     canvas.drawPath(SHAPE.path, PAINT);
-    canvas.restore();
+    canvas.restore(); */
   }
   
   @Override

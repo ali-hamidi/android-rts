@@ -1,6 +1,7 @@
 package com.zeddic.war.collision;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 
@@ -86,7 +87,7 @@ public class CollisionCell {
         : bounds.rightEdge;
   }
 
-  public void draw(Canvas c) {
+  public void draw(GL10 gl) {
     
     //PAINT.setColor(Color.GREEN);
     //c.drawRect(left, top, left + CollisionSystem.SIZE, top + CollisionSystem.SIZE, PAINT);
@@ -95,7 +96,7 @@ public class CollisionCell {
     //  c.drawRect(left, top, left + CollisionSystem.SIZE, top + CollisionSystem.SIZE, FILL_PAINT);
     //}
     
-    PAINT.setColor(Color.WHITE);
+    /*PAINT.setColor(Color.WHITE);
     if (bounds != TileBounds.SOLID || !active) {
       return;
     }
@@ -118,7 +119,7 @@ public class CollisionCell {
     
     if (bottomEdge == EdgeType.SOLID) {
       c.drawLine(left, top + CollisionSystem.SIZE, left + CollisionSystem.SIZE, top + CollisionSystem.SIZE, PAINT);
-    }
+    } */
   }
   
   Vector2d projection = new Vector2d();

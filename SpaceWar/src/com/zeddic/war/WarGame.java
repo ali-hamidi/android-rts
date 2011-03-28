@@ -1,166 +1,167 @@
 package com.zeddic.war;
 
-import java.io.IOException;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Canvas;
-import android.util.Log;
 import android.view.MotionEvent;
 
-import com.zeddic.common.Game;
-import com.zeddic.common.util.Countdown;
+import com.zeddic.common.opengl.AbstractGame;
+import com.zeddic.common.opengl.Cube;
+import com.zeddic.common.transistions.Transition;
+import com.zeddic.common.transistions.Transitions.TransitionType;
 import com.zeddic.war.collision.CollisionSystem;
-import com.zeddic.war.collision.ProximityUtil;
-import com.zeddic.war.level.FileLevelLoader;
 import com.zeddic.war.level.MockLevelLoader;
 import com.zeddic.war.ships.FighterShip;
-import com.zeddic.war.ships.LocationTarget;
 
 
-public class WarGame extends Game {
+public class WarGame extends AbstractGame {
 
-  public static final int GAME_EVENT_WIN = 0;
-  public static final int GAME_EVENT_DEAD = 1;
-  public static final int GAME_EVENT_LOADED = 2;
-  public static final int GAME_EVENT_PAUSED = 3;
-  public static final int GAME_EVENT_STARTED = 4;
-  
-  private static final int GAME_STATE_SETUP = 0;
-  private static final int GAME_STATE_PLAYING = 1;
-  private static final int GAME_STATE_PROMPT = 2;
-  private static final int GAME_STATE_PAUSED = 3;
-  
-  private static final long FIRST_SPAWN_DELAY = 0;
-  
-  private int gameState;
-  private static final int MAX_WORLD_WIDTH = 2000;
-  private static final int MAX_WORLD_HEIGHT = 2000;
-
-  private Countdown pauseButtonCooldown = new Countdown(100);
-  
+  private static final float NEAR = 1;
+  private static final float DEPTH = 750;
+  private static final float DRAW_DEPTH = NEAR + (DEPTH / 2);
   
   private BattleCommandManager commandManager;
-  //private FighterShip ship;
+  private Camera camera = new Camera();
   
-  public WarGame() {
+  // Temp vars for open gl testing.
+  private Cube cube = new Cube(10, 10, 10);
+  Transition transition = new Transition(1f, 2f, 1000, TransitionType.EASE_IN_OUT);
+  Transition transX = new Transition(5f, 1000f, 10000, TransitionType.EASE_IN_OUT);
+  Transition rot = new Transition(0f, 360f, 10000, TransitionType.LINEAR);
 
+  public WarGame() {
+    init();
   }
-  
-  @Override
-  public void init(int screenWidth, int screenHeight) {
-    if (this.initialized)
-      return;
+
+  public void init() {
     
-    Log.d(WarGame.class.getName(), "Size: " + screenWidth + "x" + screenHeight);
-    
-    GameState.setScreen(screenWidth, screenHeight);
-    
-    // Setup the collision system.
-    //CollisionManager.setup(MAX_WORLD_WIDTH, MAX_WORLD_HEIGHT);
+    // Temp objects for rending the cube.
+    cube.setColor(242, 17, 73, 180);
+    transition.setAutoReverse(true);
+    rot.setAutoReset(true);
+    transX.setAutoReverse(true);
 
     // Populate the GameState
-    //GameState.player = new Player();
-
-    
-    // Should be scaling world sizes to the window instead of just making
-    // the world as big as the screen... :(
-    // That or making the world scrollable as needed.
-    
-//    GameState.level = new MockLevelLoader().load("blah");
-    try {
-      GameState.level = new FileLevelLoader().load("levels/1.txt");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    GameState.setScreen(800, 640);
+    GameState.level = new MockLevelLoader().load("blah");
     CollisionSystem.get().initializeForLevel(GameState.level);
-
     commandManager = new BattleCommandManager();
-    
-    //GameState.map = new Map();
-    //GameState.map.setSize(screenWidth, screenHeight);
     
     // Create the enemies and reusable game objects. 
     GameState.stockpiles = new Stockpiles();
     GameState.stockpiles.populate();
-    
-    
+
     FighterShip ship = GameState.stockpiles.ships.take(FighterShip.class);
-    ship.x = screenWidth / 2;
-    ship.y = screenHeight / 2;
+    ship.x = 500;
+    ship.y = 500;
     ship.enable();
 
     ship = GameState.stockpiles.ships.take(FighterShip.class);
-    ship.x = screenWidth / 3;
-    ship.y = screenHeight / 3;
+    ship.x = 200;
+    ship.y = 200;
     ship.enable();
-    
-
-    initialized = true;
-    triggerEvent(GAME_EVENT_LOADED);
-    
-    gameState = GAME_STATE_PLAYING;
-    
-  }
-  
-  private void endGame() {
-    gameState = GAME_STATE_PROMPT;
-    updater.triggerEventHandler(GAME_EVENT_DEAD);
-  }
-  
-  private void winGame() {
-    gameState = GAME_STATE_PROMPT;
-    updater.triggerEventHandler(GAME_EVENT_WIN);
-  }
-  
-  private void resetGameObjects() {
-    //GameState.stockpiles.reset();
-   // GameState.player.reset();
-    GameState.effects.reset();
   }
 
-  
-  public void restart() {
+  @Override
+  public void onSurfaceCreated(GL10 gl, EGLConfig config) {
     
-  }
-  
-  public void pause() {
-    super.pause();
-    gameState = GAME_STATE_PAUSED;
-    triggerEvent(GAME_EVENT_PAUSED);
-  }
-  
-  public void resume() {
-    super.resume();
-    gameState = GAME_STATE_PLAYING;
+    gl.glShadeModel(GL10.GL_SMOOTH);      //Enable Smooth Shading
+    gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);  //Black Background
+    gl.glClearDepthf(1.0f);           //Depth Buffer Setup
+    gl.glEnable(GL10.GL_DEPTH_TEST);      //Enables Depth Testing
+    gl.glDepthFunc(GL10.GL_LEQUAL);       //The Type Of Depth Testing To Do
+
+    gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST); 
+    
+    /*
+     * By default, OpenGL enables features that improve quality
+     * but reduce performance. One might want to tweak that
+     * especially on software renderer.
+     */
+    //gl.glDisable(GL10.GL_DITHER);
+
+    /*
+     * Some one-time OpenGL initialization can be made here
+     * probably based on features of this particular context
+     */
+    //gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
+
+    /*gl.glClearColor(.5f, .5f, .5f, 1);
+    gl.glShadeModel(GL10.GL_SMOOTH);
+    gl.glEnable(GL10.GL_DEPTH_TEST);
+    gl.glEnable(GL10.GL_TEXTURE_2D); */
+    
   }
   
   @Override
-  public void draw(Canvas c) {
-    //ship.draw(c);
-
-    CollisionSystem.get().draw(c);
-    commandManager.draw(c);
-    GameState.level.draw(c);
-    GameState.stockpiles.draw(c);
+  public void onSurfaceChanged(GL10 gl, int width, int height) {
     
+    super.onSurfaceChanged(gl, width, height);
+    
+    GameState.setScreen(width, height);
+    
+    gl.glViewport(0, 0, width, height); 
+
+    gl.glMatrixMode(GL10.GL_PROJECTION);
+    gl.glLoadIdentity();
+
+    float far = NEAR + DEPTH;
+    float nearWidth = NEAR * width / DRAW_DEPTH;
+    float nearHeight = NEAR * height / DRAW_DEPTH;
+    gl.glFrustumf(-nearWidth/2, nearWidth/2, -nearHeight/2, nearHeight/2, NEAR, far);
+
+    gl.glDisable(GL10.GL_DITHER);
+    gl.glActiveTexture(GL10.GL_TEXTURE0);
   }
   
   @Override
   public void update(long time) {
-    if (gameState != GAME_STATE_PLAYING) {
-       return;
-    }
-    //ship.update(time);
-
     commandManager.update(time);
     GameState.stockpiles.update(time);
+    
+    transition.update(time);
+    rot.update(time);
+    transX.update(time);
+  }
+  
+  @Override
+  public void draw(GL10 gl) {
+    // Setup the Model View Matrix.
+    gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);  
+    gl.glMatrixMode(GL10.GL_MODELVIEW);
+    gl.glLoadIdentity();
+    
+    // Translate the world so drawing takes placed in the middle of it's drawable depth.
+    gl.glTranslatef(0.0f, 0.0f, -DRAW_DEPTH);
+    
+    // Translate the world so 0, 0 corresponds to the bottom left of the screen.
+    gl.glTranslatef(-GameState.screenWidth / 2, -GameState.screenHeight / 2, 0);
+    
+    // Apply the camera.
+    camera.apply(gl);
+    
+    // Draw all objects that reside in the world.
+    
+    gl.glPushMatrix();
+    cube.x = transX.get();
+    cube.y = GameState.screenHeight / 2;
+    //float scale = transition.get();
+    cube.draw(gl);
+    gl.glPopMatrix();
+
+    CollisionSystem.get().draw(gl);
+    commandManager.draw(gl);
+    GameState.level.draw(gl);
+    GameState.stockpiles.draw(gl);
+    
+    camera.end(gl);
+    
+    // Any user interface elements, such as scores or a menu may be drawn here.
   }
 
-  //// USER INPUT
-
-  public boolean onTouchEvent(MotionEvent e) {
-
-    commandManager.onTouch(e);
-    
-    return true;
+  @Override
+  public void onTouchEvent(MotionEvent e) {
+    camera.onTouchEvent(e);
+    //commandManager.onTouch(e);
   }
 }

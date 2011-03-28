@@ -1,6 +1,6 @@
 package com.zeddic.war.collision;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.GameObject;
@@ -112,7 +112,7 @@ public class CollideComponent implements GameObject {
   }
 
   @Override
-  public void draw(Canvas canvas) {
+  public void draw(GL10 gl) {
     // Do nothing.
   }
 

@@ -3,17 +3,16 @@ package com.zeddic.war.ships;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.transistions.Range;
 import com.zeddic.common.transistions.RangeConverter;
 import com.zeddic.common.transistions.Transition;
 import com.zeddic.common.transistions.Transitions.TransitionType;
-import com.zeddic.common.util.Vector2d;
 
 public class LocationTarget implements Target {
 
@@ -59,7 +58,11 @@ public class LocationTarget implements Target {
   }
 
   @Override
-  public void draw(Canvas c) {
+  public void draw(GL10 gl) {
+    
+    // TODO(baileys): Draw using opengl.
+    
+    /*
     float size = sizeTransition.get();
     
     PAINT.setAlpha((int) ALPHA.convert(size));
@@ -88,7 +91,7 @@ public class LocationTarget implements Target {
     } 
     
     PAINT.setStyle(Style.FILL);
-    c.drawCircle(x, y, 5, PAINT);
+    c.drawCircle(x, y, 5, PAINT); */
   }
 
   @Override

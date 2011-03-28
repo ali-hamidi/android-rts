@@ -16,7 +16,7 @@
 
 package com.zeddic.common.transistions;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.GameObject;
 import com.zeddic.common.transistions.Transitions.TransitionType;
@@ -87,7 +87,7 @@ public class Transition implements GameObject {
   }
 
   @Override
-  public void draw(Canvas canvas) { 
+  public void draw(GL10 gl) { 
     // Nothing to draw. 
   }
   

@@ -1,6 +1,6 @@
 package com.zeddic.common;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.CollideBehavior;
@@ -77,7 +77,7 @@ public abstract class Entity extends AbstractGameObject {
   }
 
   @Override
-  public void draw(Canvas canvas) {
+  public void draw(GL10 gl) {
     // Leave drawing to implementing classes.
   }
 

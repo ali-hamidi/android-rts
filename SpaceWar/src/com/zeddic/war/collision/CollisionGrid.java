@@ -1,6 +1,6 @@
 package com.zeddic.war.collision;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
@@ -126,10 +126,10 @@ public class CollisionGrid {
     return hits;
   }
 	
-	public void draw(Canvas c) {
+	public void draw(GL10 gl) {
 	  for (int row = 0; row < rows; row++) {
 	    for(int col = 0; col < cols; col++) {
-	      grid[row][col].draw(c);
+	      grid[row][col].draw(gl);
 	    }
 	  }
 	}

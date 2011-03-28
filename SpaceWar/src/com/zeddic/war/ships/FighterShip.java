@@ -16,16 +16,18 @@
 
 package com.zeddic.war.ships;
 
-import android.graphics.Canvas;
+import javax.microedition.khronos.opengles.GL10;
+
 import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.zeddic.common.Entity;
+import com.zeddic.common.opengl.Cube;
 import com.zeddic.common.util.Components;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.common.util.Polygon;
-import com.zeddic.common.util.Vector2d;
 import com.zeddic.common.util.Polygon.PolygonBuilder;
+import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.CollideBehavior;
 import com.zeddic.war.guns.Gun;
 
@@ -55,6 +57,8 @@ public class FighterShip extends Ship {
   private float speed;
   private Target target;
   private StraightPath path;
+  
+  private ShipMesh mesh;
 
   public FighterShip() {
     this(0, 0);
@@ -63,6 +67,7 @@ public class FighterShip extends Ship {
   public FighterShip(float x, float y) {
     super(x, y);
 
+    mesh = new ShipMesh();
     
     this.radius = 8;
     this.speed = 20;
@@ -111,15 +116,28 @@ public class FighterShip extends Ship {
   }
   
   @Override
-  public void draw(Canvas canvas) {
-    canvas.save();
+  public void draw(GL10 gl) {
+    
+    // TODO(baileys): Draw using opengl.
+    
+    /*canvas.save();
     canvas.translate(x, y);
     canvas.rotate(getAngleOffset() + angle);
     canvas.scale(scale, scale);
     canvas.drawPath(SHAPE.path, PAINT);
-    canvas.restore();
+    canvas.restore(); */
     
-    components.draw(canvas);
+    mesh.x = x;
+    mesh.y = y;
+    mesh.rz = angle;
+    mesh.scale = 4;
+    
+    gl.glPushMatrix();
+    mesh.draw(gl);
+    
+    
+    gl.glPopMatrix();
+    components.draw(gl);
   }
   
   public void setTarget(Target target) {
