@@ -21,44 +21,33 @@ public abstract class Mesh {
   
   public float scale = 1;
 
-  // Rotate params.
+  // Rotate transformation parameters.
   public float rx = 0;
   public float ry = 0;
   public float rz = 0;
 
   // Our vertex buffer.
   private FloatBuffer verticesBuffer = null;
-
-  // Our index buffer.
   private ShortBuffer indicesBuffer = null;
-
-  // The number of indices.
   private int numOfIndices = -1;
 
-  // Flat Color
+  // Flat or smooth coloring.
   private float[] rgba = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
-
-  // Smooth Colors
   private FloatBuffer colorBuffer = null;
+  
+  private int textureId = -1;
+  private FloatBuffer textureCoordBuffer = null;
 
   public void draw(GL10 gl) {
     // Counter-clockwise winding.
     gl.glFrontFace(GL10.GL_CCW);
-    // Enable face culling.
-    gl.glEnable(GL10.GL_CULL_FACE);
-    // What faces to remove with the face culling.
-    gl.glCullFace(GL10.GL_BACK);
-    // Enabled the vertices buffer for writing and to be used during
-    // rendering.
+
+    // Enable the vertex buffer and specify vertices.
     gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-    // Specifies the location and data format of an array of vertex
-    // coordinates to use when rendering.
     gl.glVertexPointer(3, GL10.GL_FLOAT, 0, verticesBuffer);
     
-    // Set flat color
+    // Enable coloring if specified.
     gl.glColor4f(rgba[0], rgba[1], rgba[2], rgba[3]);
- 
-    // Smooth color
     if ( colorBuffer != null ) {
         // Enable the color array buffer to be used during rendering.
         gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
@@ -66,6 +55,14 @@ public abstract class Mesh {
         gl.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
     }
     
+    // Enable textures if specified.
+    if (textureId != -1 && textureCoordBuffer != null) {
+      gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+      gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCoordBuffer);
+      gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
+    }
+
+    // Output the vertices with any requested transformations.
     gl.glPushMatrix();
     gl.glTranslatef(x, y, z);
     gl.glRotatef(rx, 1, 0, 0);
@@ -84,15 +81,16 @@ public abstract class Mesh {
 
     gl.glPopMatrix();
     
-    // Disable the vertices buffer.
+    // Disable any enabled client states.
     gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
     
     if ( colorBuffer != null) {
       gl.glDisableClientState(GL10.GL_COLOR_ARRAY);;
     }
 
-    // Disable face culling.
-    gl.glDisable(GL10.GL_CULL_FACE);
+    if (textureId != -1 && textureCoordBuffer != null) {
+      gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+    }
   }
   
   protected void setVertices(float[] vertices) {
@@ -139,5 +137,18 @@ public abstract class Mesh {
     colorBuffer = cbb.asFloatBuffer();
     colorBuffer.put(colors);
     colorBuffer.position(0);
+  }
+  
+  public void setTexture(int textureId) {
+    this.textureId = textureId;
+  }
+
+  protected void setTextureCoordinates(float[] textureCoords) {
+    ByteBuffer byteBuf = ByteBuffer
+    .allocateDirect(textureCoords.length * 4);
+    byteBuf.order(ByteOrder.nativeOrder());
+    textureCoordBuffer = byteBuf.asFloatBuffer();
+    textureCoordBuffer.put(textureCoords);
+    textureCoordBuffer.position(0);
   }
 }
