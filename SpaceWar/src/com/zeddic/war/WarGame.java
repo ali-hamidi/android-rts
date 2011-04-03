@@ -78,7 +78,7 @@ public class WarGame extends AbstractGame {
      * but reduce performance. One might want to tweak that
      * especially on software renderer.
      */
-    //gl.glDisable(GL10.GL_DITHER);
+    gl.glDisable(GL10.GL_DITHER);
 
     /*
      * Some one-time OpenGL initialization can be made here
@@ -86,10 +86,10 @@ public class WarGame extends AbstractGame {
      */
     //gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 
-    /*gl.glClearColor(.5f, .5f, .5f, 1);
+    //gl.glClearColor(.5f, .5f, .5f, 1);
     gl.glShadeModel(GL10.GL_SMOOTH);
     gl.glEnable(GL10.GL_DEPTH_TEST);
-    gl.glEnable(GL10.GL_TEXTURE_2D); */
+    gl.glEnable(GL10.GL_TEXTURE_2D);
     
   }
   
@@ -109,9 +109,6 @@ public class WarGame extends AbstractGame {
     float nearWidth = NEAR * width / DRAW_DEPTH;
     float nearHeight = NEAR * height / DRAW_DEPTH;
     gl.glFrustumf(-nearWidth/2, nearWidth/2, -nearHeight/2, nearHeight/2, NEAR, far);
-
-    gl.glDisable(GL10.GL_DITHER);
-    gl.glActiveTexture(GL10.GL_TEXTURE0);
   }
   
   @Override

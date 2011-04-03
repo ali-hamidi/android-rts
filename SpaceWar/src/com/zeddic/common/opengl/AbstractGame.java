@@ -3,12 +3,23 @@ package com.zeddic.common.opengl;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.zeddic.war.GameState;
+
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
 public abstract class AbstractGame implements GLSurfaceView.Renderer {
 
+  private static final int MILLIS_PER_SECOND = 1000;
+  private static final boolean ENABLE_FPS = true;
+  
   private long lastUpdate;
+  private long lastFpsDisplay;
+  private long fps = 0;
 
   @Override
   public void onSurfaceCreated(GL10 gl, EGLConfig config) {}
@@ -20,10 +31,42 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
   public void onDrawFrame(GL10 gl) {
     long now = System.currentTimeMillis();
     long delta = now - lastUpdate;
-    lastUpdate = now;
+    lastUpdate = now; 
     
     update(delta);
     draw(gl);
+    
+    if (lastFpsDisplay < 500) {
+      lastFpsDisplay += delta;
+    } else {
+      lastFpsDisplay = 0;
+      fps = MILLIS_PER_SECOND / delta;
+    }
+    
+    if (ENABLE_FPS) {
+      displayFps(gl);
+    }
+  }
+
+  private void displayFps(GL10 gl) {
+    int height = 64;
+    int width = 64;
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+    bitmap.eraseColor(Color.TRANSPARENT);
+    Canvas canvas = new Canvas(bitmap);
+
+    // Draw the text
+    Paint textPaint = new Paint();
+    textPaint.setTextSize(32);
+    textPaint.setAntiAlias(true);
+    textPaint.setColor(Color.WHITE);
+    canvas.drawText(String.valueOf(fps), 0, 32, textPaint);
+    
+    Sprite fpsSprite = new Sprite(width, height, bitmap);
+    fpsSprite.x = width / 2;
+    fpsSprite.y = GameState.screenHeight - (height / 2);
+    fpsSprite.draw(gl);
+    bitmap.recycle();
   }
 
   public void onTouchEvent(final MotionEvent event) {}
