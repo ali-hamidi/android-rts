@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.zeddic.common.effects.Effects;
+import com.zeddic.common.opengl.TextureLibrary;
 import com.zeddic.common.util.ResourceLoader;
 import com.zeddic.war.level.Level;
 
@@ -32,6 +33,7 @@ public class GameState {
   public static Activity activity;
   public static Stockpiles stockpiles = null;
   public static Level level = null;
+  public static TextureLibrary textures = null;
   
   private static boolean loaded = false;
   private static int loadCount = 0;

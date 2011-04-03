@@ -5,9 +5,9 @@ import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
 public class GameGLSurfaceView extends GLSurfaceView {
-  
+
   private AbstractGame game;
-  
+
   public GameGLSurfaceView(Context context, AbstractGame game) {
       super(context);
       this.game = game;
@@ -16,9 +16,9 @@ public class GameGLSurfaceView extends GLSurfaceView {
 
   public boolean onTouchEvent(final MotionEvent event) {
     queueEvent(new Runnable(){
-      public void run() {
-        game.onTouchEvent(event);
-      }});
-      return true;
+        public void run() {
+          game.onTouchEvent(event);
+        }});
+        return true;
     }      
 }
