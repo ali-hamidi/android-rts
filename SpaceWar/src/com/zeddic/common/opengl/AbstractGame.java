@@ -20,6 +20,13 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
   private long lastUpdate;
   private long lastFpsDisplay;
   private long fps = 0;
+  
+  private static final int FPS_WIDTH = 64;
+  private static final int FPS_HEIGHT = 64;
+  private Bitmap fpsBitmap = Bitmap.createBitmap(FPS_WIDTH, FPS_HEIGHT, Bitmap.Config.ARGB_4444);
+  private Canvas fpsCanvas = new Canvas(fpsBitmap);
+  private Paint fpsPaint = new Paint();
+  private Sprite fpsSprite = new Sprite(FPS_WIDTH, FPS_HEIGHT, fpsBitmap);
 
   @Override
   public void onSurfaceCreated(GL10 gl, EGLConfig config) {}
@@ -49,24 +56,18 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
   }
 
   private void displayFps(GL10 gl) {
-    int height = 64;
-    int width = 64;
-    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-    bitmap.eraseColor(Color.TRANSPARENT);
-    Canvas canvas = new Canvas(bitmap);
 
-    // Draw the text
-    Paint textPaint = new Paint();
-    textPaint.setTextSize(32);
-    textPaint.setAntiAlias(true);
-    textPaint.setColor(Color.WHITE);
-    canvas.drawText(String.valueOf(fps), 0, 32, textPaint);
-    
-    Sprite fpsSprite = new Sprite(width, height, bitmap);
-    fpsSprite.x = width / 2;
-    fpsSprite.y = GameState.screenHeight - (height / 2);
+    fpsPaint.setTextSize(32);
+    fpsPaint.setAntiAlias(true);
+    fpsPaint.setColor(Color.WHITE);
+
+    fpsBitmap.eraseColor(Color.TRANSPARENT);
+    fpsCanvas.drawText(String.valueOf(fps), 0, 32, fpsPaint);
+   
+    fpsSprite.x = FPS_WIDTH / 2;
+    fpsSprite.y = GameState.screenHeight - (FPS_HEIGHT / 2);
+    fpsSprite.texture.reload();
     fpsSprite.draw(gl);
-    bitmap.recycle();
   }
 
   public void onTouchEvent(final MotionEvent event) {}

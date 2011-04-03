@@ -1,17 +1,25 @@
 package com.zeddic.common.opengl;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import android.graphics.Bitmap;
-import android.opengl.GLUtils;
+
 
 public class Sprite extends Mesh {
   
-  private Bitmap bitmap;
+  //private Bitmap bitmap;
+  
+  public Sprite(int width, int height, int resource) {
+    setDimensions(width, height);
+    setTextureCoordinates();
+    setTexture(new Texture(resource));
+  }
   
   public Sprite(int width, int height, Bitmap bitmap) {
-    this.bitmap = bitmap;
-    
+    setDimensions(width, height);
+    setTextureCoordinates();
+    setTexture(new Texture(bitmap));
+  }
+  
+  private void setDimensions(int width, int height) {
     int halfWidth = width / 2;
     int halfHeight = height / 2;
     
@@ -27,6 +35,11 @@ public class Sprite extends Mesh {
         1, 3, 2,
     };
     
+    setIndices(indices);
+    setVertices(vertices);
+  }
+  
+  private void setTextureCoordinates() {
     float textureCoordinates[] = {
         0.0f, 1.0f,
         1.0f, 1.0f,
@@ -34,12 +47,14 @@ public class Sprite extends Mesh {
         1.0f, 0.0f,
     };
     
-    setIndices(indices);
-    setVertices(vertices);
     setTextureCoordinates(textureCoordinates);
   }
   
-  @Override
+  //public Sprite(int width, int height, Bitmap bitmap) {
+  //  this.bitmap = bitmap;
+  //}
+  
+  /*@Override
   public void draw(GL10 gl) {
     int textures[] = new int[1];
     gl.glGenTextures(1, textures, 0);
@@ -52,8 +67,8 @@ public class Sprite extends Mesh {
     gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, GL10.GL_REPEAT);
 
     GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
-    setTexture(textures[0]);
+    //setTexture(textures[0]);
     super.draw(gl);
     gl.glDeleteTextures(1, textures, 0);
-  }
+  } */
 }

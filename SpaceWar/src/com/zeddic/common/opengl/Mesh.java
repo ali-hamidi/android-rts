@@ -7,11 +7,6 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-/**
- * 
- * 
- * Source: http://blog.jayway.com/2010/02/15/opengl-es-tutorial-for-android-%E2%80%93-part-v/
- */
 public abstract class Mesh {
   
   // Translate params.
@@ -35,10 +30,11 @@ public abstract class Mesh {
   private float[] rgba = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
   private FloatBuffer colorBuffer = null;
   
-  private int textureId = -1;
+  public Texture texture = null;
   private FloatBuffer textureCoordBuffer = null;
 
   public void draw(GL10 gl) {
+    
     // Counter-clockwise winding.
     gl.glFrontFace(GL10.GL_CCW);
 
@@ -56,10 +52,10 @@ public abstract class Mesh {
     }
     
     // Enable textures if specified.
-    if (textureId != -1 && textureCoordBuffer != null) {
+    if (texture != null && textureCoordBuffer != null) {
       gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
       gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCoordBuffer);
-      gl.glBindTexture(GL10.GL_TEXTURE_2D, textureId);
+      gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.id);
     }
 
     // Output the vertices with any requested transformations.
@@ -68,16 +64,9 @@ public abstract class Mesh {
     gl.glRotatef(rx, 1, 0, 0);
     gl.glRotatef(ry, 0, 1, 0);
     gl.glRotatef(rz, 0, 0, 1);
+    gl.glScalef(scale, scale, scale);
     
-    if (scale != 1) {
-      gl.glScalef(scale, scale, scale);
-    }
-    
-    gl.glDrawElements(
-        GL10.GL_TRIANGLES,
-        numOfIndices,
-        GL10.GL_UNSIGNED_SHORT,
-        indicesBuffer);
+    gl.glDrawElements(GL10.GL_TRIANGLES, numOfIndices, GL10.GL_UNSIGNED_SHORT, indicesBuffer);
 
     gl.glPopMatrix();
     
@@ -88,7 +77,7 @@ public abstract class Mesh {
       gl.glDisableClientState(GL10.GL_COLOR_ARRAY);;
     }
 
-    if (textureId != -1 && textureCoordBuffer != null) {
+    if (texture != null && textureCoordBuffer != null) {
       gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
     }
   }
@@ -139,8 +128,8 @@ public abstract class Mesh {
     colorBuffer.position(0);
   }
   
-  public void setTexture(int textureId) {
-    this.textureId = textureId;
+  public void setTexture(Texture texture) {
+    this.texture = texture;
   }
 
   protected void setTextureCoordinates(float[] textureCoords) {
