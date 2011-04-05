@@ -27,7 +27,7 @@ public class GridPlane extends Mesh {
                                      -size,  size, 0.0f,
                                       size, size, 0.0f };
     
-    float textureScale = count / 2;
+    float textureScale = count / 1;
     
     float textureCoordinates[] = {
         0.0f, textureScale,
@@ -40,6 +40,6 @@ public class GridPlane extends Mesh {
     setIndices(indices);
     setVertices(vertices);
     setTextureCoordinates(textureCoordinates);
-    setTexture(new Texture(R.drawable.grid2));
+    setTexture(new Texture(R.drawable.grid));
   }
 }
