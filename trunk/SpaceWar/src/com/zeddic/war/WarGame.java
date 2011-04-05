@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 
 import com.zeddic.common.opengl.AbstractGame;
 import com.zeddic.common.opengl.Cube;
+import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.opengl.TextureLibrary;
 import com.zeddic.common.transistions.Transition;
 import com.zeddic.common.transistions.Transitions.TransitionType;
@@ -31,6 +32,7 @@ public class WarGame extends AbstractGame {
   Transition rot = new Transition(0f, 360f, 10000, TransitionType.LINEAR);
 
   private GridPlane grid = new GridPlane(2048,2048, 32, 32);
+  private Planet planet = new Planet(50, 50);
   
   public WarGame() {
     init();
@@ -150,6 +152,7 @@ public class WarGame extends AbstractGame {
     transition.update(time);
     rot.update(time);
     transX.update(time);
+    planet.update(time);
   }
 
   @Override
@@ -173,31 +176,23 @@ public class WarGame extends AbstractGame {
 
     //gl.glPushMatrix();
     grid.draw(gl);
+    planet.draw(gl);
     //gl.glPopMatrix();
     
    // CollisionSystem.get().draw(gl);
    // commandManager.draw(gl);
     //GameState.level.draw(gl);
-    //GameState.stockpiles.draw(gl);
+    GameState.stockpiles.draw(gl);
     
     camera.end(gl);
     
     // Any user interface elements, such as scores or a menu may be drawn here.
   }
 
-  /*
-   * gl.glPushMatrix();
-    cube.x = transX.get();
-    cube.y = GameState.screenHeight / 2;
-    //float scale = transition.get();
-    cube.draw(gl);
-    gl.glPopMatrix();(non-Javadoc)
-   * @see com.zeddic.common.opengl.AbstractGame#onTouchEvent(android.view.MotionEvent)
-   */
-  
+
   @Override
   public void onTouchEvent(MotionEvent e) {
-    camera.onTouchEvent(e);
-    //commandManager.onTouch(e);
+    //camera.onTouchEvent(e);
+    commandManager.onTouch(e);
   }
 }

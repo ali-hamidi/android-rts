@@ -22,12 +22,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.zeddic.common.Entity;
+import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.opengl.WireFrame;
 import com.zeddic.common.util.Components;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.common.util.Polygon;
-import com.zeddic.common.util.Polygon.PolygonBuilder;
 import com.zeddic.common.util.Vector2d;
+import com.zeddic.common.util.Polygon.PolygonBuilder;
+import com.zeddic.war.R;
 import com.zeddic.war.collision.CollideBehavior;
 import com.zeddic.war.guns.Gun;
 
@@ -70,6 +72,9 @@ public class FighterShip extends Ship {
       .build();
       
 
+  private Sprite sprite = new Sprite(32, 32, R.drawable.ship);
+  
+  
   public FighterShip() {
     this(0, 0);
   }
@@ -136,16 +141,14 @@ public class FighterShip extends Ship {
     canvas.drawPath(SHAPE.path, PAINT);
     canvas.restore(); */
     
-    mesh.x = x;
-    mesh.y = y;
-    mesh.rz = angle;
-    mesh.scale = 2;
+    sprite.x = x;
+    sprite.y = y;
+    sprite.rz = angle;
+    //.scale = 2;
+
+    sprite.draw(gl);
     
-    gl.glPushMatrix();
-    mesh.draw(gl);
     
-    
-    gl.glPopMatrix();
     components.draw(gl);
   }
   
