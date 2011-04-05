@@ -60,11 +60,8 @@ public abstract class Mesh {
 
     // Output the vertices with any requested transformations.
     gl.glPushMatrix();
-    gl.glTranslatef(x, y, z);
-    gl.glRotatef(rx, 1, 0, 0);
-    gl.glRotatef(ry, 0, 1, 0);
-    gl.glRotatef(rz, 0, 0, 1);
-    gl.glScalef(scale, scale, scale);
+    
+    applyActiveTransformations(gl);
     
     gl.glDrawElements(GL10.GL_TRIANGLES, numOfIndices, GL10.GL_UNSIGNED_SHORT, indicesBuffer);
 
@@ -79,6 +76,30 @@ public abstract class Mesh {
 
     if (texture != null && textureCoordBuffer != null) {
       gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+    }
+  }
+  
+  private void applyActiveTransformations(GL10 gl) {
+    // Only apply transformations if necessary. Excess stack
+    // transformations can cause slow down if done enough.
+    if (x != 0 || y  != 0 || z != 0) {
+      gl.glTranslatef(x, y, z);
+    }
+    
+    if (rx != 0) {
+      gl.glRotatef(rx, 1, 0, 0);
+    }
+    
+    if (ry != 0) {
+      gl.glRotatef(ry, 0, 1, 0);
+    }
+    
+    if (rz != 0) {
+      gl.glRotatef(rz, 0, 0, 1);
+    }
+    
+    if (scale != 0) {
+      gl.glScalef(scale, scale, scale);
     }
   }
   
