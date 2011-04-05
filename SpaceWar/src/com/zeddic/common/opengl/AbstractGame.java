@@ -6,6 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
+import com.zeddic.common.util.Metrics;
 import com.zeddic.war.GameState;
 
 public abstract class AbstractGame implements GLSurfaceView.Renderer {
@@ -15,8 +16,8 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
   
   private long lastUpdate;
   private long lastFpsDisplay;
-  private long fps = 0;
-  
+  private Metrics fpsMetrics = new Metrics(10);
+
   private static final int FPS_WIDTH = 64;
   private static final int FPS_HEIGHT = 64;
   private TextSprite fpsSprite = new TextSprite(FPS_WIDTH, FPS_HEIGHT);
@@ -40,7 +41,7 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
       lastFpsDisplay += delta;
     } else {
       lastFpsDisplay = 0;
-      fps = MILLIS_PER_SECOND / delta;
+      fpsMetrics.addSample(MILLIS_PER_SECOND / delta);
     }
     
     if (ENABLE_FPS) {
@@ -51,7 +52,7 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
   private void displayFps(GL10 gl) {
     fpsSprite.x = FPS_WIDTH / 2;
     fpsSprite.y = GameState.screenHeight - (FPS_HEIGHT / 2);
-    fpsSprite.setText(String.valueOf(fps));
+    fpsSprite.setText(String.valueOf(fpsMetrics.getAverage()));
     fpsSprite.draw(gl);
   }
 
