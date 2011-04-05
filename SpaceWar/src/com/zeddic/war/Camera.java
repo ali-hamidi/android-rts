@@ -88,7 +88,7 @@ public class Camera implements GameObject {
    * Translates user input to pan and zoom commands.
    */
   public void onTouchEvent(MotionEvent e) {
-    Log.d("Martin",">>>>>Entering on Touch Event ");
+    //Log.d("Martin",">>>>>Entering on Touch Event ");
     int action = e.getAction();
     int actionCode = action & MotionEvent.ACTION_MASK;
     switch (actionCode) {
@@ -99,9 +99,9 @@ public class Camera implements GameObject {
         break;
       }
       case MotionEvent.ACTION_POINTER_DOWN:{
-        Log.d("Martin","--->Multi Action pinch press down");
+        //Log.d("Martin","--->Multi Action pinch press down");
         onPinch(e);
-        dumpEvent(e);
+        //dumpEvent(e);
         break;
       }
       case MotionEvent.ACTION_UP:{
@@ -117,14 +117,14 @@ public class Camera implements GameObject {
       //case MotionEvent.ACTION_POINTER_UP: Log.d("Martin","--->pinch press up"); break;
       
       case MotionEvent.ACTION_MOVE: 
-        Log.d("Martin", "--->Action Move");
-        dumpEvent(e);
+        //Log.d("Martin", "--->Action Move");
+        //dumpEvent(e);
         onMove(e); 
         break;
       default: onCancel(e); break;
     }
-    Log.d("Martin","<<<<<Exiting on Touch Event ");
-    Log.d("Martin","***************************");
+    //Log.d("Martin","<<<<<Exiting on Touch Event ");
+    //Log.d("Martin","***************************");
   }
 
   private void onPress(MotionEvent e) {
@@ -141,8 +141,6 @@ public class Camera implements GameObject {
     lastPress = OnPressType.TWO;
     Point2d lastPoint = null;
     //We will do a check to verify that the points have changed
-    String junk = "junk"+e.getPointerCount();
-    Log.d("Martin",junk);
     if (lastPress.getIndex() != e.getPointerCount()) return;
     boolean equalPoints = true;
     for (int i = 0; ((i < lastPress.getIndex())||(equalPoints==true));i++){
@@ -257,11 +255,11 @@ public class Camera implements GameObject {
       float newX = e.getX();
       float newY = GameState.screenHeight - e.getY();
       
-      cameraPoint.x += newX - lastPoint.x;// lastX;
-      cameraPoint.y += newY - lastPoint.y;//lastY;
+      cameraPoint.x += newX - lastPoint.x;
+      cameraPoint.y += newY - lastPoint.y;
       
-      lastPoint.x = newX;//lastX = newX;
-      lastPoint.y = newY;//lastY = newY;
+      lastPoint.x = newX;
+      lastPoint.y = newY;
     }
     
   }
@@ -279,23 +277,25 @@ public class Camera implements GameObject {
       Point2d point2 = lastPress.getLastPoints()[1];
       
       double dist1 = Camera.distance(point1.x, point1.y, point2.x, point2.y);
-      double dist2 = Camera.distance(e.getX(0), e.getY(0), e.getX(1), e.getY(1));
+      float newX1 = e.getX(0);
+      float newY1 = e.getY(0);
+      float newX2 = e.getX(1);
+      float newY2 = e.getY(1);
+      
+      double dist2 = Camera.distance(newX1, newY1, newX2, newY2);
       
       if (dist1 < dist2)
         cameraPoint.z +=1;
       else
         cameraPoint.z -=1;
-      /*
-      Point2d lastPoint = lastPress.getLastPoints()[0];
-      float newX = e.getX();
-      float newY = GameState.screenHeight - e.getY();
       
-      cameraPoint.x += newX - lastPoint.x;// lastX;
-      cameraPoint.y += newY - lastPoint.y;//lastY;
+      String zVal = "z="+cameraPoint.z;
+      Log.d("Martin", zVal);
+      point1.x = newX1;
+      point1.y = newY1;
+      point2.x = newX2;
+      point2.y = newY2;
       
-      lastPoint.x = newX;//lastX = newX;
-      lastPoint.y = newY;//lastY = newY;
-      */
     }
     
   }
