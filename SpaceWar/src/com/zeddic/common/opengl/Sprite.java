@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
  */
 public class Sprite extends SimplePlane {
 
-  public Sprite(int width, int height, int resource) {
+  public Sprite(float width, float height, int resource) {
     super(width, height);
     setTexture(new Texture(resource));
   }
