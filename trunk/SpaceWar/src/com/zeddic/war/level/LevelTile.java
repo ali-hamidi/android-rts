@@ -2,12 +2,9 @@ package com.zeddic.war.level;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Color;
-import android.graphics.Paint;
-
 import com.zeddic.common.GameObject;
-import com.zeddic.common.util.Polygon;
-import com.zeddic.common.util.Polygon.PolygonBuilder;
+import com.zeddic.common.opengl.Sprite;
+import com.zeddic.war.R;
 
 /**
  * A single tile within the level.
@@ -19,22 +16,7 @@ public class LevelTile implements GameObject {
   private TileType type;
   private int row;
   private int col;
-  
-  private static final Paint PAINT;
-  private static final Polygon ROCK_SHAPE;
-
-  static {
-    PAINT = new Paint();
-    PAINT.setColor(Color.RED);
-    PAINT.setStyle(Paint.Style.STROKE);
-    PAINT.setStrokeWidth(3);
-    ROCK_SHAPE = new PolygonBuilder()
-        .add(0, 0)
-        .add(0, Level.TILE_SIZE)
-        .add(Level.TILE_SIZE, Level.TILE_SIZE)
-        .add(Level.TILE_SIZE, 0)
-        .build();
-  }
+  private static final Sprite sprite = new Sprite(32, 32, R.drawable.solid);
   
   public LevelTile(int row, int col) {
     this.row = row;
@@ -43,13 +25,10 @@ public class LevelTile implements GameObject {
   
   public void draw(GL10 gl) {
     
-    // TODO(baileys): Open flips the standard concept of the y axis.
-    // As a result, the levels appear flipped here. This class will
-    // need to become aware of the max # of rows to inverse y, or 
-    // we'll need to change the order of our mapping matrix.
-    
     if (type == TileType.SOLID_ROCK) {
-
+      sprite.setLeft(col * Level.TILE_SIZE);
+      sprite.setTop(row * Level.TILE_SIZE);
+      sprite.draw(gl);
     }
   }
 

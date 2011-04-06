@@ -6,6 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.view.MotionEvent;
 
 import com.zeddic.common.opengl.AbstractGame;
+import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.opengl.TextureLibrary;
 import com.zeddic.war.collision.CollisionSystem;
 import com.zeddic.war.level.MockLevelLoader;
@@ -22,7 +23,7 @@ public class WarGame extends AbstractGame {
   private BattleCommandManager commandManager;
   private Camera camera = new Camera();
 
-  private GridPlane grid = new GridPlane(2048,2048, 32, 32);
+  private Sprite grid;
   private Planet planet = new Planet(0, 0);
   
   public WarGame() {
@@ -92,6 +93,13 @@ public class WarGame extends AbstractGame {
   public void onSurfaceChanged(GL10 gl, int width, int height) {
     super.onSurfaceChanged(gl, width, height);
     
+    int gridWidth = ((int) width / 32 + 1) * 32;
+    int gridHeight = ((int) height / 32 + 1) * 32;
+    grid = new Sprite(gridWidth , gridHeight, R.drawable.grid);
+    grid.setTextureScale(gridWidth / 32, gridHeight / 32);
+    grid.setTop(0);
+    grid.setLeft(0);
+    
     GameState.setScreen(width, height);
     
     // Set device dimensions.
@@ -138,7 +146,7 @@ public class WarGame extends AbstractGame {
 
   @Override
   public void onTouchEvent(MotionEvent e) {
-    camera.onTouchEvent(e);
-    //commandManager.onTouch(e);
+    //camera.onTouchEvent(e);
+    commandManager.onTouch(e);
   }
 }
