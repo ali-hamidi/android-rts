@@ -134,7 +134,7 @@ public class Camera implements GameObject {
         (lastPoint.y == e.getY())) return;
     dragging = true;
     lastPoint.x = e.getX();
-    lastPoint.y = GameState.screenHeight-e.getY();
+    lastPoint.y = e.getY();
   }
 
   private void onPinch(MotionEvent e){
@@ -156,7 +156,7 @@ public class Camera implements GameObject {
       for (int i = 0; i < lastPress.getIndex();i++){
         lastPoint = lastPress.getLastPoints()[i];
         lastPoint.x = e.getX(i);
-        lastPoint.y = GameState.screenHeight-e.getY(i);
+        lastPoint.y = e.getY(i);
       }
     }
   }
@@ -253,7 +253,7 @@ public class Camera implements GameObject {
     public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint) {
       Point2d lastPoint = lastPress.getLastPoints()[0];
       float newX = e.getX();
-      float newY = GameState.screenHeight - e.getY();
+      float newY = e.getY();
       
       cameraPoint.x += newX - lastPoint.x;
       cameraPoint.y += newY - lastPoint.y;

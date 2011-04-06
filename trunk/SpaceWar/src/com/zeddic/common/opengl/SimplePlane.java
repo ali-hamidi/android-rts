@@ -23,16 +23,17 @@ public class SimplePlane extends Mesh {
         1, 3, 2,
     };
 
+    
     setIndices(indices);
     setVertices(vertices);
   }
-  
+
   private void setTextureCoordinates() {
     float textureCoordinates[] = {
-        0.0f, 1.0f,
-        1.0f, 1.0f,
         0.0f, 0.0f,
         1.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
     };
 
     setTextureCoordinates(textureCoordinates);

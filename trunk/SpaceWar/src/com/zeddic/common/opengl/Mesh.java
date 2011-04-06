@@ -35,9 +35,6 @@ public abstract class Mesh {
 
   public void draw(GL10 gl) {
     
-    // Counter-clockwise winding.
-    gl.glFrontFace(GL10.GL_CCW);
-
     // Enable the vertex buffer and specify vertices.
     gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
     gl.glVertexPointer(3, GL10.GL_FLOAT, 0, verticesBuffer);
