@@ -6,10 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.zeddic.common.GameObject;
-import com.zeddic.common.opengl.WireFrame;
 import com.zeddic.common.util.Polygon;
 import com.zeddic.common.util.Polygon.PolygonBuilder;
-import com.zeddic.war.GameState;
 
 /**
  * A single tile within the level.
@@ -24,7 +22,7 @@ public class LevelTile implements GameObject {
   
   private static final Paint PAINT;
   private static final Polygon ROCK_SHAPE;
-  
+
   static {
     PAINT = new Paint();
     PAINT.setColor(Color.RED);
@@ -37,28 +35,6 @@ public class LevelTile implements GameObject {
         .add(Level.TILE_SIZE, 0)
         .build();
   }
-  
-  // This is a god awful way of rendering wireframes.. but its a temp solution
-  // of seeing the 3d shapes until some textures can be put in.
-  private static final WireFrame cube = new WireFrame.Builder()
-      .add(-1, -1, -1)
-      .add( 1, -1, -1)
-      .add( 1,  1, -1)
-      .add(-1,  1, -1)
-      .add(-1, -1, -1)
-      .add(-1,  1, -1)
-      .add(-1,  1,  1)
-      .add(-1, -1,  1)
-      .add( 1, -1,  1)
-      .add( 1,  1,  1)
-      .add(-1,  1,  1)
-      .add(-1, -1,  1)
-      .add(-1, -1, -1)
-      .add( 1, -1, -1)
-      .add( 1, -1,  1)
-      .add( 1,  1,  1)
-      .add( 1,  1, -1)
-      .build();
   
   public LevelTile(int row, int col) {
     this.row = row;
@@ -73,10 +49,7 @@ public class LevelTile implements GameObject {
     // we'll need to change the order of our mapping matrix.
     
     if (type == TileType.SOLID_ROCK) {
-      cube.scale = Level.TILE_SIZE / 2;
-      cube.x = col * Level.TILE_SIZE + Level.TILE_SIZE / 2;
-      cube.y = row * Level.TILE_SIZE + Level.TILE_SIZE / 2;
-      cube.draw(gl);
+
     }
   }
 
