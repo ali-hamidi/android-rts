@@ -7,7 +7,6 @@ import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
 import com.zeddic.common.util.Metrics;
-import com.zeddic.war.GameState;
 
 public abstract class AbstractGame implements GLSurfaceView.Renderer {
 
@@ -26,7 +25,10 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
   public void onSurfaceCreated(GL10 gl, EGLConfig config) {}
   
   @Override
-  public void onSurfaceChanged(GL10 gl, int width, int height) {}
+  public void onSurfaceChanged(GL10 gl, int width, int height) {
+    Screen.width = width;
+    Screen.height = height;
+  }
 
   @Override
   public void onDrawFrame(GL10 gl) {
@@ -51,7 +53,7 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
 
   private void displayFps(GL10 gl) {
     fpsSprite.x = FPS_WIDTH / 2;
-    fpsSprite.y = GameState.screenHeight - (FPS_HEIGHT / 2);
+    fpsSprite.y = FPS_HEIGHT / 2;
     fpsSprite.setText(String.valueOf(fpsMetrics.getAverage()));
     fpsSprite.draw(gl);
   }
