@@ -137,6 +137,14 @@ public abstract class Mesh {
         (float) alpha / 255);
   }
    
+  /**
+   * Sets the alpha transparency of the mesh. 1 is solid. 0 for completely
+   * transparent.
+   */
+  public void setAlpha(float alpha) {
+    rgba[3] = alpha;
+  }
+  
   protected void setColors(float[] colors) {
     // float has 4 bytes.
     ByteBuffer cbb = ByteBuffer.allocateDirect(colors.length * 4);

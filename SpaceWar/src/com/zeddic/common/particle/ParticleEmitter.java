@@ -23,6 +23,8 @@ import javax.microedition.khronos.opengles.GL10;
 import android.util.Log;
 
 import com.zeddic.common.Entity;
+import com.zeddic.common.opengl.Sprite;
+import com.zeddic.common.particle.SpriteParticle.SpriteParticleData;
 import com.zeddic.common.util.ObjectPool.ObjectBuilder;
 import com.zeddic.common.util.ObjectPoolManager;
 
@@ -183,6 +185,7 @@ public class ParticleEmitter extends Entity {
             try {
               particle = pClass.newInstance();
               particle.enabled = false;
+              particle.onCreate(pData);
             } catch (IllegalAccessException e) {
               Log.e(this.getClass().toString(), "Error creating particle", e);
             } catch (InstantiationException e) {
@@ -338,7 +341,7 @@ public class ParticleEmitter extends Entity {
     float pSpeed = 0;
     float pMaxSpeed = 0;
     float pLife = 1000;
-    float pAlpha = 255;
+    float pAlpha = 1;
     float pAlphaRate = 0;
     Entity pGravityWell;
     float pGravityWellForce;
@@ -441,7 +444,13 @@ public class ParticleEmitter extends Entity {
       this.pData = data;
       return this;
     }
-    
+
+    public ParticleEmitterBuilder withSprite(Sprite sprite) {
+      this.pClass = SpriteParticle.class;
+      this.pData = new SpriteParticleData(sprite);
+      return this;
+    }
+
     public ParticleEmitterBuilder withGravityWell(
         Entity well,
         float force) {
@@ -465,7 +474,7 @@ public class ParticleEmitter extends Entity {
       this.pGravityWellCollide = collideWith;
       return this;
     }
- 
+
     public ParticleEmitter build() {
       ParticleEmitter emitter = new ParticleEmitter(x, y);
       emitter.emitMode = emitMode;

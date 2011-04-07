@@ -1,38 +1,21 @@
 package com.zeddic.common.particle;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
+import javax.microedition.khronos.opengles.GL10;
+
+import com.zeddic.common.opengl.Color;
+import com.zeddic.common.opengl.SimpleGeometry;
 
 public class PixelParticle extends Particle {
 
-  private static final Paint DEFAULT_PAINT = BasicParticleOptions.getRandomColor();
-
+  private Color color = new Color(0, 255, 0, 255);
+  
   public PixelParticle() {
-    this(0, 0);
+    super(0, 0);
   }
-  
-  @Override
-  public void onEmit(ParticleData data) {
-    if (data != null) {
-      this.paint = ((BasicParticleOptions) data).color;
-    }
-  }
-  
-  /**
-   * Creates a new particle at the given position with default values.
-   */
-  public PixelParticle(float x, float y) {
-    super(x, y);
 
-    paint = DEFAULT_PAINT;
-  }
-  
-  public void draw(Canvas canvas) {
-    paint.setAlpha((int) alpha);
-    paint.setStrokeWidth(1);
-    //canvas.save();
-    //canvas.translate(x, y); 
-    canvas.drawPoint(x, y, paint);
-    //canvas.restore();
+  @Override
+  public void draw(GL10 gl) {
+    color.a = alpha;
+    SimpleGeometry.drawPoint(gl, x, y, color);
   }
 }

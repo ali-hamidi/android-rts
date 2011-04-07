@@ -20,6 +20,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.particle.ParticleEmitter;
+import com.zeddic.common.particle.SpriteParticle;
 import com.zeddic.common.particle.ParticleEmitter.ParticleEmitterBuilder;
 
 public class Explosion extends Entity {
@@ -46,6 +47,7 @@ public class Explosion extends Entity {
         .withParticleLife(500)
         .withMaxParticles(20)
         .withEmitRate(1000)
+        .withParticleClass(SpriteParticle.class)
         .build();
   }
   

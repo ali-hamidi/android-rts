@@ -4,7 +4,7 @@ import android.graphics.Paint;
 
 import com.zeddic.common.util.RandomUtil;
 
-public class BasicParticleOptions extends ParticleData {
+public class BasicParticleOptions implements ParticleData {
 
   private static final int MAX_RANDOM_COLORS = 5;
   private static final Paint[] RANDOM_COLORS = new Paint[MAX_RANDOM_COLORS];
@@ -28,7 +28,7 @@ public class BasicParticleOptions extends ParticleData {
   public BasicParticleOptions() {
     color = getRandomColor();
   }
-  
+
   public BasicParticleOptions(Paint color) {
     this.color = color;
   }
