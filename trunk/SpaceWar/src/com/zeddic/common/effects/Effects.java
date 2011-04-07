@@ -42,7 +42,6 @@ public class Effects extends AbstractGameObject {
     effects = new ObjectStockpile();
     effects.createSupply(Explosion.class, 50);
     effects.createSupply(HitExplosion.class, 50);
-    effects.createSupply(GravityExplosion.class, 50);
     effects.createSupply(Implosion.class, 50);
   }
   
@@ -82,20 +81,6 @@ public class Effects extends AbstractGameObject {
     explosion.x = x;
     explosion.y = y;
     explosion.ignite();
-    return explosion;
-  }
-  
-  public GravityExplosion explodeWithGravity(
-      float x, float y, Entity dest) {
-    
-    GravityExplosion explosion = effects.getSupply(GravityExplosion.class).take();
-    if (explosion == null)
-      return null;
-    
-    explosion.x = x;
-    explosion.y = y;
-    explosion.ignite(dest);
-    
     return explosion;
   }
   

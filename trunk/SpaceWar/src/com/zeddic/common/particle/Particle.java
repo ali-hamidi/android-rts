@@ -30,20 +30,10 @@ import com.zeddic.common.util.Vector2d;
  * explosions or fire. Particles ussually have a short time life
  * which is coordinated by a {@link ParticleEmitter}. 
  * 
- * @author scott
+ * @author scott@zeddic.com (Scott Bailey)
  */
 public class Particle extends Entity {
 
-  /** Position in the game world. */
-  //public float x;
-  //public float y;
-  
-  /** Speed + direction of movement. */
-  //public Vector2d velocity; 
-  
-  /** How large the particle should be. */
-  //public float scale;
-  
   /** How many milliseconds the particle should be rendered for. */
   public float maxLife;
   
@@ -86,7 +76,7 @@ public class Particle extends Entity {
   protected Paint paint;
   
   /** Vector used for drawing the particle as a line based on speed. */
-  protected Vector2d scaledVelocity = new Vector2d(0, 0);
+  //protected Vector2d scaledVelocity = new Vector2d(0, 0);
   /** A gravity force vector applied by the gravity well. */
   protected Vector2d gravityVector = new Vector2d();
   
@@ -94,7 +84,6 @@ public class Particle extends Entity {
   /** What fraction of a regular update to perform based on the time passed. */
   float timeFraction;
 
-  
   /**
    * Creates a new particle at the origin with default values.
    */
@@ -118,34 +107,15 @@ public class Particle extends Entity {
   }
   
   /**
-   * Called by the emitter once the emitter has just been emited. May be
-   * used by the particle for rendering purposes.
+   * Called by the emitter once the emitter has just been emited.
    */
-  public void onEmit(ParticleData data) {
-
-  }
-
-  /**
-   * Updates the velocity.
-   */
-  public void setVelocity(float x, float y) {
-    velocity.x = x;
-    velocity.y = y;
-    scaledVelocity.x = 0;
-    scaledVelocity.y = 0;
-  }
+  public void onEmit(ParticleData data) { }
   
   /**
-   * Updates the velocity based on an angle and speed component.
+   * Called by the emitter once the emitter has just been created.
    */
-  public void setVelocityBySpeed(float angle, float speed) {
-    double radians = Math.toRadians(angle);
-    velocity.x = speed * (float) Math.cos(radians);
-    velocity.y = speed * (float) Math.sin(radians);
-    scaledVelocity.x = 0;
-    scaledVelocity.y = 0;
-  }
-  
+  public void onCreate(ParticleData data) { }
+
   /**
    * Main update loop responsible for updating the particle state
    * based on the amount of time passed.
@@ -154,7 +124,7 @@ public class Particle extends Entity {
   public void update(long time) {
     super.update(time);
     
-    timeFraction = (float) time / Entity.TIME_SCALER;
+    //timeFraction = (float) time / Entity.TIME_SCALER;
     
     // Check to see if the particle should be dead.
     life += time;
@@ -172,12 +142,12 @@ public class Particle extends Entity {
     applyMaxSpeed();
 
     // Apply velocity.
-    x += velocity.x * timeFraction;
-    y += velocity.y * timeFraction;
+    //x += velocity.x * timeFraction;
+    //y += velocity.y * timeFraction;
     
     // Update the scaled velcoity vector for future drawing purposes.
-    scaledVelocity.x = velocity.x * timeFraction;
-    scaledVelocity.y = velocity.y * timeFraction;
+    //scaledVelocity.x = velocity.x * timeFraction;
+    //scaledVelocity.y = velocity.y * timeFraction;
   }
 
   /**
@@ -186,14 +156,6 @@ public class Particle extends Entity {
   @Override
   public void draw(GL10 gl) {
     
-    // TODO(baileys): Draw an open gl based particle.
-    
-    //paint.setAlpha((int) alpha);
-    
-    // Draw the particle as a line from its current position to where it
-    // used to be. The length of the line is based on its current velocity.
-    //c.drawLine(x, y, x + -scaledVelocity.x, y + -scaledVelocity.y, paint);
-    //c.drawCircle(x, y, scale, paint);
   }
   
   @Override
