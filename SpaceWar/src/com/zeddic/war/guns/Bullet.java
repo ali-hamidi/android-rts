@@ -22,9 +22,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.zeddic.common.Entity;
-import com.zeddic.common.effects.Effects;
 import com.zeddic.common.util.Components;
 import com.zeddic.common.util.Vector2d;
+import com.zeddic.war.effects.Effects;
 
 public class Bullet extends Entity {
 
@@ -107,7 +107,7 @@ public class Bullet extends Entity {
   @Override
   public void collide(Entity other, Vector2d avoidVector) {
     super.collide(other, avoidVector);
-    Effects.get().hit(x, y, avoidVector);
+    //Effects.get().hit(x, y, avoidVector);
     kill();
   }
 }

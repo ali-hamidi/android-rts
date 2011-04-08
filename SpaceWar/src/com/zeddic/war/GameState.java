@@ -19,9 +19,9 @@ package com.zeddic.war;
 import android.app.Activity;
 import android.content.Context;
 
-import com.zeddic.common.effects.Effects;
 import com.zeddic.common.opengl.TextureLibrary;
 import com.zeddic.common.util.ResourceLoader;
+import com.zeddic.war.effects.Effects;
 import com.zeddic.war.level.Level;
 
 public class GameState {
