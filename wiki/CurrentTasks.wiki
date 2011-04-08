@@ -11,7 +11,7 @@ It should display two types of things:
 2: Menus that allow the user to interact with items they select on the screen. For example: if a planet is selected, it may allow them to build a new space ship. If a ship is selected, it may allow them to upgrade the level of the ship.
 
 
-== Camera Scaling ==
+== World Scaling ==
 The game is run on both tablets with large screens and phones with small screens.
 
 We should determine how to best handle the display on the game world in both cases. For example: keep the world dimensions may remain the same but then we would have to scale the camera so the entire world (or some % thereof) would be visible on smaller screens.
