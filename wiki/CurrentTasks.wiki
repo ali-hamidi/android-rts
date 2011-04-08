@@ -1,0 +1,47 @@
+#summary Current tasks
+
+= Current Tasks to undertake =
+
+= HUD =
+The HUD is displayed over the game world and is responsible for displaying menus and info for the user. It is displayed in a constant position independent of the camera movement.
+
+It should display two types of things:
+
+1: Status indicator composed of the users current money and 'wave'
+2: Menus that allow the user to interact with items they select on the screen. For example: if a planet is selected, it may allow them to build a new space ship. If a ship is selected, it may allow them to upgrade the level of the ship.
+
+
+= Camera Scaling =
+The game is run on both tablets with large screens and phones with small screens.
+
+We should determine how to best handle the display on the game world in both cases. For example: keep the world dimensions may remain the same but then we would have to scale the camera so the entire world (or some % thereof) would be visible on smaller screens.
+
+For example: The world is 3000x3000. 
+On a small phone screen, we could initially zoom out so either the entire world is visible on the screen or at least 90% of it is on the screen. On a tablet, we wouldn't need to zoom out as much. 
+
+This task involves deciding on how best to scale and determining the right amount to scale for different devices.
+
+
+= Random map level generation =
+Determine an algorithm that could auto-generate interesting maps for the player. This would be composed of:
+
+1: selecting an initial home planet.
+2: populating space with planets of varying sizes that do not overlap
+
+
+= New Enemy Ships =
+Creating new types of enemy ships that will attack in waves.
+
+
+= Update the bullet / gun code to work in OpenGL =
+Update, refactor, and wire in the existing gun / bullet code to work.
+
+
+= Update collision system to work with large stationary objects =
+The collision system currently has trouble with objects that are bigger than the 32x32 tile grid. Determine the best way for this to be handled.
+
+Either:
+1: add support for a stationary object type that will register all cells that it belongs to.
+2: have large objects always register with all cells and update all cells when they move.
+3: Split up tile collision size and world object collision size, then set the collision grid size to the size of the biggest world object. (frees up memory, and makes it more efficient to move 'big objects' around in the world, but comes at the cost of potentially slower collision grid queries if the world is sufficiently 'dense')
+
