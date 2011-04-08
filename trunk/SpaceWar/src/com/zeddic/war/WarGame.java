@@ -6,14 +6,10 @@ import javax.microedition.khronos.opengles.GL10;
 import android.view.MotionEvent;
 
 import com.zeddic.common.opengl.AbstractGame;
-import com.zeddic.common.opengl.Color;
-import com.zeddic.common.opengl.SimpleGeometry;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.opengl.TextureLibrary;
-import com.zeddic.common.particle.ParticleEmitter;
-import com.zeddic.common.particle.ParticleEmitter.ParticleEmitterBuilder;
-import com.zeddic.common.particle.PixelParticle;
 import com.zeddic.war.collision.CollisionSystem;
+import com.zeddic.war.effects.Effects;
 import com.zeddic.war.level.MockLevelLoader;
 import com.zeddic.war.ships.FighterShip;
 
@@ -30,32 +26,6 @@ public class WarGame extends AbstractGame {
 
   private Sprite grid;
   private Planet planet = new Planet(0, 0);
-  
-  private ParticleEmitter emitter = new ParticleEmitterBuilder()
-      .at(300, 250)
-      .withEmitMode(ParticleEmitter.MODE_OMNI)
-      .withEmitSpeedJitter(2)
-      .withEmitLife(0)
-      .withParticleSpeed(7)
-      .withParticleAlphaRate(-.01f)
-      .withParticleLife(2000)
-      .withMaxParticles(160)
-      .withEmitRate(40)
-      .withSprite(new Sprite(16, 16, R.drawable.redparticle))
-      .build();
-  
-  private ParticleEmitter pointEmitter = new ParticleEmitterBuilder()
-      .at(500, 250)
-      .withEmitMode(ParticleEmitter.MODE_OMNI)
-      .withEmitSpeedJitter(.5f)
-      .withEmitLife(0)
-      .withParticleSpeed(12)
-      .withParticleAlphaRate(0)
-      .withParticleLife(2000)
-      .withMaxParticles(160)
-      .withEmitRate(1000)
-      .withParticleClass(PixelParticle.class)
-      .build();
 
   public WarGame() {
     init();
@@ -148,8 +118,9 @@ public class WarGame extends AbstractGame {
     commandManager.update(time);
     GameState.stockpiles.update(time);
     planet.update(time);
-    emitter.update(time);
-    pointEmitter.update(time);
+
+    Effects.get().update(time);
+    
   }
 
   @Override
@@ -170,14 +141,8 @@ public class WarGame extends AbstractGame {
     commandManager.draw(gl);
     GameState.level.draw(gl);
     GameState.stockpiles.draw(gl);
-    
-    SimpleGeometry.drawLine(gl, 50, 50, 100, 100, new Color(255, 0, 63, 255));
-    
 
-    SimpleGeometry.drawPoint(gl, 500, 500, new Color(0, 0, 255, 255));
-    
-    emitter.draw(gl);
-    pointEmitter.draw(gl);
+    Effects.get().draw(gl);
     
     // Pop any camera transformations.
     camera.end(gl);
@@ -189,5 +154,10 @@ public class WarGame extends AbstractGame {
   public void onTouchEvent(MotionEvent e) {
     //camera.onTouchEvent(e);
     commandManager.onTouch(e);
+
+    if (e.getAction() == MotionEvent.ACTION_DOWN) {
+      Effects.get().explode(e.getX(), e.getY());
+      //Effects.get().shockwave(e.getX(), e.getY());
+    }
   }
 }

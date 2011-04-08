@@ -1,31 +1,21 @@
-/*
- * Copyright (C) 2010 Geo Siege Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.zeddic.common.effects;
+package com.zeddic.war.effects;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
+import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.particle.ParticleEmitter;
-import com.zeddic.common.particle.SpriteParticle;
 import com.zeddic.common.particle.ParticleEmitter.ParticleEmitterBuilder;
+import com.zeddic.war.R;
 
+/**
+ * A basic, omni directional explosion particle effect.
+ * 
+ * @author scott@zeddic.com (Scott Bailey)
+ */
 public class Explosion extends Entity {
 
-  ParticleEmitter emitter;
+  protected ParticleEmitter emitter;
   
   public Explosion() {
     this(0, 0);
@@ -41,16 +31,17 @@ public class Explosion extends Entity {
         .at(x, y)
         .withEmitMode(ParticleEmitter.MODE_OMNI)
         .withEmitSpeedJitter(2)
-        .withEmitLife(500)
+        .withEmitLife(600)
         .withParticleSpeed(20)
-        .withParticleAlphaRate(-8)
+        .withParticleAlphaRate(-.03f)
         .withParticleLife(500)
         .withMaxParticles(20)
         .withEmitRate(1000)
-        .withParticleClass(SpriteParticle.class)
+        .withEmitCycle(false)
+        .withSprite(new Sprite(16, 16, R.drawable.redparticle))
         .build();
   }
-  
+
   public void ignite() {
     enable();
     emitter.reset();
