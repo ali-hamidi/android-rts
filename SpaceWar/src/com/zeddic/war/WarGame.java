@@ -6,11 +6,13 @@ import javax.microedition.khronos.opengles.GL10;
 import android.view.MotionEvent;
 
 import com.zeddic.common.opengl.AbstractGame;
+import com.zeddic.common.opengl.Screen;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.opengl.TextureLibrary;
 import com.zeddic.war.collision.CollisionSystem;
 import com.zeddic.war.effects.Effects;
-import com.zeddic.war.level.MockLevelLoader;
+import com.zeddic.war.level.FileLevelLoader;
+import com.zeddic.war.level.Planet;
 import com.zeddic.war.ships.FighterShip;
 
 /**
@@ -25,16 +27,11 @@ public class WarGame extends AbstractGame {
   private Camera camera = new Camera();
 
   private Sprite grid;
-  private Planet planet = new Planet(0, 0);
 
-  public WarGame() {
-    init();
-  }
+  public WarGame() { }
 
   public void init() {
-    // Populate the GameState
-    GameState.setScreen(800, 640);
-    GameState.level = new MockLevelLoader().load("blah");
+    GameState.level = new FileLevelLoader().load("levels/1.txt");
     CollisionSystem.get().initializeForLevel(GameState.level);
     commandManager = new BattleCommandManager();
     
@@ -51,6 +48,13 @@ public class WarGame extends AbstractGame {
     ship.x = 200;
     ship.y = 200;
     ship.enable();
+    
+    int gridWidth = ((int) Screen.width / 32 + 1) * 32;
+    int gridHeight = ((int) Screen.height / 32 + 1) * 32;
+    grid = new Sprite(gridWidth , gridHeight, R.drawable.grid);
+    grid.setTextureScale(gridWidth / 32, gridHeight / 32);
+    grid.setTop(0);
+    grid.setLeft(0);
   }
 
   @Override
@@ -94,15 +98,8 @@ public class WarGame extends AbstractGame {
   public void onSurfaceChanged(GL10 gl, int width, int height) {
     super.onSurfaceChanged(gl, width, height);
     
-    int gridWidth = ((int) width / 32 + 1) * 32;
-    int gridHeight = ((int) height / 32 + 1) * 32;
-    grid = new Sprite(gridWidth , gridHeight, R.drawable.grid);
-    grid.setTextureScale(gridWidth / 32, gridHeight / 32);
-    grid.setTop(0);
-    grid.setLeft(0);
-    
-    GameState.setScreen(width, height);
-    
+    init();
+
     // Set device dimensions.
     gl.glViewport(0, 0, width, height); 
     
@@ -117,10 +114,9 @@ public class WarGame extends AbstractGame {
   public void update(long time) {
     commandManager.update(time);
     GameState.stockpiles.update(time);
-    planet.update(time);
+    GameState.level.update(time);
 
     Effects.get().update(time);
-    
   }
 
   @Override
@@ -135,9 +131,7 @@ public class WarGame extends AbstractGame {
     
     // Draw all game objects.
     grid.draw(gl);
-    planet.draw(gl);
-    
-    CollisionSystem.get().draw(gl);
+
     commandManager.draw(gl);
     GameState.level.draw(gl);
     GameState.stockpiles.draw(gl);
@@ -156,7 +150,7 @@ public class WarGame extends AbstractGame {
     commandManager.onTouch(e);
 
     if (e.getAction() == MotionEvent.ACTION_DOWN) {
-      Effects.get().explode(e.getX(), e.getY());
+      //Effects.get().explode(e.getX(), e.getY());
       //Effects.get().shockwave(e.getX(), e.getY());
     }
   }

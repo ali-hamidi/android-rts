@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.util.Log;
+
 import com.zeddic.common.util.ResourceLoader;
 import com.zeddic.war.level.Level.LevelBuilder;
 
@@ -22,20 +24,22 @@ public class FileLevelLoader implements LevelLoader {
   
   
   @Override
-  public Level load(String file) throws IOException {
-    InputStream inputStream = ResourceLoader.loadAsset(file);
+  public Level load(String file) {
+
     Level loadedLevel = null;
     
     try {
+      InputStream inputStream = ResourceLoader.loadAsset(file);
+      
       InputStreamReader inputReader = new InputStreamReader(inputStream);
       BufferedReader reader = new BufferedReader(inputReader);
       
       loadedLevel = parseMap(reader);
 
-    } catch (IOException e) {
-      throw e;
-    } finally {
       inputStream.close();
+    } catch (IOException e) {
+      Log.e(this.getClass().toString(), "Unable to load level file");
+      throw new RuntimeException("Unable to load level! Aborting!");
     }
     
     return loadedLevel;
@@ -85,7 +89,9 @@ public class FileLevelLoader implements LevelLoader {
           throw new IOException("Invalid Map Size specified or Map Size Missing: "
               + rows + ", " + cols);
         }
+
         loadedLevelBuilder.withGridSize(rows, cols);
+
         for (int r = 0; r < rows; r++) {
           line = reader.readLine();
           for (int c = 0; c < cols; c++) {

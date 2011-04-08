@@ -2,9 +2,8 @@ package com.zeddic.war.level;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Canvas;
-
 import com.zeddic.common.GameObject;
+import com.zeddic.common.opengl.Screen;
 
 
 public class Level implements GameObject {
@@ -17,8 +16,7 @@ public class Level implements GameObject {
   
   public Level(LevelBuilder builder) {
     this.grid = builder.grid;
-    map = new Map();
-    map.setSize(builder.width, builder.height);
+    map = new Map(builder.width, builder.height);
     this.rows = builder.rows;
     this.cols = builder.cols;
   }
@@ -122,8 +120,10 @@ public class Level implements GameObject {
     public LevelBuilder() {}
     
     public void withGridSize(int rows, int cols) {
-      this.width = cols * TILE_SIZE;
-      this.height = rows * TILE_SIZE;
+      
+      // TODO(scott): HACK WORLD SIZE UNTIL CAMERA SCALES TO FIT WORLD ON SCREEN
+      this.width = Screen.width;
+      this.height = Screen.height;
       this.rows = rows;
       this.cols = cols;
       grid = new LevelTile[rows][cols];
