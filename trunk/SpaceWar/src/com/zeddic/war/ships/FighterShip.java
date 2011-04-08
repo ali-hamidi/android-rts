@@ -59,7 +59,7 @@ public class FighterShip extends Ship {
   private Target target;
   private StraightPath path;
 
-  private Sprite sprite = new Sprite(32, 32, R.drawable.ship);
+  private Sprite sprite = new Sprite(40, 40, R.drawable.ship);
   
   
   public FighterShip() {

@@ -1,9 +1,6 @@
 package com.zeddic.war.collision;
 
-import javax.microedition.khronos.opengles.GL10;
-
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.util.FloatMath;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
@@ -11,23 +8,8 @@ import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.TileBounds.EdgeType;
 
 public class CollisionCell {
-  
 
   private static int INITIAL_CAPACITY = 40;
-  
-  private static final Paint PAINT;
-  private static final Paint FILL_PAINT;
-  static {
-    PAINT = new Paint();
-    PAINT.setColor(Color.WHITE);
-    PAINT.setStyle(Paint.Style.STROKE);
-    PAINT.setStrokeWidth(1);
-    
-    FILL_PAINT = new Paint();
-    FILL_PAINT.setColor(Color.rgb(219, 255, 207));
-    FILL_PAINT.setStyle(Paint.Style.FILL);
-  }
-
   private TileBounds bounds = TileBounds.EMPTY;
   public SimpleList<Entity> items;
   
@@ -87,55 +69,26 @@ public class CollisionCell {
         : bounds.rightEdge;
   }
 
-  public void draw(GL10 gl) {
-    
-    //PAINT.setColor(Color.GREEN);
-    //c.drawRect(left, top, left + CollisionSystem.SIZE, top + CollisionSystem.SIZE, PAINT);
-    
-    //if (items.size > 0) {
-    //  c.drawRect(left, top, left + CollisionSystem.SIZE, top + CollisionSystem.SIZE, FILL_PAINT);
-    //}
-    
-    /*PAINT.setColor(Color.WHITE);
-    if (bounds != TileBounds.SOLID || !active) {
-      return;
-    }
-    
-    c.drawRect(left, top, left + CollisionSystem.SIZE, top + CollisionSystem.SIZE, PAINT);
-
-    PAINT.setColor(Color.RED);
-  
-    if (topEdge == EdgeType.SOLID) {
-      c.drawLine(left, top, left + CollisionSystem.SIZE, top, PAINT);
-    }
-    
-    if (leftEdge == EdgeType.SOLID) {
-      c.drawLine(left, top, left, top + CollisionSystem.SIZE, PAINT);
-    }
-    
-    if (rightEdge == EdgeType.SOLID) {
-      c.drawLine(left + CollisionSystem.SIZE, top, left + CollisionSystem.SIZE, top + CollisionSystem.SIZE, PAINT);
-    }
-    
-    if (bottomEdge == EdgeType.SOLID) {
-      c.drawLine(left, top + CollisionSystem.SIZE, left + CollisionSystem.SIZE, top + CollisionSystem.SIZE, PAINT);
-    } */
-  }
-  
   Vector2d projection = new Vector2d();
  
   public void collide(Entity entity) {
     
+    if (!collideWithTile(entity)) {
+      collideWithItems(entity);
+    }
+  }
+  
+  private boolean collideWithTile(Entity entity) {
     if (bounds.isEmpty()) {
-      return;
+      return false;
     }
     
     if (left() >= entity.right() || right() <= entity.left()) {
-      return;
+      return false;
     }
     
     if (top() >= entity.bottom() || bottom() <= entity.top()) {
-      return;
+      return false;
     }
         
     projection.x = Float.MAX_VALUE;
@@ -166,6 +119,38 @@ public class CollisionCell {
       entity.x += projection.x;
       entity.y += projection.y;
       //entity.collide(projection, null);
+    }
+    
+    return hit;
+  }
+  
+  private void collideWithItems(Entity entity) {
+    
+    Entity other;
+    for (int i = 0; i < items.size; i++) {
+      other = items.items[i];
+      
+      if (other == entity) {
+        continue;
+      }
+      
+      // Are they colliding now?
+      float dX = entity.x - other.x;
+      float dY = entity.y - other.y;
+      float minDistance = entity.radius + other.radius;
+      boolean colliding = dX * dX + dY * dY < minDistance * minDistance;
+      
+      if (colliding) {
+        float seperationNeeded = minDistance - FloatMath.sqrt(dX * dX + dY * dY);
+        projection.x = dX;
+        projection.y = dY;
+        projection.normalize();
+        projection.x *= seperationNeeded;
+        projection.y *= seperationNeeded;
+        
+        entity.x += projection.x;
+        entity.y += projection.y;
+      }
     }
   }
   

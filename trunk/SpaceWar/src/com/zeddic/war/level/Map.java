@@ -16,22 +16,19 @@
 
 package com.zeddic.war.level;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Join;
-import android.graphics.Paint.Style;
-import android.graphics.Path;
-
 import com.zeddic.common.AbstractGameObject;
+import com.zeddic.common.opengl.Color;
 
 public class Map extends AbstractGameObject {
   
   private static final float EDGE_BUFFER = 0;
   private static final float SPAWN_BUFFER = 50;
-  private static final float DEFAULT_WIDTH = 900;
-  private static final float DEFAULT_HEIGHT = 600;
+  private static final int NUM_PLANETS = 10;
   
   public float width;
   public float height;
@@ -46,20 +43,19 @@ public class Map extends AbstractGameObject {
   public float spawnHeight;
   public float spawnRight;
   public float spawnBottom;
-
-  Path borderPath; 
-  Paint paint;
   
-  public Map() {
-    paint = new Paint();
-    paint.setStyle(Style.STROKE);
-    paint.setStrokeWidth(3);
-    paint.setStrokeJoin(Join.MITER);
-    paint.setColor(Color.WHITE);
-    setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  private final List<Planet> planets = new ArrayList<Planet>();
+
+  public Map(float width, float height) {
+    setSize(width, height);
+    planets.add(new Planet(900, 300));
+    planets.add(new Planet(100, 100, new Color(255, 0, 238, 255)));
+    planets.add(new Planet(500, 250, new Color(0, 255, 89, 255)));
+    planets.add(new Planet(750, 500, new Color(255, 187, 0, 255)));
+    planets.add(new Planet(300, 700, new Color(255, 0, 0, 255)));
   }
   
-  public void setSize(float width, float height) {
+  private void setSize(float width, float height) {
     this.width = width;
     this.height = height;
     top = 0 + EDGE_BUFFER;
@@ -73,13 +69,6 @@ public class Map extends AbstractGameObject {
     spawnHeight = height - 2 * SPAWN_BUFFER;
     spawnBottom = spawnTop + spawnHeight;
     spawnRight = spawnLeft + spawnWidth;
-    
-    borderPath = new Path();
-    borderPath.moveTo(left, top);
-    borderPath.lineTo(right, top);
-    borderPath.lineTo(right, bottom);
-    borderPath.lineTo(left, bottom);
-    borderPath.lineTo(left, top);
   }
   
   public boolean inSpawnableArea(float x, float y) {
@@ -89,13 +78,15 @@ public class Map extends AbstractGameObject {
   
   @Override
   public void update(long time) {
-    //background.update(time);
+    for (Planet planet : planets) {
+      planet.update(time);
+    }
   }
   
   @Override
   public void draw(GL10 gl) {
-    // TODO(baileys): Draw using opengl.
-    //background.draw(c);
-    //c.drawPath(borderPath, paint);
+    for (Planet planet : planets) {
+      planet.draw(gl);
+    }
   }
 }

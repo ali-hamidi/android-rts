@@ -122,19 +122,17 @@ public abstract class Mesh {
   }
 
   public void setColor(float red, float green, float blue, float alpha) {
-    // Setting the flat color.
     rgba[0] = red;
     rgba[1] = green;
     rgba[2] = blue;
     rgba[3] = alpha;
   }
   
-  public void setColor(int red, int green, int blue, int alpha) {
-    setColor(
-        (float) red / 255,
-        (float) green / 255,
-        (float) blue / 255,
-        (float) alpha / 255);
+  public void setColor(Color color) {
+    rgba[0] = color.r;
+    rgba[1] = color.g;
+    rgba[2] = color.b;
+    rgba[3] = color.a;
   }
    
   /**

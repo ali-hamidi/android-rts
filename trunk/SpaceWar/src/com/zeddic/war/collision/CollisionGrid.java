@@ -5,6 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.war.level.Level;
+import com.zeddic.war.level.LevelTile;
 import com.zeddic.war.level.TileType;
 
 public class CollisionGrid {
@@ -15,15 +16,17 @@ public class CollisionGrid {
 	
 	public CollisionGrid(Level level) {
 	  
-	  this.rows = level.getTileRows();
-	  this.cols = level.getTileCols();
+	  this.rows = (int) (level.getHeight() / Level.TILE_SIZE) + 1;
+	  this.cols = (int) (level.getWidth() / Level.TILE_SIZE) + 1;
 	  
 	  grid = new CollisionCell[rows][cols];
 	  
 	  for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {   
         CollisionCell cell = new CollisionCell(this, row, col);
-        if (level.getTile(row, col).getType() != TileType.EMPTY) {
+        
+        LevelTile tile = level.getTile(row, col);
+        if (tile != null && tile.getType() != TileType.EMPTY) {
           cell.setBounds(TileBounds.SOLID);
         }
         grid[row][col] = cell;
@@ -129,7 +132,7 @@ public class CollisionGrid {
 	public void draw(GL10 gl) {
 	  for (int row = 0; row < rows; row++) {
 	    for(int col = 0; col < cols; col++) {
-	      grid[row][col].draw(gl);
+	      //grid[row][col].draw(gl);
 	    }
 	  }
 	}
@@ -174,7 +177,7 @@ public class CollisionGrid {
       cell.add(entity);
     }
 
-    component.currentCell = cell;;
+    component.currentCell = cell;
   }
   
   /**

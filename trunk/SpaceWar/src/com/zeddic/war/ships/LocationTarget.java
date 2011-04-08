@@ -5,30 +5,25 @@ import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Color;
-import android.graphics.Paint;
-
 import com.zeddic.common.Entity;
+import com.zeddic.common.opengl.Color;
+import com.zeddic.common.opengl.SimpleGeometry;
+import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.transistions.Range;
 import com.zeddic.common.transistions.RangeConverter;
 import com.zeddic.common.transistions.Transition;
 import com.zeddic.common.transistions.Transitions.TransitionType;
+import com.zeddic.common.util.Vector2d;
+import com.zeddic.war.R;
 
 public class LocationTarget implements Target {
 
-  private static final Paint PAINT;
-  static {
-    PAINT = new Paint();
-    PAINT.setColor(Color.RED);
-    PAINT.setStyle(Paint.Style.STROKE);
-    PAINT.setStrokeWidth(1);
-    PAINT.setAntiAlias(true);
-  }
-  
+  private static final Color color = new Color(255, 0, 0, 255);
+  private static final Sprite sprite = new Sprite(40, 40, R.drawable.planet);
   private float x;
   private float y;
-  private final Transition sizeTransition = new Transition(5, 25, 1000, TransitionType.EASE_IN_OUT);
-  private static final RangeConverter ALPHA = new RangeConverter(new Range(15, 25), new Range(255, 50));
+  private final Transition sizeTransition = new Transition(.5f, 1, 2000, TransitionType.EASE_IN_OUT);
+  private static final RangeConverter ALPHA = new RangeConverter(new Range(.5f, 1f), new Range(1f, 0f));
   private final List<Entity> followers = new ArrayList<Entity>();
   
   // TODO(baileys): Change this to a composite.
@@ -59,6 +54,13 @@ public class LocationTarget implements Target {
 
   @Override
   public void draw(GL10 gl) {
+
+    sprite.scale = sizeTransition.get();
+    sprite.setColor(color);
+    sprite.setAlpha(ALPHA.convert(sprite.scale));
+    sprite.x = x;
+    sprite.y = y;
+    sprite.draw(gl);
     
     // TODO(baileys): Draw using opengl.
     
@@ -70,7 +72,7 @@ public class LocationTarget implements Target {
     c.drawCircle(x, y, size, PAINT);
     
 
-    PAINT.setAlpha(255);
+    PAINT.setAlpha(255); */
     
     int length = followers.size();
 
@@ -81,17 +83,19 @@ public class LocationTarget implements Target {
       float dX = x - follower.x;
       float dY = y - follower.y;
       
-      if (dX * dX + dY * dY > 25 * 25) {
+      if (dX * dX + dY * dY > 32 * 32) {
         Vector2d temp = new Vector2d(dX, dY);
         temp.normalize();
-        temp.x *= 25;
-        temp.y *= 25;
-        c.drawLine(follower.x + temp.x, follower.y + temp.y, x, y, PAINT);
+        temp.x *= 32;
+        temp.y *= 32;
+        SimpleGeometry.drawLine(gl, follower.x + temp.x, follower.y + temp.y, x, y, color);
       }
     } 
     
-    PAINT.setStyle(Style.FILL);
-    c.drawCircle(x, y, 5, PAINT); */
+
+    
+    //PAINT.setStyle(Style.FILL);
+    //c.drawCircle(x, y, 5, PAINT); */
   }
 
   @Override

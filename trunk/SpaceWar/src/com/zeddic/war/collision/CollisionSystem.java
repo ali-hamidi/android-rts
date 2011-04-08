@@ -50,8 +50,12 @@ public class CollisionSystem implements GameObject {
     
     component.entity.x += dX;
     component.entity.y += dY;
-    grid.collide(component);
     
+    if (component.getBehavior() == CollideBehavior.HIT_ONLY ||
+        component.getBehavior() == CollideBehavior.HIT_RECEIVE) {
+      grid.collide(component);
+    }
+
     if (dX != 0 || dY != 0) {
       grid.update(component);
     }

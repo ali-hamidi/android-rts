@@ -2,11 +2,11 @@ package com.zeddic.war;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.MotionEvent;
 
 import com.zeddic.common.AbstractGameObject;
+import com.zeddic.common.opengl.Color;
+import com.zeddic.common.opengl.SimpleGeometry;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.ProximityUtil;
@@ -16,14 +16,7 @@ import com.zeddic.war.ships.Target;
 
 public class BattleCommandManager extends AbstractGameObject {
 
-  private static final Paint PAINT;
-  static {
-    PAINT = new Paint();
-    PAINT.setColor(Color.rgb(64, 255, 0));
-    PAINT.setStrokeWidth(1);
-    PAINT.setStyle(Paint.Style.STROKE);
-  }
-
+  private static final Color color = new Color(0, 255, 0, 255);
   private final SimpleList<Target> targets = SimpleList.create(Target.class);
 
   private Selection selection;
@@ -47,7 +40,7 @@ public class BattleCommandManager extends AbstractGameObject {
     
     this.selection = null;
 
-    FighterShip ship = (FighterShip) ProximityUtil.getClosest(FighterShip.class, e.getX(), e.getY(), 50);
+    FighterShip ship = (FighterShip) ProximityUtil.getClosest(FighterShip.class, e.getX(), e.getY(), 80);
     if (ship != null) {
       //if (ship.getTarget() != null) {
       //  this.selection = new Selection(ship.getTarget());
@@ -125,9 +118,8 @@ public class BattleCommandManager extends AbstractGameObject {
     }
 
     if (selection.isShip()) {
-      
-      
-      /*float dX = lastX - selection.ship.x;
+            
+      float dX = lastX - selection.ship.x;
       float dY = lastY - selection.ship.y;
       
       if (dX * dX + dY * dY > 25 * 25) {
@@ -135,10 +127,10 @@ public class BattleCommandManager extends AbstractGameObject {
         temp.normalize();
         temp.x *= 25;
         temp.y *= 25;
-        c.drawLine(selection.ship.x + temp.x, selection.ship.y + temp.y, lastX, lastY, PAINT);
-      } */
-      
-      
+        
+        SimpleGeometry.drawLine(gl, selection.ship.x + temp.x, selection.ship.y + temp.y, lastX, lastY, color);
+      }
+
       //c.drawLine(selection.getX(), selection.getY(), lastX, lastY, PAINT);
     }
   }

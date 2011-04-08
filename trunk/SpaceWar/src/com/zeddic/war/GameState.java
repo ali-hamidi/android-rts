@@ -26,8 +26,6 @@ import com.zeddic.war.level.Level;
 
 public class GameState {
 
-  public static int screenWidth = 800;
-  public static int screenHeight = 433;
   public static Effects effects = null;
   public static Context context = null;
   public static Activity activity;
@@ -71,12 +69,5 @@ public class GameState {
     effects = null;
     context = null;
     loaded = false;
-  }
-  
-  public static void setScreen(int width, int height) {
-    // Force horizontal mode. Android does not appear to be deterministic
-    // in how it reports screen width / height.
-    screenWidth = Math.max(width, height);
-    screenHeight = Math.min(width, height);
   }
 }
