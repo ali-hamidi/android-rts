@@ -42,7 +42,6 @@ public class Particle extends Entity {
   
   /** 
    * An acceleration that should be added to the velocity.
-   * TODO(scott): IMPLEMENT!
    **/
   public float acceleration;
   
@@ -51,6 +50,9 @@ public class Particle extends Entity {
   
   /** The rate at which the alpha transparency should change. */
   public float alphaRate;
+  
+  /** The rate at which particle's scale should change. */
+  public float scaleRate;
   
   /**
    * The maximum speed that the particle can reach. 0 for no limit.
@@ -124,7 +126,7 @@ public class Particle extends Entity {
   public void update(long time) {
     super.update(time);
     
-    //timeFraction = (float) time / Entity.TIME_SCALER;
+    timeFraction = (float) time / 1000;
     
     // Check to see if the particle should be dead.
     life += time;
@@ -133,13 +135,20 @@ public class Particle extends Entity {
     }
     
     // Update transparency.
-    alpha += alphaRate;
+    alpha += alphaRate * timeFraction;
     
     // Update any gravity well effects
     applyGravityWellToVelocity();
     
     // Throttle back if needed.
     applyMaxSpeed();
+    
+    // Apply any acel.
+    velocity.x += acceleration * timeFraction;
+    velocity.y += acceleration * timeFraction;
+    
+    // Update scale.
+    scale += scaleRate * timeFraction;
 
     // Apply velocity.
     //x += velocity.x * timeFraction;

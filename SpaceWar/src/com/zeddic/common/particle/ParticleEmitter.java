@@ -23,10 +23,12 @@ import javax.microedition.khronos.opengles.GL10;
 import android.util.Log;
 
 import com.zeddic.common.Entity;
+import com.zeddic.common.opengl.Color;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.particle.SpriteParticle.SpriteParticleData;
-import com.zeddic.common.util.ObjectPool.ObjectBuilder;
 import com.zeddic.common.util.ObjectPoolManager;
+import com.zeddic.common.util.RandomUtil;
+import com.zeddic.common.util.ObjectPool.ObjectBuilder;
 
 /**
  * Spawns particles with particular properties to create animations. 
@@ -122,6 +124,15 @@ public class ParticleEmitter extends Entity {
   
   /** The rate at which particle transparency should change. */
   public float pAlphaRate;
+  
+  /** The scale of the sprite. */
+  public float pScale;
+  
+  /** The rate at which the particle's scale should change. */
+  public float pScaleRate;
+  
+  /** How much the scale between new particles should differ. */
+  public float pScaleJitter;
 
   /**
    * A gravity well (object) that particles should be pulled towards. Null,
@@ -233,6 +244,8 @@ public class ParticleEmitter extends Entity {
     particle.maxSpeed = pMaxSpeed;
     particle.alpha = pAlpha;
     particle.alphaRate = pAlphaRate;
+    particle.scale = RandomUtil.nextFloat(pScale - pScaleJitter, pScale + pScaleJitter);
+    particle.scaleRate = pScaleRate;
     particle.gravityWell = pGravityWell;
     particle.gravityWellForce = pGravityWellForce;
     particle.gravityWellMaxDistance = pGravityWellMaxDistance;
@@ -255,7 +268,7 @@ public class ParticleEmitter extends Entity {
       particle.x = x;
       particle.y = y;
     }
-    
+
     // Determine the speed that the particle should be fired at.
     float emitSpeed = pSpeed + -emitSpeedJitter + random.nextFloat() * emitSpeedJitter * 2;
     
@@ -343,6 +356,9 @@ public class ParticleEmitter extends Entity {
     float pLife = 1000;
     float pAlpha = 1;
     float pAlphaRate = 0;
+    float pScale = 1;
+    float pScaleRate = 0;
+    float pScaleJitter = 0;
     Entity pGravityWell;
     float pGravityWellForce;
     float pGravityWellMaxDistance = 0;
@@ -435,6 +451,13 @@ public class ParticleEmitter extends Entity {
       return this;
     }
     
+    public ParticleEmitterBuilder withParticleScale(float scale, float scaleRate, float scaleJitter) {
+      this.pScale = scale;
+      this.pScaleRate = scaleRate;
+      this.pScaleJitter = scaleJitter;
+      return this;
+    }
+    
     public ParticleEmitterBuilder withParticleClass(Class<? extends Particle> pClass) {
       this.pClass = pClass;
       return this;
@@ -446,8 +469,12 @@ public class ParticleEmitter extends Entity {
     }
 
     public ParticleEmitterBuilder withSprite(Sprite sprite) {
+      return withSprite(sprite);
+    }
+    
+    public ParticleEmitterBuilder withSprite(Sprite sprite, Color color) {
       this.pClass = SpriteParticle.class;
-      this.pData = new SpriteParticleData(sprite);
+      this.pData = new SpriteParticleData(sprite, color);
       return this;
     }
 
@@ -491,6 +518,9 @@ public class ParticleEmitter extends Entity {
       emitter.pLife = pLife;
       emitter.pAlpha = pAlpha;
       emitter.pAlphaRate = pAlphaRate;
+      emitter.pScale = pScale;
+      emitter.pScaleRate = pScaleRate;
+      emitter.pScaleJitter = pScaleJitter;
       emitter.pGravityWell = pGravityWell;
       emitter.pGravityWellForce = pGravityWellForce;
       emitter.pGravityWellMaxDistance = pGravityWellMaxDistance;
