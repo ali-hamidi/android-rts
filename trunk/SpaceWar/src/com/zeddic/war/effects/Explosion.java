@@ -3,6 +3,7 @@ package com.zeddic.war.effects;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
+import com.zeddic.common.opengl.Color;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.particle.ParticleEmitter;
 import com.zeddic.common.particle.ParticleEmitter.ParticleEmitterBuilder;
@@ -33,12 +34,13 @@ public class Explosion extends Entity {
         .withEmitSpeedJitter(2)
         .withEmitLife(600)
         .withParticleSpeed(20)
-        .withParticleAlphaRate(-.03f)
-        .withParticleLife(500)
-        .withMaxParticles(20)
-        .withEmitRate(1000)
+        .withParticleAlphaRate(-0.5f)
+        .withParticleLife(600)
+        .withMaxParticles(15)
+        .withEmitRate(300)
         .withEmitCycle(false)
-        .withSprite(new Sprite(16, 16, R.drawable.redparticle))
+        .withParticleScale(1, 1f, .5f)
+        .withSprite(new Sprite(10, 10, R.drawable.sparkle), new Color(0, 255, 0, 255))
         .build();
   }
 

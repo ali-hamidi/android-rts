@@ -12,7 +12,6 @@ import com.zeddic.common.opengl.TextureLibrary;
 import com.zeddic.war.collision.CollisionSystem;
 import com.zeddic.war.effects.Effects;
 import com.zeddic.war.level.FileLevelLoader;
-import com.zeddic.war.level.Planet;
 import com.zeddic.war.ships.FighterShip;
 
 /**
@@ -150,7 +149,7 @@ public class WarGame extends AbstractGame {
     commandManager.onTouch(e);
 
     if (e.getAction() == MotionEvent.ACTION_DOWN) {
-      //Effects.get().explode(e.getX(), e.getY());
+      Effects.get().explode(e.getX(), e.getY());
       //Effects.get().shockwave(e.getX(), e.getY());
     }
   }
