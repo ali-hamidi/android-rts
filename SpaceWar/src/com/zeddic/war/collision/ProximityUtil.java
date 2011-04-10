@@ -16,7 +16,7 @@ public class ProximityUtil {
   
   
   private static SimpleList<Entity> objects = SimpleList.create(Entity.class);
-  private static SimpleList<CollisionCell> cells = SimpleList.create(CollisionCell.class);
+  private static SimpleList<EntityCell> cells = SimpleList.create(EntityCell.class);
   
   public static SimpleList<Entity> getNearbyObjects(
       Class<?> targetClass,
@@ -24,11 +24,11 @@ public class ProximityUtil {
       float y,
       float radius) {
     
-    CollisionGrid grid = CollisionSystem.get().getGrid();
+    EntityGrid grid = CollisionSystem.get().getEntityGrid();
     grid.getCellsWithinRadius(x, y, radius, cells);
 
     Entity object;
-    CollisionCell cell;
+    EntityCell cell;
     float maxDistance = radius * radius;
     
     objects.clear();

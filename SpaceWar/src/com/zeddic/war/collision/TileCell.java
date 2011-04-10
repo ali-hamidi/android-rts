@@ -1,39 +1,40 @@
 package com.zeddic.war.collision;
 
-import android.util.FloatMath;
-
 import com.zeddic.common.Entity;
-import com.zeddic.common.util.SimpleList;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.TileBounds.EdgeType;
 
-public class CollisionCell {
+/**
+ * A class that represents a single collidable tile in a tile map.
+ * 
+ * @author scott@zeddic.com (Scott Bailey)
+ */
+public class TileCell {
 
-  private static int INITIAL_CAPACITY = 40;
   private TileBounds bounds = TileBounds.EMPTY;
-  public SimpleList<Entity> items;
   
   private boolean active;
   private float top;
   private float left;
   
-  private CollisionGrid grid;
+  private TileGrid grid;
   private EdgeType topEdge;
   private EdgeType bottomEdge;
   private EdgeType rightEdge;
   private EdgeType leftEdge;
+  private float size;
   
   int row;
   int col;
 
-  public CollisionCell(CollisionGrid grid, int row, int col) {
+  public TileCell(TileGrid grid, int row, int col, float size) {
     this.grid = grid;
     this.row = row;
     this.col = col;
-    top = row * CollisionSystem.SIZE;
-    left = col * CollisionSystem.SIZE;
+    this.size = size;
+    top = row * size;
+    left = col * size;
     active = false;
-    items = new SimpleList<Entity>(Entity.class, INITIAL_CAPACITY);
   }
   
   public void setBounds(TileBounds bounds) {
@@ -43,10 +44,10 @@ public class CollisionCell {
   
   public void calculateEdges() {
     
-    CollisionCell above = grid.above(this);
-    CollisionCell below = grid.below(this);
-    CollisionCell left = grid.left(this);
-    CollisionCell right = grid.right(this);
+    TileCell above = grid.above(this);
+    TileCell below = grid.below(this);
+    TileCell left = grid.left(this);
+    TileCell right = grid.right(this);
     
     topEdge = 
         (above == null || bounds.topEdge == EdgeType.SOLID && grid.above(this).bounds.bottomEdge == EdgeType.SOLID)
@@ -70,15 +71,12 @@ public class CollisionCell {
   }
 
   Vector2d projection = new Vector2d();
- 
-  public void collide(Entity entity) {
+  public boolean collide(Entity entity) {
     
-    if (!collideWithTile(entity)) {
-      collideWithItems(entity);
+    if (!active) {
+      return false;
     }
-  }
-  
-  private boolean collideWithTile(Entity entity) {
+    
     if (bounds.isEmpty()) {
       return false;
     }
@@ -123,37 +121,7 @@ public class CollisionCell {
     
     return hit;
   }
-  
-  private void collideWithItems(Entity entity) {
-    
-    Entity other;
-    for (int i = 0; i < items.size; i++) {
-      other = items.items[i];
-      
-      if (other == entity) {
-        continue;
-      }
-      
-      // Are they colliding now?
-      float dX = entity.x - other.x;
-      float dY = entity.y - other.y;
-      float minDistance = entity.radius + other.radius;
-      boolean colliding = dX * dX + dY * dY < minDistance * minDistance;
-      
-      if (colliding) {
-        float seperationNeeded = minDistance - FloatMath.sqrt(dX * dX + dY * dY);
-        projection.x = dX;
-        projection.y = dY;
-        projection.normalize();
-        projection.x *= seperationNeeded;
-        projection.y *= seperationNeeded;
-        
-        entity.x += projection.x;
-        entity.y += projection.y;
-      }
-    }
-  }
-  
+
   private void determineShorterProjection(Vector2d projection, float dX, float dY) {
     if (Math.abs(dX + dY) < Math.abs(projection.x + projection.y)) {
       projection.x = dX;
@@ -166,7 +134,7 @@ public class CollisionCell {
   }
   
   public float bottom() {
-    return top + CollisionSystem.SIZE;
+    return top + size;
   }
   
   public float left() {
@@ -174,25 +142,6 @@ public class CollisionCell {
   }
   
   public float right() {
-    return left + CollisionSystem.SIZE;
-  }
-  
-  /**
-   * Adds a new object to this grid position.
-   */
-  public void add(Entity object) {
-    items.add(object);
-  }
-  
-  
-  public boolean contains(Entity object) {
-    return items.contains(object);
-  }
-  
-  /**
-   * Removes an object from the grid spot.
-   */
-  public void remove(Entity object) {
-    items.remove(object);
+    return left + size;
   }
 }

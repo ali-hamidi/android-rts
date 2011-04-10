@@ -21,14 +21,7 @@ public enum CollideBehavior {
    * the players ship.
    */
   HIT_RECEIVE,
-  
-  /**
-   * An object that can receive collisions but can never hit something.
-   * For example: asteroids that can't be hit by each other but can be hit
-   * by a player ship. 
-   */
-  RECEIVE_ONLY,
-  
+
   /**
    * A large object that is stationary and can be run into by other
    * objects in the world.
