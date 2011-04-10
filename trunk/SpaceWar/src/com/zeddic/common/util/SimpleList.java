@@ -138,5 +138,9 @@ public class SimpleList<T> {
     return new SimpleList<T>(clazz);
   }
   
+  public static <T> SimpleList<T> create(Class<T> clazz, int size) {
+    return new SimpleList<T>(clazz, size);
+  }
+  
   //SimpleList<CollisionCell> nearbyCells = new SimpleList<CollisionCell>(CollisionCell.class, INITIAL_CAPACITY);
 }

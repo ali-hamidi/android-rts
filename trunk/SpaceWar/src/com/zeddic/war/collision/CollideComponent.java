@@ -9,7 +9,7 @@ public class CollideComponent implements GameObject {
 
   private final CollisionSystem collisionSystem;
   public final Entity entity;
-  public CollisionCell currentCell;
+  public EntityCell currentCell;
 
   private boolean registered;
   private CollideBehavior behavior;
@@ -22,6 +22,7 @@ public class CollideComponent implements GameObject {
       CollisionSystem collisionSystem,
       Entity entity,
       CollideBehavior behavior) {
+
     this.collisionSystem = collisionSystem;
     this.behavior = behavior;
     this.entity = entity;
@@ -66,7 +67,7 @@ public class CollideComponent implements GameObject {
    * can be tracked in the underlying data structures.
    */  
   public void registerObject() {
-    if (registered || behavior == CollideBehavior.HIT_ONLY)
+    if (registered)
       return;
     
     collisionSystem.register(this);  
@@ -81,7 +82,7 @@ public class CollideComponent implements GameObject {
    * cluttered with dead objects and slowing down the world.
    */
   public void unregisterObject() {
-    if (!registered || behavior == CollideBehavior.HIT_ONLY) {
+    if (!registered) {
       return;
     }
     
@@ -91,14 +92,7 @@ public class CollideComponent implements GameObject {
 
   @Override
   public void update(long time) {
-
     register(entity.enabled);
-    
-    /*if (entity.enabled && behavior != CollideBehavior.HIT_ONLY) {
-      if (lastX != entity.x || lastY != entity.y) {
-        collisionSystem.update(this);
-      }
-    }*/
   }
   
   public void move(float dX, float dY) {
