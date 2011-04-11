@@ -144,19 +144,11 @@ public class Particle extends Entity {
     applyMaxSpeed();
     
     // Apply any acel.
-    velocity.x += acceleration * timeFraction;
-    velocity.y += acceleration * timeFraction;
+    velocity.x += Math.signum(velocity.x) * acceleration * timeFraction;
+    velocity.y += Math.signum(velocity.y) * acceleration * timeFraction;
     
     // Update scale.
     scale += scaleRate * timeFraction;
-
-    // Apply velocity.
-    //x += velocity.x * timeFraction;
-    //y += velocity.y * timeFraction;
-    
-    // Update the scaled velcoity vector for future drawing purposes.
-    //scaledVelocity.x = velocity.x * timeFraction;
-    //scaledVelocity.y = velocity.y * timeFraction;
   }
 
   /**
