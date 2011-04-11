@@ -21,10 +21,6 @@ public class HealthBar {
     this.length = length;
   }
   
-  public void setHealth(float curHealth) {
-    this.curHealth = curHealth;
-  }
-  
   public void draw(GL10 gl) {
     if (curHealth == maxHealth) {
       return;
