@@ -50,6 +50,7 @@ public abstract class Mesh {
     
     // Enable textures if specified.
     if (texture != null && textureCoordBuffer != null) {
+      gl.glEnable(GL10.GL_TEXTURE_2D);
       gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
       gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCoordBuffer);
       gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.id);
@@ -73,6 +74,7 @@ public abstract class Mesh {
 
     if (texture != null && textureCoordBuffer != null) {
       gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+      gl.glDisable(GL10.GL_TEXTURE_2D);
     }
   }
   
