@@ -16,19 +16,18 @@
 
 package com.zeddic.war.level;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.opengl.Color;
+import com.zeddic.common.util.Countdown;
+import com.zeddic.war.GameState;
+import com.zeddic.war.ships.Square;
 
 public class Map extends AbstractGameObject {
   
   private static final float EDGE_BUFFER = 0;
   private static final float SPAWN_BUFFER = 50;
-  private static final int NUM_PLANETS = 10;
   
   public float width;
   public float height;
@@ -44,15 +43,30 @@ public class Map extends AbstractGameObject {
   public float spawnRight;
   public float spawnBottom;
   
-  private final List<Planet> planets = new ArrayList<Planet>();
-
+  //private final List<Planet> planets = new ArrayList<Planet>();
+  
+  private static final int ENEMIES_PER_WAVE = 10;
+  
+  private final Planet planet;
+  private final InvadePath path;
+  private final Countdown nextWaveCountdown = new Countdown(10000);
+  private final Countdown spawnCountdown = new Countdown(1000);
+  private int leftToSpawn;
+  
   public Map(float width, float height) {
     setSize(width, height);
-    planets.add(new Planet(900, 300));
-    planets.add(new Planet(100, 100, new Color(255, 0, 238, 255)));
-    planets.add(new Planet(500, 250, new Color(0, 255, 89, 255)));
-    planets.add(new Planet(750, 500, new Color(255, 187, 0, 255)));
-    planets.add(new Planet(300, 700, new Color(255, 0, 0, 255)));
+
+    planet = new Planet(750, 500, new Color(255, 187, 0, 255));
+    path = new InvadePath.Builder()
+        .add(0, 100)
+        .add(400, 100)
+        .add(400, 500)
+        .add(750, 500)
+        .build();
+   
+    leftToSpawn = ENEMIES_PER_WAVE;
+    nextWaveCountdown.start();
+    spawnCountdown.start();
   }
   
   private void setSize(float width, float height) {
@@ -78,15 +92,29 @@ public class Map extends AbstractGameObject {
   
   @Override
   public void update(long time) {
-    for (Planet planet : planets) {
-      planet.update(time);
+    planet.update(time);
+    path.update(time);
+    
+    if (leftToSpawn > 0) {
+      spawnCountdown.update(time);
+      if (spawnCountdown.isDone()) {
+        Square square = GameState.stockpiles.ships.take(Square.class);
+        square.spawn(path);
+        spawnCountdown.restart();
+        leftToSpawn--;
+      }
+    } else {
+      nextWaveCountdown.update(time);
+      if (nextWaveCountdown.isDone()) {
+        leftToSpawn = ENEMIES_PER_WAVE;
+        nextWaveCountdown.restart();
+      }
     }
   }
   
   @Override
   public void draw(GL10 gl) {
-    for (Planet planet : planets) {
-      planet.draw(gl);
-    }
+    planet.draw(gl);
+    path.draw(gl);
   }
 }

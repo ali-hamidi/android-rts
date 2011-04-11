@@ -33,7 +33,7 @@ public class Explosion extends Entity {
         .withEmitMode(ParticleEmitter.MODE_OMNI)
         .withEmitSpeedJitter(2)
         .withEmitLife(600)
-        .withParticleSpeed(20)
+        .withParticleSpeed(100)
         .withParticleAlphaRate(-0.5f)
         .withParticleLife(600)
         .withMaxParticles(15)
