@@ -27,7 +27,8 @@ public class WarGame extends AbstractGame {
 
   public WarGame() { }
 
-  public void init() {
+  @Override
+  public void onInitialize() {
     GameState.level = new FileLevelLoader().load("levels/1.txt");
     CollisionSystem.get().initializeForLevel(GameState.level);
     commandManager = new BattleCommandManager();
@@ -95,8 +96,6 @@ public class WarGame extends AbstractGame {
   public void onSurfaceChanged(GL10 gl, int width, int height) {
     super.onSurfaceChanged(gl, width, height);
     
-    init();
-
     // Set device dimensions.
     gl.glViewport(0, 0, width, height); 
     
