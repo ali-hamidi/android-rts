@@ -16,13 +16,12 @@
 
 package com.zeddic.war.guns;
 
+import com.zeddic.common.Entity;
 import com.zeddic.war.guns.control.DirectionalGunControl;
-import com.zeddic.war.guns.control.RandomGunControl;
-import com.zeddic.war.ships.Ship;
 
 public class Arsenal {
   
-  public static Gun getPeaShooter(Ship owner) {
+  public static Gun getPeaShooter(Entity owner) {
     Gun gun = new GunBuilder()
       .withOwner(owner)
       .withAutoFire(true)
@@ -34,20 +33,19 @@ public class Arsenal {
     return gun;
   }
   
-  public static Gun getSniper(Ship owner) {
+  public static Gun getSniper(Entity owner) {
     Gun gun = new GunBuilder()
       .withOwner(owner)
       .withAutoFire(true)
       .withBulletSpeed(120f)
       .withCooldown(2500)
       .withFireOffset(40)
-      .withBullet(ShardBullet.class)
       .build();
     
     return gun;
   }
   
-  public static Gun getTriGun(Ship owner) {
+  public static Gun getTriGun(Entity owner) {
     Gun gun = getPeaShooter(owner);
     gun.multiplier = 3;
     gun.multiplierStartAngle = -5;
@@ -55,24 +53,8 @@ public class Arsenal {
     
     return gun;
   }
-  
-  public static Gun getBombBurst(Ship owner) {
-    Gun gun = new GunBuilder()
-      .withOwner(owner)
-      .withAutoFire(true)
-      .withBulletSpeed(300)
-      .withCooldown(0)
-      .withFireOffset(6)
-      .withClipSize(10)
-      .withReloadTime(2000)
-      .withControl(new RandomGunControl())
-      .withBullet(ShardBullet.class)
-      .build();
-    
-    return gun;
-  }
-  
-  public static Gun getDeathBlossom(Ship owner) {
+
+  public static Gun getDeathBlossom(Entity owner) {
     Gun gun = getPeaShooter(owner);
     gun.multiplier = 2;
     gun.multiplierAngleBetweenBullets = 180;

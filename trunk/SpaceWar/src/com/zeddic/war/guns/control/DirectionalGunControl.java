@@ -16,21 +16,21 @@
 
 package com.zeddic.war.guns.control;
 
+import com.zeddic.common.Entity;
 import com.zeddic.war.guns.Gun;
-import com.zeddic.war.ships.Ship;
 
-public class DirectionalGunControl extends GunControl {
+public class DirectionalGunControl implements GunControl {
   
   private static final float DEFAULT_ANGLE_OFFSET = 0;
   
-  public Ship owner;
+  public Entity owner;
   public float angleOffset;
   
-  public DirectionalGunControl(Ship owner) {
+  public DirectionalGunControl(Entity owner) {
     this(owner, DEFAULT_ANGLE_OFFSET);
   }
   
-  public DirectionalGunControl(Ship owner, float angleOffset) {
+  public DirectionalGunControl(Entity owner, float angleOffset) {
     this.owner = owner;
     this.angleOffset = angleOffset;
   }

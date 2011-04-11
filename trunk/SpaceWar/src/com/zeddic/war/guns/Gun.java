@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2010 Geo Siege Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.zeddic.war.guns;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -37,15 +21,12 @@ public class Gun implements GameObject {
   protected int clipSize;
   protected long reloadTime;
   protected Class<? extends Bullet> bulletClass;
-
   protected int multiplier = 1;
   protected float multiplierStartAngle = 0;
   protected float multiplierAngleBetweenBullets = 0;
-  
   protected float xOffset;
   protected float yOffset;
   protected long lastFire;
-
   private int clipCount;
   private Countdown reloadTimer;
   private boolean reloading;
@@ -72,20 +53,13 @@ public class Gun implements GameObject {
   public boolean shouldFire() {
     return control != null ? control.shouldFire(this) : true;
   }
-  
-  /*public void recordFire() {
-    lastFire = System.currentTimeMillis();
-    clipCount--;
-    
-  } */
-  
-  public boolean fire() {
 
-    if (!canFire() || !shouldFire())
-      return false;
-    
-    boolean shot = false;
-    
+  public void fire() {
+
+    if (!canFire() || !shouldFire()) {
+      return;
+    }
+
     long now = System.currentTimeMillis();
     long passedTime = now - lastFire;
     if (passedTime > fireCooldown) {
@@ -93,20 +67,18 @@ public class Gun implements GameObject {
       for (int i = 0 ; i < timesToFire ; i++) {
         
         fireOnce();
-        shot = true;
-        
+
         clipCount--;
-        
         if (clipCount <= 0) {
           reloadTimer.reset();
           reloadTimer.start();
           reloading = true;
+          break;
         }
       }
+
       lastFire = (fireCooldown == 0 ? now : now - passedTime % fireCooldown);
     }
-    
-    return shot;
   }
   
   private void fireOnce() {
@@ -126,9 +98,6 @@ public class Gun implements GameObject {
       bullet.angle = fireAngle;
       bullet.setVelocityBySpeed(fireAngle, bulletSpeed);
       bullet.offset(fireOffset);
-      
-      //TODO(baileys): FIX;
-      bullet.firedByEnemy = false; //(owner instanceof EnemyShip);
       bullet.enable();
       bullet.life = 0;
       
@@ -138,7 +107,7 @@ public class Gun implements GameObject {
   
   @Override
   public void draw(GL10 gl) {
-    //nothing to draw.
+    // Nothing to draw.
   }
   
   public void reset() {
@@ -155,7 +124,7 @@ public class Gun implements GameObject {
         clipCount = clipSize;
       }
     }
-    
+
     if (autoFire) {
       fire();
     }

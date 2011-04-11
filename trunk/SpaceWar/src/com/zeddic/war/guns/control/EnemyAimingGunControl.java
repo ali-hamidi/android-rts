@@ -20,27 +20,28 @@ import com.zeddic.common.Entity;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.ProximityUtil;
 import com.zeddic.war.guns.Gun;
-import com.zeddic.war.ships.Ship;
 import com.zeddic.war.ships.Square;
 
-public class EnemyAimingGunControl extends GunControl {
+public class EnemyAimingGunControl implements GunControl {
 
   private final Vector2d aimVector = new Vector2d();
-  private final Ship owner;
+  private final Entity owner;
   private float range;
   
   private Entity target = null;
 
-  public EnemyAimingGunControl(Ship owner, float range) {
+  public EnemyAimingGunControl(Entity owner, float range) {
     this.owner = owner;
     this.range = range;
   }
 
+  @Override
   public boolean shouldFire(Gun gun) {
     target = ProximityUtil.getClosest(Square.class, owner.x, owner.y, range);
     return target != null;
   }
   
+  @Override
   public void aim(Gun gun) {
     if (target == null) {
       return;
