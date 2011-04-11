@@ -37,6 +37,7 @@ public class Square extends Entity implements EnemyShip {
   private InvadePathFollower pather;
   
   private Sprite sprite = new Sprite(32, 32, R.drawable.square);
+  private HealthBar healthBar = new HealthBar(maxHealth, 40);
 
   public Square() {
     this(0, 0);
@@ -81,6 +82,11 @@ public class Square extends Entity implements EnemyShip {
     sprite.y = y;
     sprite.setColor(color);
     sprite.draw(gl);
+    
+    healthBar.x = x - (healthBar.length / 2);
+    healthBar.y = y + sprite.getHeight() / 2 + 2;
+    healthBar.setHealth(health);
+    healthBar.draw(gl);
   }
 
   public boolean isDead() {
