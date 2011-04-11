@@ -1,6 +1,7 @@
 package com.zeddic.war;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -47,5 +48,4 @@ public class MainActivity extends Activity {
     GameState.cleanup();
     super.onDestroy();
   }
-
 }

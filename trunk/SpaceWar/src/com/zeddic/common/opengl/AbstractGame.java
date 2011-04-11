@@ -13,6 +13,7 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
   private static final int MILLIS_PER_SECOND = 1000;
   private static final boolean ENABLE_FPS = true;
   
+  private boolean initialized = false;
   private long lastUpdate;
   private long lastFpsDisplay;
   private Metrics fpsMetrics = new Metrics(10);
@@ -28,6 +29,10 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
   public void onSurfaceChanged(GL10 gl, int width, int height) {
     Screen.width = width;
     Screen.height = height;
+    if (!initialized) {
+      onInitialize();
+      initialized = true;
+    }
   }
 
   @Override
@@ -60,6 +65,7 @@ public abstract class AbstractGame implements GLSurfaceView.Renderer {
 
   public void onTouchEvent(final MotionEvent event) {}
 
+  public abstract void onInitialize();
   public abstract void draw(GL10 gl);
   public abstract void update(long time);
 }
