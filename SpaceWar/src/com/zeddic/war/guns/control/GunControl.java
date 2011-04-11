@@ -1,30 +1,22 @@
-/*
- * Copyright (C) 2010 Geo Siege Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.zeddic.war.guns.control;
 
 import com.zeddic.war.guns.Gun;
 
-public class GunControl {
+/**
+ * An interface for any object that knows how to aim a gun.
+ * 
+ * @author scott@zeddic.com (Scott Bailey)
+ */
+public interface GunControl {
   
-  public boolean shouldFire(Gun gun) {
-    return true;
-  }
-  
-  public void aim(Gun gun) {
-    
-  }
+  /**
+   * Returns true if the gun is capable of firing. For example,
+   * if an target is within range.
+   */
+  boolean shouldFire(Gun gun);
+
+  /**
+   * Aims the gun for a single shot by setting it's angle.
+   */
+  void aim(Gun gun);
 }

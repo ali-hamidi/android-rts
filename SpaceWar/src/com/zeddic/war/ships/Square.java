@@ -27,7 +27,7 @@ import com.zeddic.war.collision.CollideBehavior;
 import com.zeddic.war.effects.Effects;
 import com.zeddic.war.level.InvadePath;
 
-public class Square extends Ship implements EnemyShip {
+public class Square extends Entity implements EnemyShip {
   
   public float maxHealth = 60;
   public float health;

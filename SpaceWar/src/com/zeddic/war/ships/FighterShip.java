@@ -2,6 +2,7 @@ package com.zeddic.war.ships;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.zeddic.common.Entity;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.util.Components;
 import com.zeddic.war.R;
@@ -10,7 +11,7 @@ import com.zeddic.war.guns.Arsenal;
 import com.zeddic.war.guns.Gun;
 import com.zeddic.war.guns.control.EnemyAimingGunControl;
 
-public class FighterShip extends Ship {
+public class FighterShip extends Entity {
 
   private Gun gun;
   private Components components;
@@ -66,7 +67,6 @@ public class FighterShip extends Ship {
     sprite.y = y;
     sprite.rz = angle;
     sprite.draw(gl);
-
     components.draw(gl);
   }
   

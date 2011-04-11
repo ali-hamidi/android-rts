@@ -5,7 +5,6 @@ import javax.microedition.khronos.opengles.GL10;
 import com.zeddic.common.Entity;
 import com.zeddic.common.opengl.Color;
 import com.zeddic.common.opengl.SimpleGeometry;
-import com.zeddic.common.util.Components;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.collision.CollideBehavior;
 import com.zeddic.war.effects.Effects;
@@ -15,10 +14,8 @@ public class Bullet extends Entity {
 
   private static final long DEFAULT_MAX_LIFE = 4000;
   private static final Color color = new Color(255, 255, 0, 255);
-
   public long life; 
   public long maxLife;
-  public boolean firedByEnemy = false;
 
   public Bullet() {
     this(0, 0);
@@ -59,10 +56,8 @@ public class Bullet extends Entity {
     if (life > maxLife) {
       kill();
     }
-
-    //components.update(time);
   }
-  
+
   public void offset(float distance) {
     x = x + distance * (float) Math.cos(Math.toRadians(angle));
     y = y + distance * (float) Math.sin(Math.toRadians(angle));
