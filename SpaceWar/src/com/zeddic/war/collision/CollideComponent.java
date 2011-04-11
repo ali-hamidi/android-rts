@@ -4,12 +4,13 @@ import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
 import com.zeddic.common.GameObject;
+import com.zeddic.common.util.SimpleList;
 
 public class CollideComponent implements GameObject {
 
   private final CollisionSystem collisionSystem;
   public final Entity entity;
-  public EntityCell currentCell;
+  public SimpleList<EntityCell> currentCells = SimpleList.create(EntityCell.class, 1);
 
   private boolean registered;
   private CollideBehavior behavior;

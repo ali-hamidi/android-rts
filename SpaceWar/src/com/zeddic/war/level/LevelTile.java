@@ -3,6 +3,7 @@ package com.zeddic.war.level;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.GameObject;
+import com.zeddic.common.opengl.Color;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.war.R;
 
@@ -17,6 +18,7 @@ public class LevelTile implements GameObject {
   private int row;
   private int col;
   private static final Sprite sprite = new Sprite(32, 32, R.drawable.solid);
+  private static final Color color = new Color(0, 76, 255, 255);
   
   public LevelTile(int row, int col) {
     this.row = row;
@@ -28,6 +30,7 @@ public class LevelTile implements GameObject {
     if (type == TileType.SOLID_ROCK) {
       sprite.setLeft(col * Level.TILE_SIZE);
       sprite.setTop(row * Level.TILE_SIZE);
+      sprite.setColor(color);
       sprite.draw(gl);
     }
   }

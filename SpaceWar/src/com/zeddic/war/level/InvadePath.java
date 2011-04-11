@@ -18,7 +18,7 @@ import com.zeddic.common.util.Vector2d;
  */
 public class InvadePath extends AbstractGameObject {
 
-  private static final Color color = new Color(255, 255, 255, 255);
+  private static final Color color = new Color(214, 214, 214, 255);
   public SimpleList<Vector2d> points = SimpleList.create(Vector2d.class);
   private Path path;
   
