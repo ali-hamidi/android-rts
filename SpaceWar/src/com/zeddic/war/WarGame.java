@@ -23,8 +23,6 @@ import com.zeddic.war.ships.FighterShip;
 public class WarGame extends AbstractGame {
 
   private BattleCommandManager commandManager;
-  private Camera camera = new Camera();
-
   private Sprite grid;
 
   public WarGame() { }
@@ -37,6 +35,7 @@ public class WarGame extends AbstractGame {
     // Create the enemies and reusable game objects. 
     GameState.stockpiles = new Stockpiles();
     GameState.stockpiles.populate();
+    GameState.camera = new Camera();
 
     FighterShip ship = GameState.stockpiles.ships.take(FighterShip.class);
     ship.x = 500;
@@ -125,7 +124,7 @@ public class WarGame extends AbstractGame {
     gl.glLoadIdentity();
 
     // Apply the camera.
-    camera.apply(gl);
+    GameState.camera.apply(gl);
     
     // Draw all game objects.
     grid.draw(gl);
@@ -137,19 +136,15 @@ public class WarGame extends AbstractGame {
     Effects.get().draw(gl);
     
     // Pop any camera transformations.
-    camera.end(gl);
+    GameState.camera.end(gl);
     
     // Any user interface elements, such as scores or a menu may be drawn here.
   }
 
   @Override
   public void onTouchEvent(MotionEvent e) {
-    //camera.onTouchEvent(e);
-    commandManager.onTouch(e);
-
-    if (e.getAction() == MotionEvent.ACTION_DOWN) {
-      //Effects.get().explode(e.getX(), e.getY());
-      //Effects.get().shockwave(e.getX(), e.getY());
+    if (!commandManager.onTouch(e)) {
+      GameState.camera.onTouchEvent(e);
     }
   }
 }

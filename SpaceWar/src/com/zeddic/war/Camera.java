@@ -56,6 +56,22 @@ public class Camera implements GameObject {
   private boolean dragging = false;
 
   /**
+   * Converts an X coordinate in screen space to world space based
+   * on the current camera orientation.
+   */
+  public float convertToWorldX(float screenX) {
+    return screenX - cameraPoint.x;
+  }
+  
+  /**
+   * Converts a Y coordinate in screen space to world space based
+   * on the current camera orientation.
+   */
+  public float convertToWorldY(float screenY) {
+    return screenY - cameraPoint.y;
+  }
+
+  /**
    * Simple dump 
    */
   private void dumpEvent(MotionEvent event) {

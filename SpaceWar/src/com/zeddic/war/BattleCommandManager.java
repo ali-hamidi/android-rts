@@ -26,49 +26,51 @@ public class BattleCommandManager extends AbstractGameObject {
   public BattleCommandManager() {
     
   }
-  
-  public void onTouch(MotionEvent e) {
+
+  public boolean onTouch(MotionEvent e) {
     switch (e.getAction()) {
-      case MotionEvent.ACTION_DOWN: onPress(e); break;
-      case MotionEvent.ACTION_UP: onRelease(e); break;
-      case MotionEvent.ACTION_MOVE: onMove(e); break;
-      default: onCancel(e); break;
+      case MotionEvent.ACTION_DOWN: return onPress(e);
+      case MotionEvent.ACTION_UP: return onRelease(e);
+      case MotionEvent.ACTION_MOVE: return onMove(e);
+      default: return onCancel(e);
     }
   }
   
-  private void onPress(MotionEvent e) {
-    
+  private boolean onPress(MotionEvent e) {
     this.selection = null;
+    
+    float eX = GameState.camera.convertToWorldX(e.getX());
+    float eY = GameState.camera.convertToWorldY(e.getY());
 
-    FighterShip ship = (FighterShip) ProximityUtil.getClosest(FighterShip.class, e.getX(), e.getY(), 80);
+    FighterShip ship = (FighterShip) ProximityUtil.getClosest(FighterShip.class, eX, eY, 100);
     if (ship != null) {
-      //if (ship.getTarget() != null) {
-      //  this.selection = new Selection(ship.getTarget());
-      //} else {
-        this.selection = new Selection(ship);
-      //}
+      selection = new Selection(ship);
     } else {
-      Target target = getTargetInRange(e.getX(), e.getY());
+      Target target = getTargetInRange(eX, eY);
       if (target != null) {
-        this.selection = new Selection(target);
+        selection = new Selection(target);
       }
     }
 
-    lastX = e.getX();
-    lastY = e.getY();
+    lastX = eX;
+    lastY = eY;
+    
+    return this.selection != null;
   }
 
-  private void onRelease(MotionEvent e) {
+  private boolean onRelease(MotionEvent e) {
     if (selection == null) {
-      return;
+      return false;
     }
     
+    float eX = GameState.camera.convertToWorldX(e.getX());
+    float eY = GameState.camera.convertToWorldY(e.getY());
+    
     if (selection.isShip()) {
-      
       if (selection.ship.getTarget() != null) {
         selection.ship.getTarget().set(e.getX(), e.getY());
       } else {
-        final LocationTarget target = new LocationTarget(e.getX(), e.getY());
+        final LocationTarget target = new LocationTarget(eX, eY);
         target.addFollower(selection.ship);
         target.addReachedHandler(new Runnable() {
             @Override
@@ -83,23 +85,31 @@ public class BattleCommandManager extends AbstractGameObject {
     }
     
     selection = null;
+    
+    return true;
   }
   
-  private void onMove(MotionEvent e) {
+  private boolean onMove(MotionEvent e) {
     if (selection == null) {
-      return;
+      return false;
     }
     
-    lastX = e.getX();
-    lastY = e.getY();
+    float eX = GameState.camera.convertToWorldX(e.getX());
+    float eY = GameState.camera.convertToWorldY(e.getY());
+    
+    lastX = eX;
+    lastY = eY;
     
     if (!selection.isShip()) {
       selection.target.set(lastX, lastY);
     }
+    
+    return true;
   }
   
-  private void onCancel(MotionEvent e) {
+  private boolean onCancel(MotionEvent e) {
     selection = null;
+    return false;
   }
   
   public boolean hasSelection() {
@@ -130,8 +140,6 @@ public class BattleCommandManager extends AbstractGameObject {
         
         SimpleGeometry.drawLine(gl, selection.ship.x + temp.x, selection.ship.y + temp.y, lastX, lastY, color);
       }
-
-      //c.drawLine(selection.getX(), selection.getY(), lastX, lastY, PAINT);
     }
   }
   
@@ -145,7 +153,7 @@ public class BattleCommandManager extends AbstractGameObject {
   private Target getTargetInRange(float x, float y) {
     Target toReturn = null;
     Target target;
-    float minDistanceSquared = 50 * 50;
+    float minDistanceSquared = 80 * 80;
     
     for (int i = 0; i < targets.size; i++) {
       target = targets.items[i];
@@ -161,7 +169,7 @@ public class BattleCommandManager extends AbstractGameObject {
     
     return toReturn;
   }
-  
+
   private static class Selection {
     private FighterShip ship;
     private Target target;
@@ -178,14 +186,6 @@ public class BattleCommandManager extends AbstractGameObject {
 
     public boolean isShip() {
       return ship != null;
-    }
-
-    public float getX() {
-      return ship != null ? ship.x : target.getX();
-    }
-
-    public float getY() {
-      return ship != null ? ship.y : target.getY();
     }
   }
 }

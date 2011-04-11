@@ -32,6 +32,7 @@ public class GameState {
   public static Stockpiles stockpiles = null;
   public static Level level = null;
   public static TextureLibrary textures = null;
+  public static Camera camera;
   
   private static boolean loaded = false;
   private static int loadCount = 0;
