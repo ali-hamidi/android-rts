@@ -1,5 +1,7 @@
 package com.zeddic.war.collision;
 
+import android.util.Log;
+
 import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.war.level.Level;
@@ -150,18 +152,19 @@ public class EntityGrid {
   public void update(CollideComponent component) {
     Entity entity = component.entity;
 
+    // Receive only objects may reside in multiple cells.
     if (component.getBehavior() == CollideBehavior.RECEIVE_ONLY) {
       remove(component);
       add(component);
     } else {
       EntityCell cell = getCellForEntity(entity);
+      EntityCell current = component.currentCells.items[0];
+      if (cell != current) {
+        current.remove(entity);
 
-      if (cell != component.currentCell) {
-        component.currentCell.remove(entity);
-        
         if (cell != null) {
           cell.add(entity);
-          component.currentCell = cell;
+          component.currentCells.items[0] = cell;
         }
       }
     }
@@ -173,19 +176,20 @@ public class EntityGrid {
   public void add(CollideComponent component) {
     Entity entity = component.entity;
 
-    // Stationary, AKA large objects may reside in multiple cells.
+    // Receive only objects may reside in multiple cells.
     if (component.getBehavior() == CollideBehavior.RECEIVE_ONLY) {
       for (int col = gridValue(entity.left()); col <= gridValue(entity.right()); col++) {
         for (int row = gridValue(entity.top()); row <= gridValue(entity.bottom()); row++) {
           EntityCell cell = get(row, col);
           if (cell != null) {
             cell.add(entity);
+            component.currentCells.add(cell);
           }
         }
       }
     } else {
       EntityCell cell = getCellForEntity(entity);
-      component.currentCell = cell;
+      component.currentCells.items[0] = cell;
       if (cell != null) {
         cell.add(entity);
       }
@@ -197,21 +201,12 @@ public class EntityGrid {
    */
   public void remove(CollideComponent component) {
     Entity entity = component.entity;
-
-    if (component.getBehavior() == CollideBehavior.RECEIVE_ONLY) {
-      for (int col = gridValue(entity.left()); col <= gridValue(entity.right()); col++) {
-        for (int row = gridValue(entity.top()); row <= gridValue(entity.bottom()); row++) {
-          EntityCell cell = get(row, col);
-          if (cell != null) {
-            cell.remove(entity);
-          }
-        }
-      }
-    } else {
-      EntityCell cell = getCellForEntity(entity);
-      cell.remove(entity);
-      component.currentCell = null;
+ 
+    int length = component.currentCells.size;
+    for (int i = 0; i < length; i++) {
+      component.currentCells.items[i].remove(entity);
     }
+    component.currentCells.clear();
   }
 
   /**

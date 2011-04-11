@@ -64,10 +64,12 @@ public class CollisionSystem implements GameObject {
   }
   
   public void update(CollideComponent component) {
-    if (component.getBehavior() == CollideBehavior.HIT_ONLY) {
+    if (!ready ||
+        component.getBehavior() == CollideBehavior.HIT_ONLY ||
+        component.getBehavior() == CollideBehavior.NONE) {
       return;
     }
-    
+
     entityGrid.update(component);
   }
   
@@ -79,7 +81,7 @@ public class CollisionSystem implements GameObject {
     component.entity.y += dY;
     
     CollideBehavior behavior = component.getBehavior();
-    
+
     if (behavior == CollideBehavior.HIT_ONLY ||
         behavior == CollideBehavior.HIT_RECEIVE) {
       tileGrid.collide(component);
@@ -88,7 +90,7 @@ public class CollisionSystem implements GameObject {
 
     if (behavior != CollideBehavior.HIT_ONLY &&
        (dX != 0 || dY != 0)) {
-        entityGrid.update(component);
+      entityGrid.update(component);
     }
   }
 
