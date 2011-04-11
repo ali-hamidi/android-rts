@@ -30,7 +30,7 @@ public class Planet extends Entity {
     this.color = color;
     this.radius = 50;
     this.enabled = true;
-    this.collide.setBehavior(CollideBehavior.STATIONARY);
+    this.collide.setBehavior(CollideBehavior.RECEIVE_ONLY);
   }
 
   public void reset() {
@@ -56,5 +56,5 @@ public class Planet extends Entity {
   }
 
   @Override
-  public void collide(Entity object, Vector2d avoidVector) { }
+  public void collide(Entity object, Vector2d avoidVector, boolean recieving) { }
 }

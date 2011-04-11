@@ -32,7 +32,6 @@ public class Stockpiles extends AbstractGameObject {
     enemies.createSupply(Arrow.class, 100); */
     
     bullets.createSupply(Bullet.class, 300);
-    bullets.createSupply(ShardBullet.class, 300);
     
     ships.createSupply(FighterShip.class, 100);
     ships.createSupply(Square.class, 50);

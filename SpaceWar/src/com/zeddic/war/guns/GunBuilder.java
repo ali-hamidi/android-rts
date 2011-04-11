@@ -28,7 +28,7 @@ public class GunBuilder {
   private static final int DEFAULT_CLIP_SIZE = 6;
   private static final int DEFAULT_RELOAD_TIME = 0;
   private static final Class<? extends Bullet> DEFAULT_BULLET = Bullet.class;
-  
+
   private Entity owner;
   private float xOffset = 0;
   private float yOffset = 0;
@@ -44,7 +44,7 @@ public class GunBuilder {
   private int clipSize = DEFAULT_CLIP_SIZE;
   private int reloadTime = DEFAULT_RELOAD_TIME;
   private Class<? extends Bullet> bulletClass = DEFAULT_BULLET;
-  
+
   public GunBuilder() {
     
   }

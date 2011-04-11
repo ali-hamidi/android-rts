@@ -217,7 +217,7 @@ public class Particle extends Entity {
         distanceSquared < gravityWellDespawnDistance * gravityWellDespawnDistance) {
         kill();
         if (gravityWellCollide) {
-          gravityWell.collide(this, gravityVector);
+          gravityWell.collide(this, gravityVector, true);
         }
     }
     

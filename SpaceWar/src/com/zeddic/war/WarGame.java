@@ -149,7 +149,7 @@ public class WarGame extends AbstractGame {
     commandManager.onTouch(e);
 
     if (e.getAction() == MotionEvent.ACTION_DOWN) {
-      Effects.get().explode(e.getX(), e.getY());
+      //Effects.get().explode(e.getX(), e.getY());
       //Effects.get().shockwave(e.getX(), e.getY());
     }
   }

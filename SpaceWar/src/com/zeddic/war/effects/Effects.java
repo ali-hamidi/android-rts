@@ -27,7 +27,8 @@ public class Effects extends AbstractGameObject {
   
   private void createSupply() {
     stockpile.createSupply(Explosion.class, 50);
-    stockpile.createSupply(ShockwaveExplosion.class, 500);
+    stockpile.createSupply(HitExplosion.class, 50);
+    stockpile.createSupply(ShockwaveExplosion.class, 50);
   }
 
   /**
@@ -38,6 +39,21 @@ public class Effects extends AbstractGameObject {
     if (explosion == null)
       return null;
     
+    explosion.x = x;
+    explosion.y = y;
+    explosion.ignite();
+    return explosion;
+  }
+  
+  public HitExplosion hit(float x, float y, Vector2d direction) { 
+    HitExplosion explosion = stockpile.getSupply(HitExplosion.class).take();
+    if (explosion == null)
+      return null;
+    
+    float angle = (float) Math.toDegrees(Math.atan( direction.y / direction.x));
+    if (direction.x < 0)
+      angle += 180;
+    explosion.emitter.emitAngle = angle;
     explosion.x = x;
     explosion.y = y;
     explosion.ignite();

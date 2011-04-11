@@ -53,6 +53,10 @@ public class CollideComponent implements GameObject {
   public CollideBehavior getBehavior() {
     return behavior;
   }
+  
+  private void updateRegistration() {
+    register(entity.enabled);
+  }
 
   private void register(boolean register) {
     if (this.registered && !register) {
@@ -92,7 +96,7 @@ public class CollideComponent implements GameObject {
 
   @Override
   public void update(long time) {
-    register(entity.enabled);
+    updateRegistration();
   }
   
   public void move(float dX, float dY) {

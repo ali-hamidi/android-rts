@@ -150,7 +150,7 @@ public class EntityGrid {
   public void update(CollideComponent component) {
     Entity entity = component.entity;
 
-    if (component.getBehavior() == CollideBehavior.STATIONARY) {
+    if (component.getBehavior() == CollideBehavior.RECEIVE_ONLY) {
       remove(component);
       add(component);
     } else {
@@ -174,7 +174,7 @@ public class EntityGrid {
     Entity entity = component.entity;
 
     // Stationary, AKA large objects may reside in multiple cells.
-    if (component.getBehavior() == CollideBehavior.STATIONARY) {
+    if (component.getBehavior() == CollideBehavior.RECEIVE_ONLY) {
       for (int col = gridValue(entity.left()); col <= gridValue(entity.right()); col++) {
         for (int row = gridValue(entity.top()); row <= gridValue(entity.bottom()); row++) {
           EntityCell cell = get(row, col);
@@ -198,7 +198,7 @@ public class EntityGrid {
   public void remove(CollideComponent component) {
     Entity entity = component.entity;
 
-    if (component.getBehavior() == CollideBehavior.STATIONARY) {
+    if (component.getBehavior() == CollideBehavior.RECEIVE_ONLY) {
       for (int col = gridValue(entity.left()); col <= gridValue(entity.right()); col++) {
         for (int row = gridValue(entity.top()); row <= gridValue(entity.bottom()); row++) {
           EntityCell cell = get(row, col);

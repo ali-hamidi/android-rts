@@ -46,9 +46,4 @@ public class ShardBullet extends Bullet {
     canvas.drawPath(SHAPE.path, PAINT);
     canvas.restore(); */
   }
-  
-  @Override
-  protected float getAngleOffset() {
-    return ANGLE_OFFSET;
-  }
 }
