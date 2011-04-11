@@ -16,6 +16,7 @@ import com.zeddic.war.ships.Target;
 
 public class BattleCommandManager extends AbstractGameObject {
 
+  private static final float SELECTION_RANGE = 100;
   private static final Color color = new Color(0, 255, 0, 255);
   private final SimpleList<Target> targets = SimpleList.create(Target.class);
 
@@ -42,7 +43,7 @@ public class BattleCommandManager extends AbstractGameObject {
     float eX = GameState.camera.convertToWorldX(e.getX());
     float eY = GameState.camera.convertToWorldY(e.getY());
 
-    FighterShip ship = (FighterShip) ProximityUtil.getClosest(FighterShip.class, eX, eY, 100);
+    FighterShip ship = (FighterShip) ProximityUtil.getClosest(FighterShip.class, eX, eY, SELECTION_RANGE);
     if (ship != null) {
       selection = new Selection(ship);
     } else {
@@ -68,7 +69,7 @@ public class BattleCommandManager extends AbstractGameObject {
     
     if (selection.isShip()) {
       if (selection.ship.getTarget() != null) {
-        selection.ship.getTarget().set(e.getX(), e.getY());
+        selection.ship.getTarget().set(eX, eY);
       } else {
         final LocationTarget target = new LocationTarget(eX, eY);
         target.addFollower(selection.ship);
@@ -153,7 +154,7 @@ public class BattleCommandManager extends AbstractGameObject {
   private Target getTargetInRange(float x, float y) {
     Target toReturn = null;
     Target target;
-    float minDistanceSquared = 80 * 80;
+    float minDistanceSquared = SELECTION_RANGE * SELECTION_RANGE;
     
     for (int i = 0; i < targets.size; i++) {
       target = targets.items[i];

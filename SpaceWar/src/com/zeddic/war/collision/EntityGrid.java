@@ -1,7 +1,5 @@
 package com.zeddic.war.collision;
 
-import android.util.Log;
-
 import com.zeddic.common.Entity;
 import com.zeddic.common.util.SimpleList;
 import com.zeddic.war.level.Level;
@@ -150,24 +148,8 @@ public class EntityGrid {
    * Updates an objects position in the grid.
    */
   public void update(CollideComponent component) {
-    Entity entity = component.entity;
-
-    // Receive only objects may reside in multiple cells.
-    if (component.getBehavior() == CollideBehavior.RECEIVE_ONLY) {
-      remove(component);
-      add(component);
-    } else {
-      EntityCell cell = getCellForEntity(entity);
-      EntityCell current = component.currentCells.items[0];
-      if (cell != current) {
-        current.remove(entity);
-
-        if (cell != null) {
-          cell.add(entity);
-          component.currentCells.items[0] = cell;
-        }
-      }
-    }
+    remove(component);
+    add(component);
   }
 
   /**
@@ -175,25 +157,15 @@ public class EntityGrid {
    */
   public void add(CollideComponent component) {
     Entity entity = component.entity;
-
-    // Receive only objects may reside in multiple cells.
-    if (component.getBehavior() == CollideBehavior.RECEIVE_ONLY) {
-      for (int col = gridValue(entity.left()); col <= gridValue(entity.right()); col++) {
-        for (int row = gridValue(entity.top()); row <= gridValue(entity.bottom()); row++) {
-          EntityCell cell = get(row, col);
-          if (cell != null) {
-            cell.add(entity);
-            component.currentCells.add(cell);
-          }
+    for (int col = gridValue(entity.left()); col <= gridValue(entity.right()); col++) {
+      for (int row = gridValue(entity.top()); row <= gridValue(entity.bottom()); row++) {
+        EntityCell cell = get(row, col);
+        if (cell != null) {
+          cell.add(entity);
+          component.currentCells.add(cell);
         }
       }
-    } else {
-      EntityCell cell = getCellForEntity(entity);
-      component.currentCells.items[0] = cell;
-      if (cell != null) {
-        cell.add(entity);
-      }
-    } 
+    }
   }
   
   /**
@@ -212,10 +184,10 @@ public class EntityGrid {
   /**
    * Returns the primary cell that an entity resides in.
    */
-  private EntityCell getCellForEntity(Entity entity) {
+  /*private EntityCell getCellForEntity(Entity entity) {
     int col = gridValue(entity.x);
     int row = gridValue(entity.y);
 
     return get(row, col);
-  }
+  } */
 }

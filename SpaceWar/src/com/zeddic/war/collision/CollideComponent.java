@@ -11,10 +11,9 @@ public class CollideComponent implements GameObject {
   private final CollisionSystem collisionSystem;
   public final Entity entity;
   public SimpleList<EntityCell> currentCells = SimpleList.create(EntityCell.class, 1);
-
   private boolean registered;
   private CollideBehavior behavior;
-  
+
   public CollideComponent(Entity entity, CollideBehavior behavior) {
     this(CollisionSystem.get(), entity, behavior);
   }
@@ -90,7 +89,7 @@ public class CollideComponent implements GameObject {
     if (!registered) {
       return;
     }
-    
+
     collisionSystem.unregister(this);
     registered = false;
   }
