@@ -70,7 +70,7 @@ public class FighterShip extends Ship {
     super(x, y);
 
     this.radius = 8;
-    this.speed = 20;
+    this.speed = 100;
     this.collide.setBehavior(CollideBehavior.HIT_RECEIVE);
     
     path = new StraightPath(this, 5, speed);

@@ -130,41 +130,4 @@ public class TextureLibrary {
     gl.glGenTextures(1, textures, 0);
     return textures[0];
   }
-  
-  /*Map<Integer, TextureLoadHandler>
-  
-  public addLoadHandler(TextureLoadHandler handler) {
-    
-  }
-  
-  public static interface TextureLoadHandler {
-    onLoad(int textureid);
-  }*/
-  
-  /*public Bitmap getBitmap(int resource) {
-  
-  if (bitmaps.containsKey(resource)) {
-    return bitmaps.get(resource);
-  }
-  
-  Bitmap bitmap = BitmapFactory.decodeResource(
-      context.getResources(),
-      resource);
-  
-  bitmaps.put(resource, bitmap);
-  
-  return bitmap;
-} */
-
-/*public int getTexture(GL10 gl, int resource) {
-  Bitmap bitmap = getBitmap(resource);
-  return getTexture(gl, bitmap);
-}
-
-public int getTexture(GL10 gl, Bitmap bitmap) {
-  int textureId = createNewTextureId(gl);
-  loadTexture(gl, bitmap, textureId);
-  return textureId;
-} */
-  //  //Map<Integer, Bitmap> bitmaps = new HashMap<Integer, Bitmap>();
 }

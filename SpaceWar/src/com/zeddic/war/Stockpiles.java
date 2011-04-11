@@ -7,6 +7,7 @@ import com.zeddic.common.util.ObjectStockpile;
 import com.zeddic.war.guns.Bullet;
 import com.zeddic.war.guns.ShardBullet;
 import com.zeddic.war.ships.FighterShip;
+import com.zeddic.war.ships.Square;
 
 public class Stockpiles extends AbstractGameObject {
 
@@ -34,6 +35,7 @@ public class Stockpiles extends AbstractGameObject {
     bullets.createSupply(ShardBullet.class, 300);
     
     ships.createSupply(FighterShip.class, 100);
+    ships.createSupply(Square.class, 50);
     
     //ui.createSupply(TextFlash.class, 10);
   }

@@ -8,7 +8,7 @@ import com.zeddic.war.collision.CollideComponent;
 
 public abstract class Entity extends AbstractGameObject {
 
-  public static float TIME_SCALER = 200;
+  public static float TIME_SCALER = 1000;
 
   public float x;
   public float y;
