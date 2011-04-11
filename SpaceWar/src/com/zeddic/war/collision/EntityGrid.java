@@ -81,15 +81,11 @@ public class EntityGrid {
       float worldY,
       float radius,
       SimpleList<EntityCell> result) {
-    
-    int centerCol = gridValue(worldX);
-    int centerRow = gridValue(worldY);
-    int range = gridValue(radius);
-    
-    int minRow = centerRow - range;
-    int maxRow = centerRow + range;
-    int minCol = centerCol - range;
-    int maxCol = centerCol + range;
+
+    int minRow = gridValue(worldY - radius);
+    int maxRow = gridValue(worldY + radius);
+    int minCol = gridValue(worldX - radius);
+    int maxCol = gridValue(worldX + radius);
     
     return getCells(minRow, minCol, maxRow, maxCol, result);
   }
@@ -180,14 +176,4 @@ public class EntityGrid {
     }
     component.currentCells.clear();
   }
-
-  /**
-   * Returns the primary cell that an entity resides in.
-   */
-  /*private EntityCell getCellForEntity(Entity entity) {
-    int col = gridValue(entity.x);
-    int row = gridValue(entity.y);
-
-    return get(row, col);
-  } */
 }
