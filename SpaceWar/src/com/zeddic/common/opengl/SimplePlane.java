@@ -85,4 +85,12 @@ public class SimplePlane extends Mesh {
   public void setRight(float right) {
     this.x = right - width / 2;
   }
+  
+  public float getWidth() {
+    return width;
+  }
+  
+  public float getHeight() {
+    return height;
+  }
 }
