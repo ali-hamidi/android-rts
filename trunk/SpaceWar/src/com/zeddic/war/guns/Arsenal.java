@@ -25,9 +25,10 @@ public class Arsenal {
   public static Gun getPeaShooter(Ship owner) {
     Gun gun = new GunBuilder()
       .withOwner(owner)
-      .withBulletSpeed(60f)
-      .withCooldown(300)
-      .withFireOffset(40)
+      .withAutoFire(true)
+      .withBulletSpeed(250)
+      .withCooldown(200)
+      .withFireOffset(30)
       .build();
 
     return gun;
@@ -36,6 +37,7 @@ public class Arsenal {
   public static Gun getSniper(Ship owner) {
     Gun gun = new GunBuilder()
       .withOwner(owner)
+      .withAutoFire(true)
       .withBulletSpeed(120f)
       .withCooldown(2500)
       .withFireOffset(40)
@@ -57,12 +59,12 @@ public class Arsenal {
   public static Gun getBombBurst(Ship owner) {
     Gun gun = new GunBuilder()
       .withOwner(owner)
-      .withBulletSpeed(110f)
+      .withAutoFire(true)
+      .withBulletSpeed(300)
       .withCooldown(0)
-      .withFireOffset(20)
+      .withFireOffset(6)
       .withClipSize(10)
       .withReloadTime(2000)
-      .withAutoFire(false)
       .withControl(new RandomGunControl())
       .withBullet(ShardBullet.class)
       .build();

@@ -16,6 +16,7 @@ import com.zeddic.war.R;
  */
 public class Explosion extends Entity {
 
+  private static final Sprite sprite = new Sprite(10, 10, R.drawable.sparkle);
   protected ParticleEmitter emitter;
   
   public Explosion() {
@@ -40,7 +41,7 @@ public class Explosion extends Entity {
         .withEmitRate(300)
         .withEmitCycle(false)
         .withParticleScale(1, 1f, .5f)
-        .withSprite(new Sprite(10, 10, R.drawable.sparkle), new Color(0, 255, 0, 255))
+        .withSprite(sprite, new Color(0, 255, 0, 255))
         .build();
   }
 

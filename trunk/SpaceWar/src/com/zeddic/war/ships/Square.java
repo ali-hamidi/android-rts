@@ -23,13 +23,14 @@ import com.zeddic.common.opengl.Color;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.R;
+import com.zeddic.war.collision.CollideBehavior;
 import com.zeddic.war.effects.Effects;
 import com.zeddic.war.level.InvadePath;
 
-public class Square extends Ship {
+public class Square extends Ship implements EnemyShip {
   
-  public float maxHealth = 200;
-  public float health = 200;
+  public float maxHealth = 60;
+  public float health;
   private float speed;
   private static final Color color = new Color(255, 0, 251, 255);
   
@@ -43,7 +44,8 @@ public class Square extends Ship {
 
   public Square(float x, float y) {
     super(x, y);
-    this.radius = 16;
+    this.collide.setBehavior(CollideBehavior.RECEIVE_ONLY);
+    this.radius = 10;
     this.speed = 50;
     this.pather = new InvadePathFollower(this, speed);
   }
@@ -85,17 +87,6 @@ public class Square extends Ship {
     return !enabled;
   }
 
-  @Override
-  public void damage(float damage) {
-    if (isDead())
-      return;
-    health -= damage;
-    health = Math.max(0, health);
-    if (health == 0) {
-      die();
-    }
-  }
-
   public float getPercentHealth() {
     return health / maxHealth;
   }
@@ -105,10 +96,22 @@ public class Square extends Ship {
       return;
     }
     kill();
+    this.collide.unregisterObject();
     Effects.get().explode(x, y);
   }
 
   public void collide(Entity object, Vector2d avoidVector) {
 
+  }
+
+  @Override
+  public void hit(float damage) {
+    if (isDead())
+      return;
+    health -= damage;
+    health = Math.max(0, health);
+    if (health == 0) {
+      die();
+    }
   }
 }

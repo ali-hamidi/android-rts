@@ -44,14 +44,16 @@ public class EntityCell {
         projection.x *= seperationNeeded;
         projection.y *= seperationNeeded;
         
-        entity.x += projection.x;
-        entity.y += projection.y;
+        entity.collide(other, projection, false);
+        projection.x *= -1;
+        projection.y *= -1;
+        other.collide(entity, projection, true);
         
-        // TODO(scott): Tell entity what they have collided with.
+        entity.x += projection.x * -1;
+        entity.y += projection.y * -1;
 
         return true;
       }
-      
     }
     
     return false;

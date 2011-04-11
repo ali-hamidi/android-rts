@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2010 Geo Siege Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.zeddic.war.ships;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -27,20 +11,15 @@ public class StraightPath implements GameObject {
 
   private Entity parent;
   private Target target;
-  private float waitDistance;
   private float speed;
   private boolean inRange;
   private boolean enabled;
-  private float lastTargetX = 0;
-  private float lastTargetY = 0;
   
   public StraightPath(
       Entity parent,
-      float waitDistance,
       float speed) {
     
     this.parent = parent;
-    this.waitDistance = waitDistance;
     this.speed = speed;
     this.inRange = false;
     this.enabled = true;
@@ -72,29 +51,31 @@ public class StraightPath implements GameObject {
       return;
     }
 
+    // Calculate a vector towards the target
     float dX = target.getX() - parent.x;
     float dY = target.getY() - parent.y;
-    float distance = FloatMath.sqrt(dX * dX + dY * dY); 
-    if (distance < waitDistance) {
-      parent.velocity.x = 0;
-      parent.velocity.y = 0;
-      inRange = true;
-      target.removeFollower(parent);
-      target = null;
+    
+    if (dX == 0 && dY == 0) {
       return;
     }
     
-    inRange = false;
-    
-    float velocityScale = (float) Math.min(distance, speed);
-    
-    parent.velocity.x = dX;
-    parent.velocity.y = dY;
-    parent.velocity.normalize();
-    parent.velocity.x *= velocityScale;
-    parent.velocity.y *= velocityScale;
-    
-    if (target.getX() != lastTargetX || target.getY() != lastTargetY) {
+    // Determine the amount that we could travel in this frame.
+    float travelPotential = (float) time / 1000 * speed;
+    float distance = FloatMath.sqrt(dX * dX + dY * dY); 
+
+    if (distance < travelPotential) {
+      inRange = true;
+      parent.x = target.getX();
+      parent.y = target.getY();
+      parent.velocity.x = 0;
+      parent.velocity.y = 0;
+      target.removeFollower(parent);
+    } else {
+      inRange = false;
+      parent.velocity.x = dX;
+      parent.velocity.y = dY;
+      parent.velocity.normalize();
+      parent.velocity.scale(speed);
       parent.matchAngleWithVelocity();
     }
   }

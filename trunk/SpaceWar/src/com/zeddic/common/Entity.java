@@ -81,15 +81,8 @@ public abstract class Entity extends AbstractGameObject {
     // Leave drawing to implementing classes.
   }
 
-  protected float getAngleOffset() {
-    return 0;
-  }
-  
-  public void collide(Entity object, Vector2d avoidVector) {
-    if (avoidVector != null) {
-      x += avoidVector.x;
-      y += avoidVector.y;
-    }
+  public void collide(Entity object, Vector2d avoidVector, boolean receiving) {
+
   }
 
   public float top() {

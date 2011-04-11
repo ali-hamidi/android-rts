@@ -133,7 +133,6 @@ public class Gun implements GameObject {
       bullet.life = 0;
       
       fireAngle += multiplierAngleBetweenBullets;
-      
     }
   }
   

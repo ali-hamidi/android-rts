@@ -116,7 +116,7 @@ public class TileCell {
     if (hit) {
       entity.x += projection.x;
       entity.y += projection.y;
-      //entity.collide(projection, null);
+      entity.collide(null, projection, false);
     }
     
     return hit;

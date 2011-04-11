@@ -23,8 +23,7 @@ public enum CollideBehavior {
   HIT_RECEIVE,
 
   /**
-   * A large object that is stationary and can be run into by other
-   * objects in the world.
+   * A large object that will only receive hits.
    */
-  STATIONARY
+  RECEIVE_ONLY
 }

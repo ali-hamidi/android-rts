@@ -82,8 +82,6 @@ public class InvadePathFollower implements GameObject {
       pathIndex++;
       if (pathIndex >= path.points.size) {
         reached = true;
-        // REACHED TARGET
-        // TODO(scott): Notify the ship to explode and do damage to the planet.
       }
     } else {
       parent.velocity.x = dX;
