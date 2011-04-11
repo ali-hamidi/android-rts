@@ -65,7 +65,6 @@ public class WarGame extends AbstractGame {
     TextureLibrary.get().reload();
 
     // Enable texture support.
-    gl.glEnable(GL10.GL_TEXTURE_2D);
     gl.glShadeModel(GL10.GL_SMOOTH);
     
     // Screen clear color.
