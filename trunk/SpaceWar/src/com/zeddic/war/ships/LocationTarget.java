@@ -19,18 +19,15 @@ import com.zeddic.war.R;
 public class LocationTarget implements Target {
 
   private static final Color color = new Color(255, 0, 0, 255);
-  private static final Sprite sprite = new Sprite(40, 40, R.drawable.planet);
+  private static final Sprite dotSprite = new Sprite(40, 40, R.drawable.waypointdot);
+  private static final Sprite ringSprite = new Sprite(40, 40, R.drawable.waypoint);
   private float x;
   private float y;
   private final Transition sizeTransition = new Transition(.5f, 1, 2000, TransitionType.EASE_IN_OUT);
   private static final RangeConverter ALPHA = new RangeConverter(new Range(.5f, 1f), new Range(1f, 0f));
   private final List<Entity> followers = new ArrayList<Entity>();
-  
-  // TODO(baileys): Change this to a composite.
   private Runnable reachedHandler;
-  
-  //SimpleList<PhysicalObjects> 
-  
+
   public LocationTarget(float x, float y) {
     this.x = x;
     this.y = y;
@@ -55,28 +52,19 @@ public class LocationTarget implements Target {
   @Override
   public void draw(GL10 gl) {
 
-    sprite.scale = sizeTransition.get();
-    sprite.setColor(color);
-    sprite.setAlpha(ALPHA.convert(sprite.scale));
-    sprite.x = x;
-    sprite.y = y;
-    sprite.draw(gl);
+    ringSprite.scale = sizeTransition.get();
+    ringSprite.setColor(color);
+    ringSprite.setAlpha(ALPHA.convert(ringSprite.scale));
+    ringSprite.x = x;
+    ringSprite.y = y;
+    ringSprite.draw(gl);
     
-    // TODO(baileys): Draw using opengl.
-    
-    /*
-    float size = sizeTransition.get();
-    
-    PAINT.setAlpha((int) ALPHA.convert(size));
-    PAINT.setStyle(Style.STROKE);
-    c.drawCircle(x, y, size, PAINT);
-    
+    dotSprite.x = x;
+    dotSprite.y = y;
+    dotSprite.setColor(color);
+    dotSprite.draw(gl);
 
-    PAINT.setAlpha(255); */
-    
     int length = followers.size();
-
-
     for (int i = 0; i < length ; i++) {
       Entity follower = followers.get(i);
       
@@ -91,11 +79,6 @@ public class LocationTarget implements Target {
         SimpleGeometry.drawLine(gl, follower.x + temp.x, follower.y + temp.y, x, y, color);
       }
     } 
-    
-
-    
-    //PAINT.setStyle(Style.FILL);
-    //c.drawCircle(x, y, 5, PAINT); */
   }
 
   @Override

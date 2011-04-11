@@ -12,7 +12,6 @@ public class StraightPath implements GameObject {
   private Entity parent;
   private Target target;
   private float speed;
-  private boolean inRange;
   private boolean enabled;
   
   public StraightPath(
@@ -21,13 +20,11 @@ public class StraightPath implements GameObject {
     
     this.parent = parent;
     this.speed = speed;
-    this.inRange = false;
     this.enabled = true;
   }
   
   @Override
   public void reset() {
-    this.inRange = false;
     this.enabled = true;
   }
   
@@ -64,38 +61,18 @@ public class StraightPath implements GameObject {
     float distance = FloatMath.sqrt(dX * dX + dY * dY); 
 
     if (distance < travelPotential) {
-      inRange = true;
       parent.x = target.getX();
       parent.y = target.getY();
       parent.velocity.x = 0;
       parent.velocity.y = 0;
       target.removeFollower(parent);
+      target = null;
     } else {
-      inRange = false;
       parent.velocity.x = dX;
       parent.velocity.y = dY;
       parent.velocity.normalize();
       parent.velocity.scale(speed);
       parent.matchAngleWithVelocity();
     }
-  }
-
-  /**
-   * Disables the pather. Once triggered the parent object will no longer
-   * have itself directed by the pather.
-   */
-  public void disable() {
-    enabled = false;
-  }
-  
-  /**
-   * Allows the pather to move the parent owner.
-   */
-  public void enable() {
-    enabled = true;
-  }
-  
-  public boolean inWaitRange() {
-    return inRange;
   }
 }

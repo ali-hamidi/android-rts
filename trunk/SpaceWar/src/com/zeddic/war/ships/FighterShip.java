@@ -16,7 +16,6 @@ public class FighterShip extends Entity {
   private Gun gun;
   private Components components;
   private float speed;
-  private Target target;
   private StraightPath path;
   private Sprite sprite = new Sprite(40, 40, R.drawable.ship);
 
@@ -53,11 +52,8 @@ public class FighterShip extends Entity {
 
   @Override
   public void update(long time) {
-    
     super.update(time);
-    
-    gun.setAutoFire(target == null || path.inWaitRange());
-    
+    gun.setAutoFire(path.getTarget() == null);
     components.update(time);
   }
   
@@ -71,7 +67,6 @@ public class FighterShip extends Entity {
   }
   
   public void setTarget(Target target) {
-    this.target = target;
     this.path.setTarget(target);
   }
 
