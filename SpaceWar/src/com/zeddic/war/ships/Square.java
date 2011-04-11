@@ -85,7 +85,7 @@ public class Square extends Entity implements EnemyShip {
     
     healthBar.x = x - (healthBar.length / 2);
     healthBar.y = y + sprite.getHeight() / 2 + 2;
-    healthBar.setHealth(health);
+    healthBar.curHealth = health;
     healthBar.draw(gl);
   }
 
