@@ -25,9 +25,8 @@ public class MainActivity extends Activity {
 
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(glView);
-
   }
-  
+
   @Override
   protected void onResume() {
     // TODO(baileys): Get pause event to the game.
