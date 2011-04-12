@@ -40,21 +40,23 @@ public class BattleCommandManager extends AbstractGameObject {
   private boolean onPress(MotionEvent e) {
     this.selection = null;
     
-    float eX = GameState.camera.convertToWorldX(e.getX());
-    float eY = GameState.camera.convertToWorldY(e.getY());
-
-    FighterShip ship = (FighterShip) ProximityUtil.getClosest(FighterShip.class, eX, eY, SELECTION_RANGE);
+    Vector2d world = GameState.camera.convertToWorld(new Vector2d(e.getX(), e.getY()));
+    
+    FighterShip ship = (FighterShip) ProximityUtil.getClosest(
+        FighterShip.class,
+        world.x, world.y, 
+        SELECTION_RANGE);
     if (ship != null) {
       selection = new Selection(ship);
     } else {
-      Target target = getTargetInRange(eX, eY);
+      Target target = getTargetInRange(world.x, world.y);
       if (target != null) {
         selection = new Selection(target);
       }
     }
 
-    lastX = eX;
-    lastY = eY;
+    lastX = world.x;
+    lastY = world.y;
     
     return this.selection != null;
   }
@@ -64,14 +66,13 @@ public class BattleCommandManager extends AbstractGameObject {
       return false;
     }
     
-    float eX = GameState.camera.convertToWorldX(e.getX());
-    float eY = GameState.camera.convertToWorldY(e.getY());
-    
+    Vector2d world = GameState.camera.convertToWorld(new Vector2d(e.getX(), e.getY()));
+
     if (selection.isShip()) {
       if (selection.ship.getTarget() != null) {
-        selection.ship.getTarget().set(eX, eY);
+        selection.ship.getTarget().set(world.x, world.y);
       } else {
-        final LocationTarget target = new LocationTarget(eX, eY);
+        final LocationTarget target = new LocationTarget(world.x, world.y);
         target.addFollower(selection.ship);
         target.addReachedHandler(new Runnable() {
             @Override
@@ -94,12 +95,11 @@ public class BattleCommandManager extends AbstractGameObject {
     if (selection == null) {
       return false;
     }
+
+    Vector2d world = GameState.camera.convertToWorld(new Vector2d(e.getX(), e.getY()));
     
-    float eX = GameState.camera.convertToWorldX(e.getX());
-    float eY = GameState.camera.convertToWorldY(e.getY());
-    
-    lastX = eX;
-    lastY = eY;
+    lastX = world.x;
+    lastY = world.y;
     
     if (!selection.isShip()) {
       selection.target.set(lastX, lastY);
@@ -154,7 +154,9 @@ public class BattleCommandManager extends AbstractGameObject {
   private Target getTargetInRange(float x, float y) {
     Target toReturn = null;
     Target target;
-    float minDistanceSquared = SELECTION_RANGE * SELECTION_RANGE;
+    
+    float range = SELECTION_RANGE;
+    float minDistanceSquared = range * range;
     
     for (int i = 0; i < targets.size; i++) {
       target = targets.items[i];

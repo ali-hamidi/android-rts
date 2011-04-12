@@ -2,11 +2,11 @@ package com.zeddic.war;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.accounts.NetworkErrorException;
-import android.util.Log;
+import android.util.FloatMath;
 import android.view.MotionEvent;
 
 import com.zeddic.common.GameObject;
+import com.zeddic.common.util.Vector2d;
 
 /**
  * A camera simulates zooming and panning within the game world.
@@ -18,237 +18,136 @@ import com.zeddic.common.GameObject;
 public /*class*/enum Camera implements GameObject {
   INSTANCE;
 
-  
-  public enum OnPressType { 
-    UNKNOWN(0,null), 
-    ONE(1, new MovePoint()), 
-    TWO(2, new MovePinch());
-    
-    private final int index;   
-    private final Point2d[] points;
-    private final CamerasOnMove onMove;
-    
-    OnPressType(int index, CamerasOnMove onMove) {
-      this.index = index;
-      this.points = new Point2d[index];
-      for (int i = 0 ; i < index; ++i){
-        this.points[i]= new Point2d(0,0);
-      }
-      this.onMove = onMove;
-    }
-  
-    public int getIndex()   { return index; }
-
-    public Point2d[] getLastPoints() {return points;}
-    
-    public CamerasOnMove getCamerasOnMove() {return onMove;}
-  };
-  
-  //private static final int INITIAL_ACTION_CODE=-1;
-  //private static final boolean  USE_ON_ACTION_POINTER_DOWN_PATCH = false;
-  
-  // The panning and zoom state of the camera.
-  private Point3d cameraPoint = new Point3d(0,0,0);
-  
-  // The panning and zoom state of the camera.
-  private Point3d cameraScale = new Point3d(1,1,1);
-  private boolean cameraScaleSet = false;
-
-  // The last recorded touch input x/y
-  private OnPressType lastPress = OnPressType.UNKNOWN;
-  
-  // Is the user dragging the camera now?
-  private boolean dragging = false;
-
-  //private int previousActionCode = INITIAL_ACTION_CODE;
-  /**
-   * Converts an X coordinate in screen space to world space based
-   * on the current camera orientation.
+  /** 
+   * The translations of the camera in _world_ coordinates. For example,
+   * -50, -50 would mean the camera is currently showing world position
+   * 50, 50 in the very top-left most point on the screen.
    */
-  public float convertToWorldX(float screenX) {
-    return screenX - cameraPoint.x;
-  }
+  public float x = 0;
+  public float y = 0;
   
-  /**
-   * Converts a Y coordinate in screen space to world space based
-   * on the current camera orientation.
-   */
-  public float convertToWorldY(float screenY) {
-    return screenY - cameraPoint.y;
-  }
+  /** Any zoom scale applied to the camera. For example: 2 would be 2x zoom. */
+  public float scale = 1;
+  
+  /** The last known _screen_ coordinates for finger1. */
+  private Vector2d lastPoint1 = new Vector2d(0, 0);
+  
+  /** The last known _screen_ coordinates for finger2. */
+  private Vector2d lastPoint2 = new Vector2d(0, 0);
+  
+  /** A point, in world coordinates, that any zoom actions should focus on. */
+  private Vector2d zoomAnchor;
 
-  /**
-   * Simple dump 
-   */
-  private void dumpEvent(MotionEvent event) {
-    String names[] = { "DOWN" , "UP" , "MOVE" , "CANCEL" , "OUTSIDE" ,
-       "POINTER_DOWN" , "POINTER_UP" , "7?" , "8?" , "9?" };
-    StringBuilder sb = new StringBuilder();
-    int action = event.getAction();
-    int actionCode = action & MotionEvent.ACTION_MASK;
-    sb.append("event ACTION_" ).append(names[actionCode]);
-    /*
-    if (USE_ON_ACTION_POINTER_DOWN_PATCH){
-      if (event.getPointerCount()>1){
-        if (actionCode != MotionEvent.ACTION_POINTER_UP){
-          actionCode = MotionEvent.ACTION_POINTER_DOWN;
-        }
-      }
-    }*/
-    if (actionCode == MotionEvent.ACTION_POINTER_DOWN
-          || actionCode == MotionEvent.ACTION_POINTER_UP) {
-       sb.append("(pid " ).append(
-       action >> MotionEvent.ACTION_POINTER_ID_SHIFT);
-       sb.append(")" );
-    }
-    sb.append("[" );
-    for (int i = 0; i < event.getPointerCount(); i++) {
-       sb.append("#" ).append(i);
-       sb.append("(pid " ).append(event.getPointerId(i));
-       sb.append(")=" ).append((int) event.getX(i));
-       sb.append("," ).append((int) event.getY(i));
-       if (i + 1 < event.getPointerCount())
-          sb.append(";" );
-    }
-    sb.append("]" );
-    Log.d("Martin", sb.toString());
- }
+  /** If true, system must collect at least data point before allowing a pan. */
+  private boolean needPanData = true;
 
   /**
    * Translates user input to pan and zoom commands.
    */
   public void onTouchEvent(MotionEvent e) {
-    //Log.d("Martin",">>>>>Entering on Touch Event ");
     int action = e.getAction();
     int actionCode = action & MotionEvent.ACTION_MASK;
-
-    // Special Case where Pinch is not being passed
-    // Correctly.  this will do an onPinchCall as well as
-    // and onMove
-    /*
-    if (USE_ON_ACTION_POINTER_DOWN_PATCH){
-      if (((previousActionCode == INITIAL_ACTION_CODE)&&
-          (e.getPointerCount()>1))||(false)){
-        Log.d("Martin","--->Multi Action pinch Patch press down");
-        onPinch(e);
-        //dumpEvent(e);
-        previousActionCode = MotionEvent.ACTION_POINTER_DOWN;
-    }
-    */
     switch (actionCode) {
-      case MotionEvent.ACTION_DOWN:{
-        //Log.d("Martin","---> Single Action press down");
-        onPress(e);
-        //dumpEvent(e);
-        break;
-      }
-      case MotionEvent.ACTION_POINTER_DOWN:{
-        //Log.d("Martin","--->Multi Action pinch press downStart");
-        onPinch(e);
-        //Log.d("Martin","--->Multi Action pinch press downEnd");
-        //dumpEvent(e);
-        break;
-      }
-      case MotionEvent.ACTION_UP:{
-        //Log.d("Martin", "--->Action press up");
-        onRelease(e);
-        //dumpEvent(e);
-        break;
-      }
-      
-      //The following case doesn't seem to occur
-      //it appears that multipress or onMultPress release is not implemented.
-      //I think we should leave this on the off chance that future implementation will behave correctly.
-      /*
-      case MotionEvent.ACTION_POINTER_UP:{ 
-        Log.d("Martin","--->Multi Action pinch press up"); 
-        onRelease(e);
-        break;
-      }*/
-      case MotionEvent.ACTION_MOVE: 
-        //Log.d("Martin", "--->Action Move");
-        //dumpEvent(e);
-        onMove(e); 
-        break;
-      default: 
-        Log.d("Martin", "--->UNKNOWN ACTION "+actionCode);
-        onCancel(e); 
-        break;
+      case MotionEvent.ACTION_DOWN: onPress(e); break;
+      case MotionEvent.ACTION_POINTER_DOWN: onPinchStart(e); break;
+      case MotionEvent.ACTION_UP: onRelease(e); break;
+      case MotionEvent.ACTION_MOVE: onMove(e); break;
+      default: onCancel(e); break;
     }
-    //Log.d("Martin","<<<<<Exiting on Touch Event ");
-    //Log.d("Martin","***************************");
   }
 
   private void onPress(MotionEvent e) {
-    lastPress = OnPressType.ONE;
-    Point2d lastPoint = lastPress.getLastPoints()[0];
-    if ((lastPoint.x == e.getX())&&
-        (lastPoint.y == e.getY())) return;
-    dragging = true;
-    lastPoint.x = e.getX();
-    lastPoint.y = e.getY();
+    recordInput(e, 0, lastPoint1);
+  }
+  
+  private void onPinchStart(MotionEvent e){
+    recordInput(e, 0, lastPoint1);
+    recordInput(e, 1, lastPoint2);
+    
+    // Whenever a zoom gesture starts, center the anchor on the
+    // point exactly between both fingers.
+    anchorZoom();
   }
 
-  private void onPinch(MotionEvent e){
-    Log.d("Martin", "--->DOING onPinch Start ");
-    lastPress = OnPressType.TWO;
-    Point2d lastPoint = null;
-    //We will do a check to verify that the points have changed
-    Log.d("Martin", "--->DOING onPinch Start ");
-    Log.d("Martin", "--->DOING onPinch index count "+lastPress.getIndex());
-    Log.d("Martin", "--->DOING onPinch  pointer count "+ e.getPointerCount());
-    if (lastPress.getIndex() != e.getPointerCount()) return;
-    Log.d("Martin", "--->DOING onPinch after test");
-    boolean equalPoints = true;
-    for (int i = 0; ((i < lastPress.getIndex())&&(equalPoints==true));i++){
-      lastPoint = lastPress.getLastPoints()[i];
-      if ((lastPoint.x != e.getX(i))||
-          (lastPoint.y != e.getY(i))){
-        equalPoints = false;
-      }
+  private void onMove(MotionEvent e) {
+    if (e.getPointerCount() > 1) {
+      onZoomMove(e);
+    } else {
+      onPanMove(e);
     }
-    // if the points different capture the points
-    if (equalPoints == false){
-      dragging = true;
-      for (int i = 0; i < lastPress.getIndex();i++){
-        lastPoint = lastPress.getLastPoints()[i];
-        lastPoint.x = e.getX(i);
-        lastPoint.y = e.getY(i);
-      }
+  }
+  
+  private void onZoomMove(MotionEvent e) {
+    
+    // Determine how much the fingers have moved part.
+    float initialDistance = getDistance(lastPoint1, lastPoint2);
+    recordInput(e, 0, lastPoint1);
+    recordInput(e, 1, lastPoint2);
+    
+    // Whenever a zoom gesture starts, center the anchor on the
+    // point exactly between both fingers.
+    if (!hasZoomAnchor()) {
+      anchorZoom();
     }
-    Log.d("Martin", "--->DOING onPinch End ");
+
+    float newDistance = getDistance(lastPoint1, lastPoint2);
+    float delta = (newDistance - initialDistance);
+    
+    // Update the scale based on this change. Multiply the delta by 
+    // scale so the zoom rate decreases the more you zoom out.
+    scale +=  delta * scale / 400;
+    
+    // After zooming, make sure the camera still shows
+    // our zoom anchor exactly between both fingers.
+    placeWorldPositionAtScreenPosition(
+        zoomAnchor,
+        getMidpoint(lastPoint1, lastPoint2));
+  }
+
+  private void onPanMove(MotionEvent e) {
+    // Don't allow panning until a zoom operation has finished.
+    if (hasZoomAnchor()) {
+      return;
+    }
+
+    // Panning is based on deltas from the last known finger
+    // position. Ensure we have at least two good data points.
+    if (needPanData) {
+      recordInput(e, 0, lastPoint1);
+      needPanData = false;
+    }
+
+    // x and y always represent world coordinates. Convert the
+    // screen translation into world space before updating them.
+    x += (e.getX() - lastPoint1.x) / scale;
+    y += (e.getY() - lastPoint1.y) / scale;
+    recordInput(e, 0, lastPoint1);
   }
   
   private void onRelease(MotionEvent e) {
-    lastPress = null;
-    onMove(e);
-    dragging = false;
-    //previousActionCode = INITIAL_ACTION_CODE;
+    zoomAnchor = null;
+    needPanData = true;
   }
-  
-  private void onMove(MotionEvent e) {
-    // In the off chance that the press was not registered previously
-    if ((lastPress == null)||
-        (lastPress == OnPressType.UNKNOWN )){
-      return;
-    }
-    
-    
-    //In the situation that dragging
-    if (!dragging) {
-      return;
-    }
-    
-    if (lastPress.getIndex()==e.getPointerCount()){
-      lastPress.getCamerasOnMove().onMove(e, lastPress, cameraPoint, cameraScale);
-    }
-  }
-  
+
   private void onCancel(MotionEvent e) {
-    dragging = false;
-    //previousActionCode = INITIAL_ACTION_CODE;
+    zoomAnchor = null;
+    needPanData = true;
   }
   
+  /**
+   * Re-centers the camera so that the given world coordinates are displayed at
+   * the given pixel point on the screen. For example, the camera could be set
+   * to place a game object at world position 1000x1000 at the top left of the screen
+   * at pixel 10x10.
+   */
+  public void placeWorldPositionAtScreenPosition(Vector2d world, Vector2d screen) {    
+    float desiredWorldX = screen.x / scale;
+    float desiredWorldY = screen.y / scale;
+    
+    x = (-world.x + desiredWorldX);
+    y = (-world.y + desiredWorldY);
+  }
+
   /**
    * Applys the camera open gl transformation. Functionally this works by 
    * translating the entire world in the inverse direction of the cameras
@@ -257,9 +156,8 @@ public /*class*/enum Camera implements GameObject {
    */
   public void apply(GL10 gl) {
     gl.glPushMatrix();
-    gl.glTranslatef(cameraPoint.x, cameraPoint.y, cameraPoint.z);
-    gl.glScalef(cameraScale.x,cameraScale.y,cameraScale.z);
-    //gl.glScalex((int)cameraScale.x,(int)cameraScale.y,(int)cameraScale.z);
+    gl.glScalef(scale, scale, 0);
+    gl.glTranslatef(x, y, 0);
   }
   
   /**
@@ -279,98 +177,55 @@ public /*class*/enum Camera implements GameObject {
 
   @Override
   public void reset() {
-    cameraPoint.x = 0;
-    cameraPoint.y = 0;
-    cameraPoint.z = 0;
-    cameraScale.x = 1;
-    cameraScale.y = 1;
-    cameraScale.z = 1;
+    x = 0;
+    y = 0;
+    scale = 1;
+    zoomAnchor = null;
+    needPanData = true;
   }
   
-  //Public Static inner classes 
-  public static class Point2d{
-    public float x = 0;
-    public float y = 0;
-    
-    public Point2d(float x, float y){
-      this.x = x;
-      this.y = y;
-    }
-    
+  /**
+   * Converts screen coordinates to world coordinates.
+   */
+  public Vector2d convertToWorld(Vector2d screen) {
+    return new Vector2d(
+        (screen.x  / scale - x),
+        (screen.y / scale) - y);
   }
   
-  public static class Point3d extends Point2d {
-    public float z = 0;
-    
-    public Point3d(float x, float y, int z){
-      super(x,y);
-      this.z = z;
-    }
-  }
-
-  static interface CamerasOnMove{
-    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint,Point3d cameraScale);
+  /**
+   * Anchors the zoom camera to the now current midpoint of the user's
+   * finger.
+   */
+  private void anchorZoom() {
+    zoomAnchor = convertToWorld(getMidpoint(lastPoint1, lastPoint2));
   }
   
-  public static class MovePoint implements CamerasOnMove{
-
-    @Override
-    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint, Point3d cameraScale) {
-      //Log.d("Martin", "OnMove on Point");
-      Point2d lastPoint = lastPress.getLastPoints()[0];
-      float newX = e.getX();
-      float newY = e.getY();
-      
-      cameraPoint.x += newX - lastPoint.x;
-      cameraPoint.y += newY - lastPoint.y;
-      
-      lastPoint.x = newX;
-      lastPoint.y = newY;
-    }
-    
-  }
-
-  
-  public static double distance (float x1, float y1, float x2, float y2){
-    return Math.sqrt(Math.pow((x2-x1), 2)-Math.pow((y2-y1),2));
+  /**
+   * Returns true if there is some anchor that zooming is being done
+   * around.
+   */
+  private boolean hasZoomAnchor() {
+    return zoomAnchor != null;
   }
   
-  public static class MovePinch implements CamerasOnMove{
-    private static final float SCALE_FACTOR = (float) 0.01;
-    @Override
-    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint, Point3d cameraScale) {
-      Log.d("Martin", "OnMove on Pinch");
-      Point2d point1 = lastPress.getLastPoints()[0];
-      Point2d point2 = lastPress.getLastPoints()[1];
-      
-      double dist1 = Camera.distance(point1.x, point1.y, point2.x, point2.y);
-      float newX1 = e.getX(0);
-      float newY1 = e.getY(0);
-      float newX2 = e.getX(1);
-      float newY2 = e.getY(1);
-      
-      double dist2 = Camera.distance(newX1, newY1, newX2, newY2);
-      
-      if (dist1 < dist2){
-        if (cameraScale.x<1.5) cameraScale.x +=SCALE_FACTOR;
-        if (cameraScale.y<1.5) cameraScale.y +=SCALE_FACTOR;
-//      if (cameraScale.Z<1.5) cameraScale.z +=SCALE_FACTOR;
-      }else{
-        if (cameraScale.x >.5) cameraScale.x -=SCALE_FACTOR;
-        if (cameraScale.y >.5) cameraScale.y -=SCALE_FACTOR;
-//        if (cameraScale.z > .5) cameraScale.z -=SCALE_FACTOR;
-      }
-      
-      String zVal = "cp.x="+cameraPoint.x+"cp.y="+cameraPoint.y+"cp.z="+cameraPoint.z;
-      Log.d("Martin", zVal);
-      zVal = "cs.x="+cameraScale.x+"cs.y="+cameraScale.y+"cs.z="+cameraScale.z;
-      Log.d("Martin", zVal);
-      point1.x = newX1;
-      point1.y = newY1;
-      point2.x = newX2;
-      point2.y = newY2;
-   
-    }
-    
+  // Utility methods.
+  
+  private static Vector2d getMidpoint(Vector2d point1, Vector2d point2) {
+    return new Vector2d(
+        point1.x + (point2.x - point1.x) / 2,
+        point1.y + (point2.y - point1.y) / 2);
+  }
+  
+  private static final float getDistance(Vector2d point1, Vector2d point2) {
+    float dX = (point1.x - point2.x);
+    float dY = (point1.y - point2.y);
+    return FloatMath.sqrt(dX * dX + dY * dY);
+  }
+  
+  /** Stores a motion event into a vector. */
+  private static final void recordInput(MotionEvent e, int motionIndex, Vector2d saveIn) {
+    saveIn.x = e.getX(motionIndex);
+    saveIn.y = e.getY(motionIndex);
   }
 }
