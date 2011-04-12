@@ -41,6 +41,7 @@ public class GameState {
     
     GameState.activity = activity;
     GameState.context = activity;
+    GameState.camera = Camera.INSTANCE;
     
     loadCount++;
     
@@ -57,6 +58,7 @@ public class GameState {
     
     activity = null;
     context = null;
+    camera = null;
     
     if (!loaded) {
       return;
