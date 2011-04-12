@@ -2,6 +2,7 @@ package com.zeddic.war;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.accounts.NetworkErrorException;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -14,9 +15,8 @@ import com.zeddic.common.GameObject;
  * 
  * @author Scott Bailey
  */
-public class Camera implements GameObject {
-
-//public static 
+public /*class*/enum Camera implements GameObject {
+  INSTANCE;
 
   
   public enum OnPressType { 
@@ -44,17 +44,23 @@ public class Camera implements GameObject {
     public CamerasOnMove getCamerasOnMove() {return onMove;}
   };
   
-  
+  //private static final int INITIAL_ACTION_CODE=-1;
+  //private static final boolean  USE_ON_ACTION_POINTER_DOWN_PATCH = false;
   
   // The panning and zoom state of the camera.
-  public Point3d cameraPoint = new Point3d(0,0,0);
+  private Point3d cameraPoint = new Point3d(0,0,0);
   
+  // The panning and zoom state of the camera.
+  private Point3d cameraScale = new Point3d(1,1,1);
+  private boolean cameraScaleSet = false;
+
   // The last recorded touch input x/y
   private OnPressType lastPress = OnPressType.UNKNOWN;
   
   // Is the user dragging the camera now?
   private boolean dragging = false;
 
+  //private int previousActionCode = INITIAL_ACTION_CODE;
   /**
    * Converts an X coordinate in screen space to world space based
    * on the current camera orientation.
@@ -81,6 +87,14 @@ public class Camera implements GameObject {
     int action = event.getAction();
     int actionCode = action & MotionEvent.ACTION_MASK;
     sb.append("event ACTION_" ).append(names[actionCode]);
+    /*
+    if (USE_ON_ACTION_POINTER_DOWN_PATCH){
+      if (event.getPointerCount()>1){
+        if (actionCode != MotionEvent.ACTION_POINTER_UP){
+          actionCode = MotionEvent.ACTION_POINTER_DOWN;
+        }
+      }
+    }*/
     if (actionCode == MotionEvent.ACTION_POINTER_DOWN
           || actionCode == MotionEvent.ACTION_POINTER_UP) {
        sb.append("(pid " ).append(
@@ -107,6 +121,20 @@ public class Camera implements GameObject {
     //Log.d("Martin",">>>>>Entering on Touch Event ");
     int action = e.getAction();
     int actionCode = action & MotionEvent.ACTION_MASK;
+
+    // Special Case where Pinch is not being passed
+    // Correctly.  this will do an onPinchCall as well as
+    // and onMove
+    /*
+    if (USE_ON_ACTION_POINTER_DOWN_PATCH){
+      if (((previousActionCode == INITIAL_ACTION_CODE)&&
+          (e.getPointerCount()>1))||(false)){
+        Log.d("Martin","--->Multi Action pinch Patch press down");
+        onPinch(e);
+        //dumpEvent(e);
+        previousActionCode = MotionEvent.ACTION_POINTER_DOWN;
+    }
+    */
     switch (actionCode) {
       case MotionEvent.ACTION_DOWN:{
         //Log.d("Martin","---> Single Action press down");
@@ -115,8 +143,9 @@ public class Camera implements GameObject {
         break;
       }
       case MotionEvent.ACTION_POINTER_DOWN:{
-        //Log.d("Martin","--->Multi Action pinch press down");
+        //Log.d("Martin","--->Multi Action pinch press downStart");
         onPinch(e);
+        //Log.d("Martin","--->Multi Action pinch press downEnd");
         //dumpEvent(e);
         break;
       }
@@ -129,15 +158,22 @@ public class Camera implements GameObject {
       
       //The following case doesn't seem to occur
       //it appears that multipress or onMultPress release is not implemented.
-      //I think we should leave this on th offchance that future implementation will behave correctly.
-      //case MotionEvent.ACTION_POINTER_UP: Log.d("Martin","--->pinch press up"); break;
-      
+      //I think we should leave this on the off chance that future implementation will behave correctly.
+      /*
+      case MotionEvent.ACTION_POINTER_UP:{ 
+        Log.d("Martin","--->Multi Action pinch press up"); 
+        onRelease(e);
+        break;
+      }*/
       case MotionEvent.ACTION_MOVE: 
         //Log.d("Martin", "--->Action Move");
         //dumpEvent(e);
         onMove(e); 
         break;
-      default: onCancel(e); break;
+      default: 
+        Log.d("Martin", "--->UNKNOWN ACTION "+actionCode);
+        onCancel(e); 
+        break;
     }
     //Log.d("Martin","<<<<<Exiting on Touch Event ");
     //Log.d("Martin","***************************");
@@ -154,12 +190,17 @@ public class Camera implements GameObject {
   }
 
   private void onPinch(MotionEvent e){
+    Log.d("Martin", "--->DOING onPinch Start ");
     lastPress = OnPressType.TWO;
     Point2d lastPoint = null;
     //We will do a check to verify that the points have changed
+    Log.d("Martin", "--->DOING onPinch Start ");
+    Log.d("Martin", "--->DOING onPinch index count "+lastPress.getIndex());
+    Log.d("Martin", "--->DOING onPinch  pointer count "+ e.getPointerCount());
     if (lastPress.getIndex() != e.getPointerCount()) return;
+    Log.d("Martin", "--->DOING onPinch after test");
     boolean equalPoints = true;
-    for (int i = 0; ((i < lastPress.getIndex())||(equalPoints==true));i++){
+    for (int i = 0; ((i < lastPress.getIndex())&&(equalPoints==true));i++){
       lastPoint = lastPress.getLastPoints()[i];
       if ((lastPoint.x != e.getX(i))||
           (lastPoint.y != e.getY(i))){
@@ -175,12 +216,14 @@ public class Camera implements GameObject {
         lastPoint.y = e.getY(i);
       }
     }
+    Log.d("Martin", "--->DOING onPinch End ");
   }
   
   private void onRelease(MotionEvent e) {
     lastPress = null;
     onMove(e);
     dragging = false;
+    //previousActionCode = INITIAL_ACTION_CODE;
   }
   
   private void onMove(MotionEvent e) {
@@ -197,12 +240,13 @@ public class Camera implements GameObject {
     }
     
     if (lastPress.getIndex()==e.getPointerCount()){
-      lastPress.getCamerasOnMove().onMove(e, lastPress, cameraPoint);
+      lastPress.getCamerasOnMove().onMove(e, lastPress, cameraPoint, cameraScale);
     }
   }
   
   private void onCancel(MotionEvent e) {
     dragging = false;
+    //previousActionCode = INITIAL_ACTION_CODE;
   }
   
   /**
@@ -214,6 +258,8 @@ public class Camera implements GameObject {
   public void apply(GL10 gl) {
     gl.glPushMatrix();
     gl.glTranslatef(cameraPoint.x, cameraPoint.y, cameraPoint.z);
+    gl.glScalef(cameraScale.x,cameraScale.y,cameraScale.z);
+    //gl.glScalex((int)cameraScale.x,(int)cameraScale.y,(int)cameraScale.z);
   }
   
   /**
@@ -236,6 +282,9 @@ public class Camera implements GameObject {
     cameraPoint.x = 0;
     cameraPoint.y = 0;
     cameraPoint.z = 0;
+    cameraScale.x = 1;
+    cameraScale.y = 1;
+    cameraScale.z = 1;
   }
   
   //Public Static inner classes 
@@ -260,13 +309,14 @@ public class Camera implements GameObject {
   }
 
   static interface CamerasOnMove{
-    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint);
+    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint,Point3d cameraScale);
   }
   
   public static class MovePoint implements CamerasOnMove{
 
     @Override
-    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint) {
+    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint, Point3d cameraScale) {
+      //Log.d("Martin", "OnMove on Point");
       Point2d lastPoint = lastPress.getLastPoints()[0];
       float newX = e.getX();
       float newY = e.getY();
@@ -286,9 +336,10 @@ public class Camera implements GameObject {
   }
   
   public static class MovePinch implements CamerasOnMove{
-
+    private static final float SCALE_FACTOR = (float) 0.01;
     @Override
-    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint) {
+    public void onMove(MotionEvent e, OnPressType lastPress, Point3d cameraPoint, Point3d cameraScale) {
+      Log.d("Martin", "OnMove on Pinch");
       Point2d point1 = lastPress.getLastPoints()[0];
       Point2d point2 = lastPress.getLastPoints()[1];
       
@@ -300,18 +351,25 @@ public class Camera implements GameObject {
       
       double dist2 = Camera.distance(newX1, newY1, newX2, newY2);
       
-      if (dist1 < dist2)
-        cameraPoint.z +=1;
-      else
-        cameraPoint.z -=1;
+      if (dist1 < dist2){
+        if (cameraScale.x<1.5) cameraScale.x +=SCALE_FACTOR;
+        if (cameraScale.y<1.5) cameraScale.y +=SCALE_FACTOR;
+//      if (cameraScale.Z<1.5) cameraScale.z +=SCALE_FACTOR;
+      }else{
+        if (cameraScale.x >.5) cameraScale.x -=SCALE_FACTOR;
+        if (cameraScale.y >.5) cameraScale.y -=SCALE_FACTOR;
+//        if (cameraScale.z > .5) cameraScale.z -=SCALE_FACTOR;
+      }
       
-      String zVal = "z="+cameraPoint.z;
+      String zVal = "cp.x="+cameraPoint.x+"cp.y="+cameraPoint.y+"cp.z="+cameraPoint.z;
+      Log.d("Martin", zVal);
+      zVal = "cs.x="+cameraScale.x+"cs.y="+cameraScale.y+"cs.z="+cameraScale.z;
       Log.d("Martin", zVal);
       point1.x = newX1;
       point1.y = newY1;
       point2.x = newX2;
       point2.y = newY2;
-      
+   
     }
     
   }
