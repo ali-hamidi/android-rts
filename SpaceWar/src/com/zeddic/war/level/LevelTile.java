@@ -19,7 +19,7 @@ public class LevelTile implements GameObject {
   private int col;
   private static final Sprite sprite = new Sprite(32, 32, R.drawable.solid);
   private static final Color color = new Color(0, 76, 255, 255);
-  
+
   public LevelTile(int row, int col) {
     this.row = row;
     this.col = col;

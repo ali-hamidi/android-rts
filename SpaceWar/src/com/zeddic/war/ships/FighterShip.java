@@ -3,6 +3,7 @@ package com.zeddic.war.ships;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.Entity;
+import com.zeddic.common.opengl.Color;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.util.Components;
 import com.zeddic.war.R;
@@ -17,8 +18,9 @@ public class FighterShip extends Entity {
   private Components components;
   private float speed;
   private StraightPath path;
-  private Sprite sprite = new Sprite(40, 40, R.drawable.ship);
-
+  private static final Sprite sprite = new Sprite(40, 40, R.drawable.ship);
+  private static final Color color = new Color(255, 0, 0, 255);
+  
   public FighterShip() {
     this(0, 0);
   }
@@ -62,6 +64,7 @@ public class FighterShip extends Entity {
     sprite.x = x;
     sprite.y = y;
     sprite.rz = angle;
+    sprite.setColor(color);
     sprite.draw(gl);
     components.draw(gl);
   }
