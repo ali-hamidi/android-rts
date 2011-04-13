@@ -193,6 +193,10 @@ public /*class*/enum Camera implements GameObject {
         (screen.y / scale) - y);
   }
   
+  public Vector2d convertToWorld(MotionEvent e) {
+    return convertToWorld(new Vector2d(e.getX(), e.getY()));
+  }
+  
   /**
    * Anchors the zoom camera to the now current midpoint of the user's
    * finger.

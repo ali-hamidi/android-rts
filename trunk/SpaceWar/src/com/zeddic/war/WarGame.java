@@ -13,6 +13,7 @@ import com.zeddic.war.collision.CollisionSystem;
 import com.zeddic.war.effects.Effects;
 import com.zeddic.war.level.FileLevelLoader;
 import com.zeddic.war.ships.FighterShip;
+import com.zeddic.war.ui.GameHud;
 
 /**
  * The main entry point for the game. Initializes game objects,
@@ -24,7 +25,8 @@ public class WarGame extends AbstractGame {
 
   private BattleCommandManager commandManager;
   private Sprite grid;
-
+  private GameHud hud;
+  
   public WarGame() { }
 
   @Override
@@ -32,6 +34,8 @@ public class WarGame extends AbstractGame {
     GameState.level = new FileLevelLoader().load("levels/1.txt");
     CollisionSystem.get().initializeForLevel(GameState.level);
     commandManager = new BattleCommandManager();
+    
+    hud = new GameHud();
     
     // Create the enemies and reusable game objects. 
     GameState.stockpiles = new Stockpiles();
@@ -107,6 +111,9 @@ public class WarGame extends AbstractGame {
     gl.glMatrixMode(GL10.GL_PROJECTION);
     gl.glLoadIdentity();
     gl.glOrthof(0, width, height, 0, 0, 100);
+    
+    // Update the HUD positioning based on the new screen size.
+    hud.reposition();
   }
   
   @Override
@@ -116,6 +123,8 @@ public class WarGame extends AbstractGame {
     GameState.level.update(time);
 
     Effects.get().update(time);
+    
+    hud.update(time);
   }
 
   @Override
@@ -141,12 +150,21 @@ public class WarGame extends AbstractGame {
     GameState.camera.end(gl);
     
     // Any user interface elements, such as scores or a menu may be drawn here.
+    hud.draw(gl);
   }
 
   @Override
   public void onTouchEvent(MotionEvent e) {
-    if (!commandManager.onTouch(e)) {
+    
+    boolean handled = hud.onTouch(e);
+    
+    if (!handled) {
+      handled = commandManager.onTouch(e);
+    }
+    
+    if (!handled) {
       GameState.camera.onTouchEvent(e);
     }
+
   }
 }
