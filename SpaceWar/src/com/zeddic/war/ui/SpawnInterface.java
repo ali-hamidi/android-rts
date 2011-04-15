@@ -50,9 +50,9 @@ public class SpawnInterface extends AbstractGameObject {
   public SpawnInterface() {
     positionButtons();    
   }
-  
+
   private void positionButtons() {
-    button1.y = Screen.height - 100;
+    button1.y = Screen.height - 64;
     button1.x = Screen.width / 2;
   }
   

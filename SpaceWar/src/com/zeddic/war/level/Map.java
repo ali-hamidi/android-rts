@@ -20,8 +20,11 @@ import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.opengl.Color;
+import com.zeddic.common.opengl.Screen;
+import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.war.GameState;
+import com.zeddic.war.R;
 import com.zeddic.war.ships.Square;
 
 public class Map extends AbstractGameObject {
@@ -29,6 +32,8 @@ public class Map extends AbstractGameObject {
   private static final float EDGE_BUFFER = 0;
   private static final float SPAWN_BUFFER = 50;
   
+  public int rows;
+  public int cols;
   public float width;
   public float height;
   public float top;
@@ -52,16 +57,22 @@ public class Map extends AbstractGameObject {
   private final Countdown nextWaveCountdown = new Countdown(10000);
   private final Countdown spawnCountdown = new Countdown(1000);
   private int leftToSpawn;
+  private Sprite grid;
   
-  public Map(float width, float height) {
-    setSize(width, height);
+  public Map(int rows, int cols) {
+    setSize(rows, cols);
 
-    planet = new Planet(750, 500, new Color(255, 187, 0, 255));
+    grid = new Sprite(width , height, R.drawable.grid);
+    grid.setTextureScale(cols, rows);
+    grid.setTop(0);
+    grid.setLeft(0);
+    
+    planet = new Planet(750, 100, new Color(255, 187, 0, 255));
     path = new InvadePath.Builder()
         .add(0, 100)
         .add(400, 100)
-        .add(400, 500)
-        .add(750, 500)
+        .add(400, 400)
+        .add(750, 100)
         .build();
    
     leftToSpawn = ENEMIES_PER_WAVE;
@@ -69,9 +80,11 @@ public class Map extends AbstractGameObject {
     spawnCountdown.start();
   }
   
-  private void setSize(float width, float height) {
-    this.width = width;
-    this.height = height;
+  private void setSize(int rows, int cols) {
+    this.rows = rows;
+    this.cols = cols;
+    this.width = cols * Level.TILE_SIZE;
+    this.height = rows * Level.TILE_SIZE;
     top = 0 + EDGE_BUFFER;
     left = 0 + EDGE_BUFFER;
     right = left + width; 
@@ -114,6 +127,7 @@ public class Map extends AbstractGameObject {
   
   @Override
   public void draw(GL10 gl) {
+    grid.draw(gl);
     planet.draw(gl);
     path.draw(gl);
   }

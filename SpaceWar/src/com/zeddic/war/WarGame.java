@@ -24,7 +24,6 @@ import com.zeddic.war.ui.GameHud;
 public class WarGame extends AbstractGame {
 
   private BattleCommandManager commandManager;
-  private Sprite grid;
   private GameHud hud;
   
   public WarGame() { }
@@ -46,21 +45,14 @@ public class WarGame extends AbstractGame {
     // GameState.camera = Camera.INSTANCE.CameraBehavior(x);
 
     FighterShip ship = GameState.stockpiles.ships.take(FighterShip.class);
-    ship.x = 500;
-    ship.y = 500;
+    ship.x = 150;
+    ship.y = 50;
     ship.enable();
 
     ship = GameState.stockpiles.ships.take(FighterShip.class);
-    ship.x = 200;
-    ship.y = 200;
+    ship.x = 350;
+    ship.y = 350;
     ship.enable();
-    
-    int gridWidth = ((int) Screen.width / 32 + 1) * 32;
-    int gridHeight = ((int) Screen.height / 32 + 1) * 32;
-    grid = new Sprite(gridWidth , gridHeight, R.drawable.grid);
-    grid.setTextureScale(gridWidth / 32, gridHeight / 32);
-    grid.setTop(0);
-    grid.setLeft(0);
   }
 
   @Override
@@ -138,13 +130,10 @@ public class WarGame extends AbstractGame {
     GameState.camera.apply(gl);
     
     // Draw all game objects.
-    grid.draw(gl);
-
-    commandManager.draw(gl);
     GameState.level.draw(gl);
     GameState.stockpiles.draw(gl);
-
     Effects.get().draw(gl);
+    commandManager.draw(gl);
     
     // Pop any camera transformations.
     GameState.camera.end(gl);
@@ -165,6 +154,5 @@ public class WarGame extends AbstractGame {
     if (!handled) {
       GameState.camera.onTouchEvent(e);
     }
-
   }
 }
