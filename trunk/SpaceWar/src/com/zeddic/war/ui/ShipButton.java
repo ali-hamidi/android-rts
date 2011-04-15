@@ -33,8 +33,8 @@ public class ShipButton extends AbstractUiObject {
   }
   
   private void setup() {
-    text.setTextSize(30);
-    text.setTextAlignment(Align.CENTER);
+    text.setTextSize(20);
+    text.setTextAlignment(Align.RIGHT);
     text.setText("$" + cost);
   }
   
@@ -57,7 +57,7 @@ public class ShipButton extends AbstractUiObject {
     sprite.draw(gl);
     
     text.x = x;
-    text.y = y + 78;
+    text.y = base.y + HEIGHT / 2 - 20;
     text.draw(gl);
   }
 }

@@ -6,6 +6,7 @@ import android.util.FloatMath;
 import android.view.MotionEvent;
 
 import com.zeddic.common.GameObject;
+import com.zeddic.common.opengl.Screen;
 import com.zeddic.common.util.Vector2d;
 
 /**
@@ -155,6 +156,8 @@ public /*class*/enum Camera implements GameObject {
    * by the camera have been drawn.
    */
   public void apply(GL10 gl) {
+    enforceBounds();
+    
     gl.glPushMatrix();
     gl.glScalef(scale, scale, 0);
     gl.glTranslatef(x, y, 0);
@@ -173,7 +176,7 @@ public /*class*/enum Camera implements GameObject {
   public void draw(GL10 gl) { }
 
   @Override
-  public void update(long time) { }
+  public void update(long time) {}
 
   @Override
   public void reset() {
@@ -197,6 +200,10 @@ public /*class*/enum Camera implements GameObject {
     return convertToWorld(new Vector2d(e.getX(), e.getY()));
   }
   
+  //public float convertToWorld(float value) {
+  //  return (value / scale) - ;
+  //}
+
   /**
    * Anchors the zoom camera to the now current midpoint of the user's
    * finger.
@@ -211,6 +218,44 @@ public /*class*/enum Camera implements GameObject {
    */
   private boolean hasZoomAnchor() {
     return zoomAnchor != null;
+  }
+  
+  
+  private void enforceBounds() {
+    
+
+    float maxWidth = GameState.level.map.width;
+    float maxHeight = GameState.level.map.height;
+    float viewableWidth = Screen.width / scale;
+    float viewableHeight = Screen.height / scale;
+    
+    float maxLeft = 0;
+    float maxRight = maxWidth - viewableWidth;
+    float maxTop = 0;
+    float maxBottom = maxHeight - viewableHeight;
+    
+    x = Math.max(Math.min(-maxLeft, x), -maxRight); 
+    y = Math.max(Math.min(-maxTop, y), -maxBottom);
+    
+    boolean hitWidthLimit = Screen.width / scale > maxWidth;
+    boolean hitHeightLimit = Screen.height / scale > maxHeight;
+    
+    if (hitWidthLimit && hitHeightLimit) {
+      float scale1 = Screen.height / maxHeight;
+      float scale2 = Screen.width / maxWidth;
+      scale = Math.min(scale1, scale2);
+    }
+    
+    if (hitWidthLimit) {
+      viewableWidth = Screen.width / scale;
+      x = (viewableWidth - maxWidth) / 2;
+    }
+    
+    if (hitHeightLimit) {
+      viewableHeight = Screen.height / scale;
+      y = (viewableHeight - maxHeight) / 2;
+    }
+
   }
   
   // Utility methods.

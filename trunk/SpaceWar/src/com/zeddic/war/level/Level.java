@@ -15,10 +15,10 @@ public class Level implements GameObject {
   private int cols;
   
   public Level(LevelBuilder builder) {
-    this.grid = builder.grid;
-    map = new Map(builder.width, builder.height);
     this.rows = builder.rows;
     this.cols = builder.cols;
+    this.grid = builder.grid;
+    map = new Map(rows, cols);
   }
   
   @Override
@@ -111,8 +111,6 @@ public class Level implements GameObject {
   
   public static class LevelBuilder {
     private LevelTile[][] grid;
-    private float width;
-    private float height;
     private int rows;
     private int cols;
     
@@ -120,10 +118,6 @@ public class Level implements GameObject {
     public LevelBuilder() {}
     
     public void withGridSize(int rows, int cols) {
-      
-      // TODO(scott): HACK WORLD SIZE UNTIL CAMERA SCALES TO FIT WORLD ON SCREEN
-      this.width = Screen.width;
-      this.height = Screen.height;
       this.rows = rows;
       this.cols = cols;
       grid = new LevelTile[rows][cols];
