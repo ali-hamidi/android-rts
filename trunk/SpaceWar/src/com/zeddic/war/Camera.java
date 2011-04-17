@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import com.zeddic.common.GameObject;
 import com.zeddic.common.opengl.Screen;
 import com.zeddic.common.util.Vector2d;
+import com.zeddic.war.level.Level;
 
 /**
  * A camera simulates zooming and panning within the game world.
@@ -19,6 +20,8 @@ import com.zeddic.common.util.Vector2d;
 public /*class*/enum Camera implements GameObject {
   INSTANCE;
 
+  private static final float CAMERA_EDGE_BUFFER = Level.TILE_SIZE * 0;
+  
   /** 
    * The translations of the camera in _world_ coordinates. For example,
    * -50, -50 would mean the camera is currently showing world position
@@ -185,6 +188,10 @@ public /*class*/enum Camera implements GameObject {
     scale = 1;
     zoomAnchor = null;
     needPanData = true;
+    
+    placeWorldPositionAtScreenPosition(
+        new Vector2d(GameState.level.map.width / 2, GameState.level.map.height / 2),
+        new Vector2d(Screen.width / 2, Screen.height / 2));
   }
   
   /**
@@ -199,10 +206,6 @@ public /*class*/enum Camera implements GameObject {
   public Vector2d convertToWorld(MotionEvent e) {
     return convertToWorld(new Vector2d(e.getX(), e.getY()));
   }
-  
-  //public float convertToWorld(float value) {
-  //  return (value / scale) - ;
-  //}
 
   /**
    * Anchors the zoom camera to the now current midpoint of the user's
@@ -222,27 +225,26 @@ public /*class*/enum Camera implements GameObject {
   
   
   private void enforceBounds() {
-    
 
     float maxWidth = GameState.level.map.width;
     float maxHeight = GameState.level.map.height;
     float viewableWidth = Screen.width / scale;
     float viewableHeight = Screen.height / scale;
-    
-    float maxLeft = 0;
-    float maxRight = maxWidth - viewableWidth;
-    float maxTop = 0;
-    float maxBottom = maxHeight - viewableHeight;
+
+    float maxLeft = -CAMERA_EDGE_BUFFER;
+    float maxRight = maxWidth - viewableWidth + CAMERA_EDGE_BUFFER;
+    float maxTop = -CAMERA_EDGE_BUFFER;
+    float maxBottom = maxHeight - viewableHeight + CAMERA_EDGE_BUFFER;
     
     x = Math.max(Math.min(-maxLeft, x), -maxRight); 
     y = Math.max(Math.min(-maxTop, y), -maxBottom);
     
-    boolean hitWidthLimit = Screen.width / scale > maxWidth;
-    boolean hitHeightLimit = Screen.height / scale > maxHeight;
+    boolean hitWidthLimit = Screen.width / scale > (maxWidth + CAMERA_EDGE_BUFFER * 2);
+    boolean hitHeightLimit = Screen.height / scale > (maxHeight + CAMERA_EDGE_BUFFER * 2);
     
     if (hitWidthLimit && hitHeightLimit) {
-      float scale1 = Screen.height / maxHeight;
-      float scale2 = Screen.width / maxWidth;
+      float scale1 = Screen.height / (maxHeight + CAMERA_EDGE_BUFFER * 2);
+      float scale2 = Screen.width / (maxWidth + CAMERA_EDGE_BUFFER * 2);
       scale = Math.min(scale1, scale2);
     }
     

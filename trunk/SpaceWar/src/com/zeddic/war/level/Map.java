@@ -20,7 +20,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.opengl.Color;
-import com.zeddic.common.opengl.Screen;
+import com.zeddic.common.opengl.SimplePlane;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.war.GameState;
@@ -58,6 +58,11 @@ public class Map extends AbstractGameObject {
   private final Countdown spawnCountdown = new Countdown(1000);
   private int leftToSpawn;
   private Sprite grid;
+  private Sprite borderTop;
+  private Sprite borderLeft;
+  private Sprite borderRight;
+  private Sprite borderBottom;
+  private Sprite background;
   
   public Map(int rows, int cols) {
     setSize(rows, cols);
@@ -66,6 +71,13 @@ public class Map extends AbstractGameObject {
     grid.setTextureScale(cols, rows);
     grid.setTop(0);
     grid.setLeft(0);
+    
+    createBorders();
+    
+    background = new Sprite(width, height, R.drawable.empty);
+    background.setColor(new Color(0, 0, 0, 255));
+    background.setTop(0);
+    background.setLeft(0);
     
     planet = new Planet(750, 100, new Color(255, 187, 0, 255));
     path = new InvadePath.Builder()
@@ -78,6 +90,34 @@ public class Map extends AbstractGameObject {
     leftToSpawn = ENEMIES_PER_WAVE;
     nextWaveCountdown.start();
     spawnCountdown.start();
+  }
+  
+  int BORDER_BUFFER = 4;
+  
+  
+  private void createBorders() {
+    borderTop = createBorderSprite(BORDER_BUFFER, cols + BORDER_BUFFER * 2);
+    borderTop.setBottom(0);
+    
+    borderBottom = createBorderSprite(BORDER_BUFFER, cols + BORDER_BUFFER * 2);
+    borderBottom.setTop(height);
+    
+    borderLeft = createBorderSprite(rows + BORDER_BUFFER * 2, BORDER_BUFFER);
+    borderLeft.setRight(0);
+
+    borderRight = createBorderSprite(rows + BORDER_BUFFER * 2, BORDER_BUFFER);
+    borderRight.setLeft(width);
+  }
+  
+  private Sprite createBorderSprite(int borderRows, int borderCols) {
+    float borderWidth = borderCols * Level.TILE_SIZE;
+    float borderHeight = borderRows * Level.TILE_SIZE;
+    Sprite sprite = new Sprite(borderWidth, borderHeight, R.drawable.border);
+    sprite.setTextureScale((float) borderCols / 2, (float) borderRows / 2);
+    sprite.x = width / 2;
+    sprite.y = height / 2;
+    
+    return sprite;
   }
   
   private void setSize(int rows, int cols) {
@@ -124,9 +164,14 @@ public class Map extends AbstractGameObject {
       }
     }
   }
-  
+
   @Override
   public void draw(GL10 gl) {
+    borderTop.draw(gl);
+    borderBottom.draw(gl);
+    borderLeft.draw(gl);
+    borderRight.draw(gl);
+    //background.draw(gl);
     grid.draw(gl);
     planet.draw(gl);
     path.draw(gl);

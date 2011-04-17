@@ -13,26 +13,35 @@ import com.zeddic.war.R;
  * @author baileys (Scott Bailey)
  */
 public class LevelTile implements GameObject {  
-  
-  private TileType type;
+
+  private static final Sprite solid = new Sprite(32, 32, R.drawable.border);
+  private static final Sprite blue = new Sprite(32, 32, R.drawable.solid);
+  private static final Color color = new Color(0, 76, 255, 255);
   private int row;
   private int col;
-  private static final Sprite sprite = new Sprite(32, 32, R.drawable.solid);
-  private static final Color color = new Color(0, 76, 255, 255);
+  private Sprite activeSprite;
+  public TileType type;
 
   public LevelTile(int row, int col) {
     this.row = row;
     this.col = col;
+    
+    blue.setColor(color);
   }
   
   public void draw(GL10 gl) {
-    
+
     if (type == TileType.SOLID_ROCK) {
-      sprite.setLeft(col * Level.TILE_SIZE);
-      sprite.setTop(row * Level.TILE_SIZE);
-      sprite.setColor(color);
-      sprite.draw(gl);
+      activeSprite = blue;
+    } else if (type == TileType.EDGE) {
+      activeSprite = solid;
+    } else {
+      return;
     }
+
+    activeSprite.setLeft(col * Level.TILE_SIZE);
+    activeSprite.setTop(row * Level.TILE_SIZE);
+    activeSprite.draw(gl);
   }
 
   @Override
