@@ -35,14 +35,11 @@ public class WarGame extends AbstractGame {
     commandManager = new BattleCommandManager();
     
     hud = new GameHud();
-    
+
     // Create the enemies and reusable game objects. 
     GameState.stockpiles = new Stockpiles();
     GameState.stockpiles.populate();
-    //MGM
-    // The instantiation of this instance is now done in the GameState
-    // we can uses the following line in the future
-    // GameState.camera = Camera.INSTANCE.CameraBehavior(x);
+    GameState.camera.reset();
 
     FighterShip ship = GameState.stockpiles.ships.take(FighterShip.class);
     ship.x = 150;
