@@ -35,7 +35,7 @@ public class TileGrid {
         grid[row][col] = cell;
       }
     }
-	  
+
 		calculateEdges();
 	}
 	
@@ -50,24 +50,52 @@ public class TileGrid {
 	/**
 	 * Collide a entity with any tiles in it's area.
 	 */
-	public void collide(CollideComponent component) {	 
+	public boolean collide(CollideComponent component) {	 
 	  Entity entity = component.entity;
 	  
-    int minCol = convertMapToGridValue(entity.left());
-    int maxCol = convertMapToGridValue(entity.right());
-    int minRow = convertMapToGridValue(entity.top());
-    int maxRow = convertMapToGridValue(entity.bottom());
+    int minCol = gridValue(entity.left());
+    int maxCol = gridValue(entity.right());
+    int minRow = gridValue(entity.top());
+    int maxRow = gridValue(entity.bottom());
  
+    boolean hit = false;
+    
     for (int row = minRow; row <= maxRow; row++) {
       for(int col = minCol; col <= maxCol; col++) {
         if (row >= 0 && row < rows && col >= 0 && col < cols) {
-          grid[row][col].collide(entity);
+          hit = grid[row][col].collide(entity) || hit;
         }
       }
     }
-	}
 
-	private int convertMapToGridValue(float rawValue) {
+    return hit;
+	}
+	
+	 /**
+   * Returns true if the selected entity is currently touching
+   * any tile. Does not actually perform any collision resolution.
+   */
+  public boolean intersectsAnyTile(CollideComponent component) {
+    Entity entity = component.entity;
+    
+    int minCol = gridValue(entity.left());
+    int maxCol = gridValue(entity.right());
+    int minRow = gridValue(entity.top());
+    int maxRow = gridValue(entity.bottom());
+ 
+    boolean hit = false;
+    for (int row = minRow; row <= maxRow; row++) {
+      for(int col = minCol; col <= maxCol; col++) {
+        if (row >= 0 && row < rows && col >= 0 && col < cols) {
+          hit = grid[row][col].intersects(entity) || hit;
+        }
+      }
+    }
+
+    return hit;
+  }
+
+	private int gridValue(float rawValue) {
     return (int) Math.floor(rawValue / size);
   }
 	
@@ -96,8 +124,8 @@ public class TileGrid {
   }
 
   TileCell getCellForEntity(Entity entity) {
-    int col = convertMapToGridValue(entity.x);
-    int row = convertMapToGridValue(entity.y);
+    int col = gridValue(entity.x);
+    int row = gridValue(entity.y);
 
     return get(row, col);
   }

@@ -30,6 +30,7 @@ public class CollisionSystem implements GameObject {
   private EntityGrid entityGrid;
   private TileGrid tileGrid;
   private boolean ready;
+  private CollisionQueryEntity queryEntity;
 
   SimpleList<TileCell> nearbyCells = SimpleList.create(TileCell.class);
 
@@ -93,6 +94,21 @@ public class CollisionSystem implements GameObject {
       entityGrid.update(component);
     }
   }
+  
+  /**
+   * Returns true if the radius at the given x/y coordinates intersects
+   * with anything, including entities or tiles.
+   */
+  public boolean intersects(float x, float y, float radius) {
+
+    if (queryEntity == null) {
+      queryEntity = new CollisionQueryEntity();
+    }
+
+    queryEntity.setQuery(x, y, radius);
+    return tileGrid.intersectsAnyTile(queryEntity.collide)
+        || entityGrid.collide(queryEntity.collide);
+  }
 
   public EntityGrid getEntityGrid() {
     return entityGrid;
@@ -106,7 +122,7 @@ public class CollisionSystem implements GameObject {
   public void update(long time) {}
 
   @Override
-  public void draw(GL10 gl) { }
+  public void draw(GL10 gl) {}
   
   @Override
   public void reset() {

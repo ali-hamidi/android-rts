@@ -11,6 +11,7 @@ import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.util.Vector2d;
 import com.zeddic.war.GameState;
 import com.zeddic.war.R;
+import com.zeddic.war.collision.CollisionSystem;
 import com.zeddic.war.ships.FighterShip;
 
 /**
@@ -35,6 +36,10 @@ public class SpawnInterface extends AbstractGameObject {
   /** The number of pixels the spawning ship sprite should appear above the finger. */
   private static final float SPAWN_OFFSET = 80;
   
+
+  private static final Color BAD_COLOR = new Color(255, 0, 0, 255);
+  private static final Color GOOD_COLOR = new Color(0, 255, 0, 255);
+  
   /** The sprite of the currently spawning ship. */
   private Sprite spawn;
   
@@ -44,8 +49,13 @@ public class SpawnInterface extends AbstractGameObject {
   // Location of the last mouse event.
   private Vector2d last = new Vector2d();
   
+  // Represent the screen and world location where the user is attempting to spawn.
+  private Vector2d screen = new Vector2d();
+  private Vector2d world = new Vector2d();
+  
   // True if the user is currently in a spawn action.
   private boolean spawning = false;
+  private static final Sprite spawnCircle = new Sprite(1, 1, R.drawable.spawn);
   
   public SpawnInterface() {
     positionButtons();    
@@ -106,7 +116,7 @@ public class SpawnInterface extends AbstractGameObject {
     }
 
     record(e);
-    
+
     return true;
   }
   
@@ -118,6 +128,11 @@ public class SpawnInterface extends AbstractGameObject {
    * Spawns a ship into the world as long as any are available in the stockpile. 
    */
   private void spawn(Vector2d worldPosition) {
+
+    if (!isValidSpawnLocation(worldPosition)) {
+      return;
+    }
+
     FighterShip ship = GameState.stockpiles.ships.take(FighterShip.class);
     if (ship == null) {
       return;
@@ -146,10 +161,43 @@ public class SpawnInterface extends AbstractGameObject {
     if (!spawning) {
       return;
     }
+
+    Vector2d screen = getScreenSpawnLocation();
+    boolean valid = isValidSpawnLocation(getSpawnLocation());
     
-    spawn.x = last.x;
-    spawn.y = Math.max(0, last.y - SPAWN_OFFSET);
+    Color color = valid ? GOOD_COLOR : BAD_COLOR;
+
+    spawnCircle.x = screen.x;
+    spawnCircle.y = screen.y;
+    spawnCircle.setColor(color);
+    
+    // TODO(baileys): Replace this with the gun range of the active ship
+    // the user is trying to spawn.
+    spawnCircle.scale  = GameState.camera.convertToScreen(200 * 2);
+    spawnCircle.draw(gl);
+    
+    spawn.x = screen.x;
+    spawn.y = screen.y;
     spawn.draw(gl);
+  }
+
+  private Vector2d getScreenSpawnLocation() {
+    screen.x = last.x;
+    screen.y = Math.max(0, last.y - SPAWN_OFFSET);
+    return screen;
+  }
+
+  private Vector2d getSpawnLocation() {
+    screen = getScreenSpawnLocation();
+    world = GameState.camera.convertToWorld(screen);
+    return world;
+  }
+
+  private boolean isValidSpawnLocation(Vector2d world) {
+    // TODO(baileys): Replace this with the radius of the active type of
+    // ship.
+    return !CollisionSystem.get().intersects(world.x, world.y, 8)
+        && GameState.level.map.inMapArea(world.x, world.y);
   }
 
   @Override

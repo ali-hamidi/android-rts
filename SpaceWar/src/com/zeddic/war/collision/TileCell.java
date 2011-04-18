@@ -70,14 +70,23 @@ public class TileCell {
         : bounds.rightEdge;
   }
 
-  Vector2d projection = new Vector2d();
-  public boolean collide(Entity entity) {
-    
-    if (!active) {
+  /**
+   * Returns true if the given entity intersects with this tile.
+   */
+  public boolean intersects(Entity entity) {
+    if (!active || bounds.isEmpty()) {
       return false;
     }
+
+    return !(entity.left() > right()
+        || entity.right() < left() 
+        || entity.top() > bottom()
+        || entity.bottom() < top());
+  }
+  
+  public boolean collide(Entity entity) {
     
-    if (bounds.isEmpty()) {
+    if (!active || bounds.isEmpty()) {
       return false;
     }
     
@@ -88,7 +97,12 @@ public class TileCell {
     if (top() >= entity.bottom() || bottom() <= entity.top()) {
       return false;
     }
-        
+    
+    return collideWithEdges(entity);
+  }
+
+  Vector2d projection = new Vector2d();
+  private boolean collideWithEdges(Entity entity) {
     projection.x = Float.MAX_VALUE;
     projection.y = Float.MAX_VALUE;
     boolean hit = false;
