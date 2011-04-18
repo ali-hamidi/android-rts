@@ -27,7 +27,6 @@ public class EntityGrid {
 	  this.cols = (int) (level.getWidth() / size) + 1;
 	  
 	  grid = new EntityCell[rows][cols];
-
 	  for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         grid[row][col] = new EntityCell(row, col);
@@ -36,9 +35,9 @@ public class EntityGrid {
 	}
 	
 	/**
-	 * Collides an entity with any other objects cells that it resides in.
+	 * Collides an entity with the _edges_ of any tile map pieces.
 	 */
-	public void collide(CollideComponent component) {	 
+	public boolean collide(CollideComponent component) {	 
 	  Entity entity = component.entity;
 	  
     int minCol = gridValue(entity.left());
@@ -46,13 +45,16 @@ public class EntityGrid {
     int minRow = gridValue(entity.top());
     int maxRow = gridValue(entity.bottom());
  
+    boolean hit = false;
     for (int row = minRow; row <= maxRow; row++) {
       for(int col = minCol; col <= maxCol; col++) {
         if (row >= 0 && row < rows && col >= 0 && col < cols) {
-          grid[row][col].collide(entity);
+          hit = grid[row][col].collide(entity) || hit;
         }
       }
     }
+
+    return hit;
 	}
 
 	/**

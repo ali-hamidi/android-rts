@@ -20,7 +20,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.AbstractGameObject;
 import com.zeddic.common.opengl.Color;
-import com.zeddic.common.opengl.SimplePlane;
 import com.zeddic.common.opengl.Sprite;
 import com.zeddic.common.util.Countdown;
 import com.zeddic.war.GameState;
@@ -30,8 +29,6 @@ import com.zeddic.war.ships.Square;
 public class Map extends AbstractGameObject {
   
   private static final float EDGE_BUFFER = 0;
-  private static final float SPAWN_BUFFER = 50;
-  
   public int rows;
   public int cols;
   public float width;
@@ -62,7 +59,6 @@ public class Map extends AbstractGameObject {
   private Sprite borderLeft;
   private Sprite borderRight;
   private Sprite borderBottom;
-  private Sprite background;
   
   public Map(int rows, int cols) {
     setSize(rows, cols);
@@ -73,11 +69,6 @@ public class Map extends AbstractGameObject {
     grid.setLeft(0);
     
     createBorders();
-    
-    background = new Sprite(width, height, R.drawable.empty);
-    background.setColor(new Color(0, 0, 0, 255));
-    background.setTop(0);
-    background.setLeft(0);
     
     planet = new Planet(750, 100, new Color(255, 187, 0, 255));
     path = new InvadePath.Builder()
@@ -129,18 +120,13 @@ public class Map extends AbstractGameObject {
     left = 0 + EDGE_BUFFER;
     right = left + width; 
     bottom = top + height;
-    
-    spawnLeft = left + SPAWN_BUFFER;
-    spawnTop = top + SPAWN_BUFFER;
-    spawnWidth = width - 2 * SPAWN_BUFFER;
-    spawnHeight = height - 2 * SPAWN_BUFFER;
-    spawnBottom = spawnTop + spawnHeight;
-    spawnRight = spawnLeft + spawnWidth;
   }
   
-  public boolean inSpawnableArea(float x, float y) {
-    return x >= spawnLeft && x <= spawnLeft + spawnWidth &&
-        y >= spawnTop && y <= spawnTop + spawnHeight;
+  public boolean inMapArea(float x, float y) {
+    return x >= left
+        && x <= right
+        && y >= top
+        && y <= bottom;
   }
   
   @Override
@@ -171,7 +157,6 @@ public class Map extends AbstractGameObject {
     borderBottom.draw(gl);
     borderLeft.draw(gl);
     borderRight.draw(gl);
-    //background.draw(gl);
     grid.draw(gl);
     planet.draw(gl);
     path.draw(gl);

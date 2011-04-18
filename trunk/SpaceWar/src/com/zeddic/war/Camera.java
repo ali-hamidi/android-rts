@@ -199,12 +199,28 @@ public /*class*/enum Camera implements GameObject {
    */
   public Vector2d convertToWorld(Vector2d screen) {
     return new Vector2d(
-        (screen.x  / scale - x),
-        (screen.y / scale) - y);
+        (screen.x / scale - x),
+        (screen.y / scale - y));
   }
   
   public Vector2d convertToWorld(MotionEvent e) {
     return convertToWorld(new Vector2d(e.getX(), e.getY()));
+  }
+  
+  public float convertToWorld(float value) {
+    return value / scale;
+  }
+  
+  public float convertToScreen(float value) {
+    return value * scale;
+  }
+  
+  public float convertToWorldX(float screenX) {
+    return convertToWorld(screenX) - x;
+  }
+  
+  public float convertToWorldY(float screenY) {
+    return convertToWorld(screenY) - y;
   }
 
   /**

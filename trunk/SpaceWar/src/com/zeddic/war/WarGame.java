@@ -46,10 +46,10 @@ public class WarGame extends AbstractGame {
     ship.y = 50;
     ship.enable();
 
-    ship = GameState.stockpiles.ships.take(FighterShip.class);
+    /*ship = GameState.stockpiles.ships.take(FighterShip.class);
     ship.x = 350;
     ship.y = 350;
-    ship.enable();
+    ship.enable();*/
   }
 
   @Override

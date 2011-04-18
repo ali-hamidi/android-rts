@@ -3,8 +3,6 @@ package com.zeddic.war.level;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.zeddic.common.GameObject;
-import com.zeddic.common.opengl.Screen;
-
 
 public class Level implements GameObject {
 
