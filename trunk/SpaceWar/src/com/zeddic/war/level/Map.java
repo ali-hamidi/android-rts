@@ -45,8 +45,6 @@ public class Map extends AbstractGameObject {
   public float spawnRight;
   public float spawnBottom;
   
-  //private final List<Planet> planets = new ArrayList<Planet>();
-  
   private static final int ENEMIES_PER_WAVE = 10;
   
   private final Planet planet;
@@ -70,12 +68,12 @@ public class Map extends AbstractGameObject {
     
     createBorders();
     
-    planet = new Planet(750, 100, new Color(255, 187, 0, 255));
+    planet = new Planet(600, 100, new Color(255, 187, 0, 255));
     path = new InvadePath.Builder()
         .add(0, 100)
-        .add(400, 100)
-        .add(400, 400)
-        .add(750, 100)
+        .add(200, 100)
+        .add(200, 300)
+        .add(600, 100)
         .build();
    
     leftToSpawn = ENEMIES_PER_WAVE;
