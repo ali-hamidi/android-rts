@@ -17,10 +17,6 @@ This task involves deciding on how best to scale and determining the right amoun
 Creating new types of enemy ships that will attack in waves.
 
 
-== Update the bullet / gun code to work in OpenGL ==
-Update, refactor, and wire in the existing gun / bullet code to work.
-
-
 == Distortion effects ==
 Have the map of the world distort when an explosion occurs.
 
